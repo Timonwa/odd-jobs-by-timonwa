@@ -4,3 +4,4 @@
 export * from "./base";
 export * from "./blocks";
 export * from "./patterns";
+export * from "./layouts";

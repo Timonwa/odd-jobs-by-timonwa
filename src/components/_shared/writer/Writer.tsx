@@ -2,10 +2,8 @@
 
 import { FilePlus2Icon, Loader2Icon, RefreshCwIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { ArticleCard } from "@/components/_shared/result/ArticleCard";
-import { HistorySidebar } from "@/components/_shared/result/HistorySidebar";
-import type { SocialPostHistory } from "@/lib/types";
-import type { WriterRuntime } from "@/lib/types";
+import { ArticleCard, HistorySidebar } from "@/components/_shared/result";
+import type { SocialPostHistory, WriterRuntime } from "@/lib/types";
 import { useWriter } from "@/lib/hooks";
 import { Button } from "@/components/ui";
 import { PostCard } from "./PostCard";

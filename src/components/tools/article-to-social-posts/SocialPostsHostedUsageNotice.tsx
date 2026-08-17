@@ -1,4 +1,4 @@
-import { HostedUsagePill } from "@/components/_shared/result/HostedUsagePill";
+import { HostedUsagePill } from "@/components/_shared/result";
 import { SOCIAL_POST_DAILY_USER_CAP } from "@/lib/constants";
 import { fetchSocialPostsUsage } from "@/lib/server/actions";
 

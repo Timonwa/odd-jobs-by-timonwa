@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
+import { HubNavbar } from "@/components/_shared/layout";
 import { buttonClasses } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 

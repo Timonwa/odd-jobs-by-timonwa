@@ -1,11 +1,10 @@
 import { LayoutGridIcon } from "lucide-react";
 import { Suspense } from "react";
 
-import { Newsletter } from "@/components/_shared/content/Newsletter";
-import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
-import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
-import { PageMain } from "@/components/_shared/layout/PageMain";
-import { Breadcrumbs, PageHero } from "@/components/ui";
+import { Newsletter } from "@/components/_shared/content";
+import { ToolGrid } from "@/components/_shared/tool";
+import { HubNavbar } from "@/components/_shared/layout";
+import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
 

@@ -10,17 +10,15 @@ import {
 } from "react";
 import { useFormStatus } from "react-dom";
 
-import { ArticleSourceInput } from "@/components/_shared/source/ArticleSourceInput";
-import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
+import { ArticleSourceInput } from "@/components/_shared/source";
+import { ErrorNotice } from "@/components/_shared/result";
 import { useArticleSource } from "@/lib/hooks";
 import type { ArticleSource, SeoMetaResult, TokenUsage } from "@/lib/types";
 import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
 import { Button, Input, SegmentedControl } from "@/components/ui";
 
 import { generateSeoMeta } from "@/lib/server/actions";
-import { byokModelStorage, byokStorage } from "@/lib/utils";
-import { emitHostedUsage } from "@/lib/utils";
-
+import { byokModelStorage, byokStorage, emitHostedUsage } from "@/lib/utils";
 export type SeoMetaFormParams = {
 	source: ArticleSource;
 	primaryKeyword?: string;

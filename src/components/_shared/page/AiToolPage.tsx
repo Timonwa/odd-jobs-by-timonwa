@@ -2,8 +2,8 @@ import type { ComponentType, ReactNode, SVGProps } from "react";
 
 import { ToolContent } from "../content/ToolContent";
 import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
-import { Navbar } from "@/components/_shared/layout/Navbar";
-import { PageMain } from "@/components/_shared/layout/PageMain";
+import { AppNavbar } from "@/components/_shared/layout";
+import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
@@ -33,7 +33,7 @@ export function AiToolPage({
 }: AiToolPageProps) {
 	return (
 		<>
-			<Navbar
+			<AppNavbar
 				brand={{
 					href: ROUTES.tool(slug),
 					name,

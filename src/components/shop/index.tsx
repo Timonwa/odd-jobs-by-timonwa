@@ -1,7 +1,6 @@
-import { JsonLdScript } from "@/components/_shared/content/JsonLdScript";
-import { Newsletter } from "@/components/_shared/content/Newsletter";
-import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
-import { PageMain } from "@/components/_shared/layout/PageMain";
+import { JsonLdScript, Newsletter } from "@/components/_shared/content";
+import { HubNavbar } from "@/components/_shared/layout";
+import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
 import { getAllProducts } from "@/lib/server";

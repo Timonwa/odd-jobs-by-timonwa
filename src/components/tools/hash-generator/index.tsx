@@ -1,6 +1,6 @@
 import { FingerprintIcon } from "lucide-react";
 
-import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { ClientToolPage } from "@/components/_shared/page";
 import { HashGeneratorTool } from "./HashGeneratorTool";
 
 export function HashGeneratorPageContent() {

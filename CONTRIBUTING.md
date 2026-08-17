@@ -80,10 +80,12 @@ app/
   blog/  newsletter/  shop/                    # thin entries; sections in components/<feature>/
 src/styles/                                    # globals.css + tokens/theme/base/... partials
 components/
-  ui/          # app-agnostic reusables in 4 tiers (barrel: @/components/ui)
-    base/      # atoms: Button, Input, Badge, ... (one folder per component)
+  ui/          # app-agnostic reusables in 4 tiers (barrel: @/components/ui);
+               #   one folder per component, index.tsx is the component
+    base/      # atoms: Button, Input, Badge, ...
     blocks/    # composed: Card, Drawer, Section, ...
-    patterns/  # page regions: PageHero
+    patterns/  # page regions: Navbar, Footer, PageHero
+    layouts/   # shells: SiteLayout, PageMain
   _shared/     # cross-feature: writer/ (the shared engine), category/, result/,
                #   source/, page/, byok/, content/, tool/, layout/ (navbar, footer,
                #   page shell, ThemeToggle)

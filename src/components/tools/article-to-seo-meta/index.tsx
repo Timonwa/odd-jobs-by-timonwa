@@ -1,6 +1,6 @@
 import { SearchIcon } from "lucide-react";
 
-import { AiToolPage } from "@/components/_shared/page/AiToolPage";
+import { AiToolPage } from "@/components/_shared/page";
 import { SeoMetaHero } from "./SeoMetaHero";
 import { SeoMetaHostedUsageNotice } from "./SeoMetaHostedUsageNotice";
 import { SeoMetaTool } from "./SeoMetaTool";

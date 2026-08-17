@@ -11,14 +11,15 @@ import {
 	useTransition,
 } from "react";
 
-import type { WriterRuntime } from "@/lib/types";
-import { useArticleSource } from "@/lib/hooks/use-article-source";
 import type {
+	WriterRuntime,
 	ArticleSource,
 	SocialPost,
 	SocialPostsResult,
 	TokenUsage,
+	SocialPostHistory,
 } from "@/lib/types";
+import { useArticleSource } from "@/lib/hooks/use-article-source";
 import {
 	articleSourceIdentity,
 	buildAllPostsCopyText,
@@ -27,8 +28,6 @@ import {
 	byokStorage,
 	emitHostedUsage,
 } from "@/lib/utils";
-import type { SocialPostHistory } from "@/lib/types";
-
 /** Central state and action hook for the writer engine — wires the article source, generation, editing, history, and style templates. Stores, server actions, and the history/template hooks are injected via `runtime`, so one engine powers several tools. */
 export function useWriter(runtime: WriterRuntime) {
 	const {

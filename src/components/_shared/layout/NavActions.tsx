@@ -12,17 +12,38 @@ import {
 	XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+	type ComponentType,
+	type ReactNode,
+	type SVGProps,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from "react";
 
-import { buttonClasses, Tooltip } from "@/components/ui";
-import { GithubMark } from "@/components/ui";
-import { ByokDrawer } from "@/components/_shared/byok/ByokDrawer";
+import { buttonClasses, Tooltip, GithubMark } from "@/components/ui";
+import { ByokDrawer } from "@/components/_shared/byok";
 import { NavIconButton } from "./NavIconButton";
 import { ToolsMenu } from "./ToolsMenu";
-import { ThemeToggle } from "@/components/_shared/layout/ThemeToggle";
-import { ROUTES } from "@/lib/config/routes";
+import { ThemeToggle } from "@/components/_shared/layout";
+import { NAV_LINKS, type NavLinkLabel } from "@/lib/constants";
 import { REPO_URL, SUPPORT_URL } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
+
+// Icons stay here rather than in the constant — a const whose values are
+// React components is UI, so lib/constants holds only the labels and hrefs.
+const NAV_LINK_ICONS: Record<
+	NavLinkLabel,
+	ComponentType<SVGProps<SVGSVGElement>>
+> = {
+	Home: HomeIcon,
+	Tools: LayoutGridIcon,
+	Categories: TagsIcon,
+	Blog: BookOpenTextIcon,
+	Shop: ShoppingBagIcon,
+	Newsletter: MailIcon,
+};
 
 type NavActionsProps = {
 	actionsSlot?: ReactNode;
@@ -136,35 +157,20 @@ export function NavActions({
 						: "hidden",
 				)}
 			>
-				<Link href={ROUTES.home} onClick={close} className={menuRow}>
-					<HomeIcon aria-hidden className="w-4 h-4" />
-					<span>Home</span>
-				</Link>
-
-				<Link href={ROUTES.tools} onClick={close} className={menuRow}>
-					<LayoutGridIcon aria-hidden className="w-4 h-4" />
-					<span>Tools</span>
-				</Link>
-
-				<Link href={ROUTES.categories} onClick={close} className={menuRow}>
-					<TagsIcon aria-hidden className="w-4 h-4" />
-					<span>Categories</span>
-				</Link>
-
-				<Link href={ROUTES.blog} onClick={close} className={menuRow}>
-					<BookOpenTextIcon aria-hidden className="w-4 h-4" />
-					<span>Blog</span>
-				</Link>
-
-				<Link href={ROUTES.shop} onClick={close} className={menuRow}>
-					<ShoppingBagIcon aria-hidden className="w-4 h-4" />
-					<span>Shop</span>
-				</Link>
-
-				<Link href={ROUTES.newsletter} onClick={close} className={menuRow}>
-					<MailIcon aria-hidden className="w-4 h-4" />
-					<span>Newsletter</span>
-				</Link>
+				{NAV_LINKS.map((navLink) => {
+					const NavLinkIcon = NAV_LINK_ICONS[navLink.label];
+					return (
+						<Link
+							key={navLink.label}
+							href={navLink.href}
+							onClick={close}
+							className={menuRow}
+						>
+							<NavLinkIcon aria-hidden className="w-4 h-4" />
+							<span>{navLink.label}</span>
+						</Link>
+					);
+				})}
 
 				{/* Menu slot for page-specific links */}
 				{menuSlot}

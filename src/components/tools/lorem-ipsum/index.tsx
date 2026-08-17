@@ -1,6 +1,6 @@
 import { PilcrowIcon } from "lucide-react";
 
-import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { ClientToolPage } from "@/components/_shared/page";
 import { LoremIpsumTool } from "./LoremIpsumTool";
 
 export function LoremIpsumPageContent() {

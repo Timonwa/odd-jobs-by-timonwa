@@ -3,7 +3,7 @@
 import { useId } from "react";
 
 import { ToggleButton } from "@/components/ui";
-import { TonePicker } from "@/components/_shared/writer/TonePicker";
+import { TonePicker } from "@/components/_shared/writer";
 
 import {
 	SOCIAL_POST_EMOJI_DENSITY_LABELS,

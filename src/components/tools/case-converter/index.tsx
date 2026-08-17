@@ -1,6 +1,6 @@
 import { CaseSensitiveIcon } from "lucide-react";
 
-import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { ClientToolPage } from "@/components/_shared/page";
 import { CaseConverterTool } from "./CaseConverterTool";
 
 export function CaseConverterPageContent() {

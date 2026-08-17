@@ -1,4 +1,4 @@
-import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool";
 import { getRelatedTools } from "@/lib/config/tools";
 
 /** "More tools" grid — same-category tools first, backfilled to `max` from the TOOLS config. */

@@ -40,7 +40,7 @@ app/                       thin routes only: metadata, static params, guards →
   blog/ newsletter/ shop/  content sections; /guides 308-redirects to /blog
 src/styles/                globals.css + tokens/theme/base partials, imported in order
 src/components/
-  ui/                      app-agnostic reusables in tiers: base/ blocks/ patterns/ (one folder per component, tier barrels, root barrel @/components/ui)
+  ui/                      app-agnostic reusables in 4 tiers: base/ blocks/ patterns/ layouts/ (one folder per component, index.tsx is the component; tier + root barrels)
   _shared/                 cross-feature app-specific: writer/ (engine), category/, result/, source/, page/, byok/, content/, tool/, layout/ (navbar, footer, shell)
   errors/                  framework boundaries: ErrorContent, NotFoundContent, GlobalErrorContent
   home/ categories/ tools/<slug>/ blog/ newsletter/ shop/   feature folders mirroring routes

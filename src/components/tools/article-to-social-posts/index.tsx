@@ -1,6 +1,6 @@
 import { Share2Icon } from "lucide-react";
 
-import { AiToolPage } from "@/components/_shared/page/AiToolPage";
+import { AiToolPage } from "@/components/_shared/page";
 import { SocialPostsHero } from "./SocialPostsHero";
 import { SocialPostsHostedUsageNotice } from "./SocialPostsHostedUsageNotice";
 import { SocialPostsSettingsDrawer } from "./SocialPostsSettingsDrawer";

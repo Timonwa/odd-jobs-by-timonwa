@@ -1,15 +1,12 @@
 "use client";
 
-import { ToggleButton } from "@/components/ui";
-
+import { ToggleButton, PLATFORM_ICONS } from "@/components/ui";
 import {
 	SOCIAL_POST_PLATFORMS,
 	SOCIAL_POST_PLATFORM_COLORS,
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
 import type { SocialPostPlatform } from "@/lib/constants";
-import { PLATFORM_ICONS } from "@/components/ui";
-
 type PlatformPickerProps = {
 	value: SocialPostPlatform[];
 	onToggle: (platform: SocialPostPlatform) => void;

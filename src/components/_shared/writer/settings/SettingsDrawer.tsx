@@ -3,11 +3,10 @@
 import { PenLineIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import type { WriterRuntime } from "@/lib/types";
+import type { WriterRuntime, SocialPostStyle } from "@/lib/types";
 import { OPEN_SOCIAL_POST_SETTINGS_EVENT } from "@/lib/constants";
-import type { SocialPostStyle } from "@/lib/types";
-import { TemplatesPicker } from "@/components/_shared/writer/TemplatesPicker";
-import { NavIconButton } from "@/components/_shared/layout/NavIconButton";
+import { TemplatesPicker } from "@/components/_shared/writer";
+import { NavIconButton } from "@/components/_shared/layout";
 import { Button, Drawer } from "@/components/ui";
 
 import { HashtagsSection } from "./HashtagsSection";

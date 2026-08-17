@@ -19,12 +19,11 @@ import {
 	ThreadsLogo,
 	WhatsAppLogo,
 	XLogo,
+	Button,
 } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_URL } from "@/lib/config/site";
 import { getToolBySlug } from "@/lib/config/tools";
-import { Button } from "@/components/ui";
-
 type ShareLink = {
 	key: string;
 	label: string;

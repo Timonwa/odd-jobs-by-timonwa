@@ -2,9 +2,6 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 
-import { NavActions } from "./NavActions";
-import { ROUTES } from "@/lib/config/routes";
-
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type NavbarProps = {
@@ -15,21 +12,11 @@ type NavbarProps = {
 		ariaLabel?: string;
 	};
 	centerSlot?: ReactNode;
-	actionsSlot?: ReactNode;
-	menuSlot?: ReactNode;
-	repoUrl?: string;
-	showByok?: boolean;
+	endSlot?: ReactNode;
 };
 
-/** The primary navbar shell — brand link on the left, optional center slot, and the NavActions cluster on the right. */
-export function Navbar({
-	brand,
-	centerSlot,
-	actionsSlot,
-	menuSlot,
-	repoUrl,
-	showByok,
-}: NavbarProps) {
+/** The primary navbar shell — brand link on the left, optional center slot, and whatever the app slots in on the right. */
+export function Navbar({ brand, centerSlot, endSlot }: NavbarProps) {
 	const BrandIcon = brand.icon;
 	return (
 		<nav
@@ -37,8 +24,8 @@ export function Navbar({
 			className="flex items-center justify-between gap-2 border-b border-border/50 bg-background/80 px-4 py-3 backdrop-blur-md sticky top-0 z-40 sm:px-6 sm:py-4 lg:px-10"
 		>
 			<Link
-				href={ROUTES.home}
-				aria-label={brand.ariaLabel ?? `${brand.name} — all tools home`}
+				href={brand.href}
+				aria-label={brand.ariaLabel ?? brand.name}
 				className="flex min-w-0 items-center gap-2 pr-1 text-base font-semibold sm:text-lg"
 			>
 				<span
@@ -52,12 +39,7 @@ export function Navbar({
 
 			<div className="flex shrink-0 items-center gap-1 sm:gap-2">
 				{centerSlot}
-				<NavActions
-					actionsSlot={actionsSlot}
-					menuSlot={menuSlot}
-					repoUrl={repoUrl}
-					showByok={showByok}
-				/>
+				{endSlot}
 			</div>
 		</nav>
 	);

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { Footer } from "@/components/_shared/layout/Footer";
+import { HubFooter } from "@/components/_shared/layout/HubFooter";
+import { SiteLayout } from "@/components/ui";
 import {
 	CREATOR_NAME,
 	CREATOR_TWITTER,
@@ -69,10 +70,9 @@ export default function RootLayout({
 				<script dangerouslySetInnerHTML={{ __html: themeInit }} />
 			</head>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<div className="flex-1">{children}</div>
-				<Footer />
+				<SiteLayout footer={<HubFooter />}>{children}</SiteLayout>
 				{isProduction && (
 					<Script
 						defer

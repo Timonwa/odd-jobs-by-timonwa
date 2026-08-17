@@ -11,8 +11,8 @@ import {
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
 import type { SocialPost } from "@/lib/types";
-import { PLATFORM_ICONS } from "@/components/ui";
 import {
+	PLATFORM_ICONS,
 	Badge,
 	Button,
 	Card,

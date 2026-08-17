@@ -3,7 +3,7 @@
 import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool";
 import { ToggleButton } from "@/components/ui";
 import { type CategoryId, TOOL_CATEGORIES } from "@/lib/config/categories";
 import { LIVE_TOOLS } from "@/lib/config/tools";

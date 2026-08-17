@@ -1,5 +1,5 @@
-import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
-import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { HubNavbar } from "@/components/_shared/layout";
+import { Newsletter } from "@/components/_shared/content";
 import { BrowseByCategory } from "./BrowseByCategory";
 import { HomeHero } from "./HomeHero";
 import { HowItWorks } from "./HowItWorks";

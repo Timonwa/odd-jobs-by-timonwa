@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 
-import { SourceReuseControls } from "@/components/_shared/source/SourceReuseControls";
+import { SourceReuseControls } from "@/components/_shared/source";
 import { useArticleSource } from "@/lib/hooks";
 import {
 	Card,
@@ -12,8 +12,8 @@ import {
 	Textarea,
 	ToggleButton,
 } from "@/components/ui";
-import { countWords } from "@/lib/utils";
 import {
+	countWords,
 	durationSeconds,
 	formatDuration,
 	READING_WPM,
@@ -21,7 +21,6 @@ import {
 	type ReadingSpeed,
 	SPEAKING_WPM,
 } from "@/lib/utils";
-
 const SPEEDS: { id: ReadingSpeed; label: string }[] = [
 	{ id: "slow", label: "Slow" },
 	{ id: "average", label: "Average" },

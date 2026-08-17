@@ -1,6 +1,6 @@
 import { LinkIcon } from "lucide-react";
 
-import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { ClientToolPage } from "@/components/_shared/page";
 import { SlugGeneratorTool } from "./SlugGeneratorTool";
 
 export function SlugGeneratorPageContent() {

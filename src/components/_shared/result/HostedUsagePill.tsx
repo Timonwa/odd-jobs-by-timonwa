@@ -4,9 +4,7 @@ import { InfoIcon, TriangleAlertIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { OPEN_BYOK_EVENT } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { subscribeHostedUsage } from "@/lib/utils";
-
+import { cn, subscribeHostedUsage } from "@/lib/utils";
 type Props = {
 	perUserDaily: number;
 	getUsage: () => Promise<{ configured: boolean }>;

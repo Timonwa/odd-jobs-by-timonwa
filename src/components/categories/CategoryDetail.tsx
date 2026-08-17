@@ -1,11 +1,11 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Newsletter } from "@/components/_shared/content/Newsletter";
-import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
-import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
-import { PageMain } from "@/components/_shared/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content";
+import { ToolGrid } from "@/components/_shared/tool";
+import { HubNavbar } from "@/components/_shared/layout";
 import {
+	PageMain,
 	Breadcrumbs,
 	buttonClasses,
 	EmptyState,

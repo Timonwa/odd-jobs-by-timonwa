@@ -14,9 +14,11 @@ import {
 	TagsIcon,
 } from "lucide-react";
 
-import { ArticleCard } from "@/components/_shared/result/ArticleCard";
-import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
-import { HistorySidebar } from "@/components/_shared/result/HistorySidebar";
+import {
+	ArticleCard,
+	ErrorNotice,
+	HistorySidebar,
+} from "@/components/_shared/result";
 import { SeoMetaForm, type SeoMetaFormParams } from "./SeoMetaForm";
 import { SeoMetaResults } from "./SeoMetaResults";
 import { useSeoMetaHistory, type SeoMetaHistory } from "@/lib/hooks";
@@ -33,9 +35,7 @@ import {
 	generateSeoMeta,
 	regenerateSeoMetaVariation,
 } from "@/lib/server/actions";
-import { byokModelStorage, byokStorage } from "@/lib/utils";
-import { emitHostedUsage } from "@/lib/utils";
-
+import { byokModelStorage, byokStorage, emitHostedUsage } from "@/lib/utils";
 /** History row label — article title, then URL, then a text snippet. */
 const historyLabel = (h: SeoMetaHistory): string => {
 	if (h.result.article?.title) return h.result.article.title;

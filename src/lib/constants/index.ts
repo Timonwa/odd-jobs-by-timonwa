@@ -2,6 +2,12 @@
 export { MAX_ARTICLE_INPUT_CHARS } from "./article.constant";
 export { POST_SLUGS } from "./blog.constant";
 export {
+	NAV_LINKS,
+	FOOTER_META_LINKS,
+	FOOTER_LEGAL_LINKS,
+	type NavLinkLabel,
+} from "./nav.constant";
+export {
 	OPEN_BYOK_EVENT,
 	OPEN_SOCIAL_POST_SETTINGS_EVENT,
 	BYOK_CHANGE_EVENT,

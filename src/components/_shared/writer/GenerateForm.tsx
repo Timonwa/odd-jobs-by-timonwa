@@ -6,16 +6,15 @@ import {
 	SparklesIcon,
 	Wand2Icon,
 } from "lucide-react";
-import { ArticleSourceInput } from "@/components/_shared/source/ArticleSourceInput";
-import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
-import type { ArticleSourceKind } from "@/lib/types";
+import { ArticleSourceInput } from "@/components/_shared/source";
+import { ErrorNotice } from "@/components/_shared/result";
+import type { ArticleSourceKind, SocialPostStyleTemplate } from "@/lib/types";
 import {
 	MAX_ARTICLE_INPUT_CHARS,
 	OPEN_SOCIAL_POST_SETTINGS_EVENT,
 	type SocialPostPlatform,
 	THREADABLE_SOCIAL_POST_PLATFORMS,
 } from "@/lib/constants";
-import type { SocialPostStyleTemplate } from "@/lib/types";
 import {
 	Button,
 	Card,
