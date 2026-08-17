@@ -15,42 +15,43 @@ import {
 	SITE_URL,
 } from "@/lib/config/site";
 import { ROUTES } from "@/lib/config/routes";
-import { splitGuideTitle } from "@/lib/guides/guides";
-import { getGuide, getGuideSlugs } from "@/lib/guides/loader";
+import RelatedGrid from "@/components/_shared/content/RelatedGrid";
+import { splitTitle } from "@/lib/content/split-title";
+import { getAllPosts, getPost, getPostSlugs } from "@/lib/blog/loader";
 
-// Known guide slugs are prerendered; an unknown slug falls through to the
+// Known post slugs are prerendered; an unknown slug falls through to the
 // notFound() below. (`dynamicParams` can't be set alongside cacheComponents.)
 export function generateStaticParams() {
-	return getGuideSlugs().map((slug) => ({ slug }));
+	return getPostSlugs().map((slug) => ({ slug }));
 }
 
-type GuidePageProps = { params: Promise<{ slug: string }> };
+type PostPageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({
 	params,
-}: GuidePageProps): Promise<Metadata> {
+}: PostPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const guide = getGuide(slug);
-	if (!guide) return {};
+	const post = getPost(slug);
+	if (!post) return {};
 
-	const path = ROUTES.guide(slug);
+	const path = ROUTES.post(slug);
 	const url = `${SITE_URL}${path}`;
-	const title = guide.title;
+	const title = post.title;
 
 	return {
 		title,
-		description: guide.description,
-		keywords: guide.keywords,
+		description: post.description,
+		keywords: post.keywords,
 		alternates: { canonical: path },
 		openGraph: {
 			type: "article",
 			url,
 			siteName: SITE_NAME,
 			title,
-			description: guide.description,
+			description: post.description,
 			locale: "en_US",
-			publishedTime: guide.publishedAt,
-			modifiedTime: guide.updatedAt ?? guide.publishedAt,
+			publishedTime: post.publishedAt,
+			modifiedTime: post.updatedAt ?? post.publishedAt,
 			authors: [CREATOR_URL],
 		},
 		twitter: {
@@ -58,32 +59,42 @@ export async function generateMetadata({
 			site: CREATOR_TWITTER,
 			creator: CREATOR_TWITTER,
 			title,
-			description: guide.description,
+			description: post.description,
 		},
 	};
 }
 
-export default async function GuidePage({ params }: GuidePageProps) {
+export default async function PostPage({ params }: PostPageProps) {
 	const { slug } = await params;
-	const guide = getGuide(slug);
-	if (!guide) notFound();
+	const post = getPost(slug);
+	if (!post) notFound();
 
-	const { default: GuideBody } = await import(`@/content/guides/${slug}.mdx`);
-	const { lead, accent } = splitGuideTitle(guide);
+	const { default: PostBody } = await import(`@/content/blog/${slug}.mdx`);
+	const { lead, accent } = splitTitle(post);
+
+	const related = getAllPosts()
+		.filter((p) => p.slug !== slug)
+		.slice(0, 3)
+		.map((p) => ({
+			href: ROUTES.post(p.slug),
+			eyebrow: p.category,
+			title: p.title,
+			metaRight: `${p.readingMinutes} min read`,
+		}));
 
 	const jsonLd = {
 		"@context": "https://schema.org",
-		"@type": "TechArticle",
-		headline: guide.title,
-		description: guide.description,
-		datePublished: guide.publishedAt,
-		dateModified: guide.updatedAt ?? guide.publishedAt,
+		"@type": "BlogPosting",
+		headline: post.title,
+		description: post.description,
+		datePublished: post.publishedAt,
+		dateModified: post.updatedAt ?? post.publishedAt,
 		inLanguage: "en",
-		image: `${SITE_URL}${ROUTES.guide(slug)}/opengraph-image`,
-		mainEntityOfPage: `${SITE_URL}${ROUTES.guide(slug)}`,
+		image: `${SITE_URL}${ROUTES.post(slug)}/opengraph-image`,
+		mainEntityOfPage: `${SITE_URL}${ROUTES.post(slug)}`,
 		author: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
 		publisher: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
-		keywords: guide.keywords.join(", "),
+		keywords: post.keywords.join(", "),
 	};
 
 	return (
@@ -93,7 +104,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
 				<div className="mx-auto max-w-3xl">
 					<PageHero
 						className="mb-10"
-						eyebrow={{ icon: KeyRoundIcon, label: guide.eyebrow }}
+						eyebrow={{ icon: KeyRoundIcon, label: post.eyebrow }}
 						title={
 							lead ? (
 								<>
@@ -101,25 +112,27 @@ export default async function GuidePage({ params }: GuidePageProps) {
 									<span className="hero-gradient-text">{accent}</span>
 								</>
 							) : (
-								guide.title
+								post.title
 							)
 						}
-						subtitle={guide.description}
+						subtitle={post.description}
 					/>
 
 					<article>
-						<GuideBody />
+						<PostBody />
 					</article>
+
+					<RelatedGrid heading="More posts" items={related} />
 
 					<Newsletter className="mt-16" />
 
 					<footer className="mt-16 border-t border-border/60 pt-8">
 						<Link
-							href={ROUTES.guides}
+							href={ROUTES.blog}
 							className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
 						>
 							<BookOpenTextIcon aria-hidden className="h-4 w-4" />
-							Browse all guides
+							Browse all posts
 						</Link>
 					</footer>
 				</div>

@@ -7,12 +7,12 @@ import Newsletter from "@/components/_shared/content/Newsletter";
 import { LinkCard, PageHero } from "@/components/ui";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
 import { ROUTES } from "@/lib/config/routes";
-import { getAllGuides } from "@/lib/guides/loader";
+import { getAllPosts } from "@/lib/blog/loader";
 
-const PATH = ROUTES.guides;
-const TITLE = "Guides";
+const PATH = ROUTES.blog;
+const TITLE = "Blog";
 const DESCRIPTION =
-	"Short, practical guides for the tools — setup, tips, and step-by-step walkthroughs, including how to get a free API key.";
+	"Practical tips, systems, and ideas on productivity and workflow — to help you get more done.";
 
 export const metadata: Metadata = {
 	title: TITLE,
@@ -33,17 +33,17 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function GuidesIndexPage() {
-	const guides = getAllGuides();
+export default function BlogIndexPage() {
+	const posts = getAllPosts();
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "ItemList",
-		name: "Guides — Tools by Timonwa",
-		itemListElement: guides.map((g, i) => ({
+		name: `Blog — ${SITE_NAME}`,
+		itemListElement: posts.map((p, i) => ({
 			"@type": "ListItem",
 			position: i + 1,
-			url: `${SITE_URL}${ROUTES.guide(g.slug)}`,
-			name: g.title,
+			url: `${SITE_URL}${ROUTES.post(p.slug)}`,
+			name: p.title,
 		})),
 	};
 
@@ -53,32 +53,32 @@ export default function GuidesIndexPage() {
 			<PageMain>
 				<PageHero
 					className="mb-10"
-					eyebrow={{ icon: BookOpenTextIcon, label: "Guides" }}
+					eyebrow={{ icon: BookOpenTextIcon, label: "Blog" }}
 					title={
 						<>
-							Guides &amp;{" "}
-							<span className="hero-gradient-text">walkthroughs</span>
+							Getting things done,{" "}
+							<span className="hero-gradient-text">made simpler</span>
 						</>
 					}
 					subtitle={DESCRIPTION}
 				/>
 
 				<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					{guides.map((guide) => (
-						<li key={guide.slug}>
-							<LinkCard href={ROUTES.guide(guide.slug)}>
+					{posts.map((post) => (
+						<li key={post.slug}>
+							<LinkCard href={ROUTES.post(post.slug)}>
 								<span className="text-xs font-medium uppercase tracking-wide text-primary">
-									{guide.category}
+									{post.category}
 								</span>
 								<h2 className="mt-2 text-lg font-semibold tracking-tight">
-									{guide.title}
+									{post.title}
 								</h2>
 								<p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-									{guide.description}
+									{post.description}
 								</p>
 								<span className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground">
 									<ClockIcon aria-hidden className="h-3.5 w-3.5" />
-									{guide.readingMinutes} min read
+									{post.readingMinutes} min read
 									<ArrowRightIcon
 										aria-hidden
 										className="ml-auto h-4 w-4 transition-transform group-hover:translate-x-0.5"

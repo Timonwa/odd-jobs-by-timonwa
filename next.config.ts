@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 	reactCompiler: true,
 	pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+	// The Guides section was renamed to Blog; keep old URLs alive (308).
+	async redirects() {
+		return [
+			{ source: "/guides", destination: "/blog", permanent: true },
+			{ source: "/guides/:slug", destination: "/blog/:slug", permanent: true },
+		];
+	},
 };
 
 const withMDX = createMDX({
