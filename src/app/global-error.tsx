@@ -1,7 +1,6 @@
 "use client";
 
-import { GlobalErrorContent } from "@/components/errors/GlobalErrorContent";
-import "../src/styles/globals.css";
+import { GlobalErrorContent } from "@/components/errors/global-error";
 
 export default function GlobalError({
 	error,
@@ -12,7 +11,7 @@ export default function GlobalError({
 }) {
 	return (
 		<html lang="en">
-			<body className="antialiased">
+			<body>
 				<GlobalErrorContent error={error} reset={reset} />
 			</body>
 		</html>

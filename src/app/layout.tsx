@@ -11,7 +11,7 @@ import {
 	SITE_TITLE,
 	SITE_URL,
 } from "@/lib/config/site";
-import "../src/styles/globals.css";
+import "@/styles/globals.css";
 import { isProduction } from "@env";
 
 const geistSans = Geist({
