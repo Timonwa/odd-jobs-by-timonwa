@@ -39,7 +39,7 @@ const DEFAULT_DESCRIPTION =
 const DEFAULT_EMPTY = "Your generations will appear here.";
 
 /** History sidebar for the draft-based AI tools: scrollable list, source badge, two-step remove. */
-export default function HistorySidebar({
+export function HistorySidebar({
 	items,
 	onLoad,
 	onRemove,

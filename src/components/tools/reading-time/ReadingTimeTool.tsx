@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 
-import SourceReuseControls from "@/components/_shared/source/SourceReuseControls";
+import { SourceReuseControls } from "@/components/_shared/source/SourceReuseControls";
 import { useArticleSource } from "@/lib/hooks";
 import {
 	Card,
@@ -30,7 +30,7 @@ const SPEEDS: { id: ReadingSpeedType; label: string }[] = [
 
 const numberFmt = new Intl.NumberFormat("en-US");
 
-export default function ReadingTimeTool() {
+export function ReadingTimeTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
 	const [speed, setSpeed] = useState<ReadingSpeedType>("average");

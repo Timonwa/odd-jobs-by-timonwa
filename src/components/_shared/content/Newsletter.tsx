@@ -23,7 +23,7 @@ function SubmitButton() {
 }
 
 /** "New tools in your inbox" signup — posts to the Sender.net server action. */
-export default function Newsletter({ className }: { className?: string }) {
+export function Newsletter({ className }: { className?: string }) {
 	const [state, formAction] = useActionState(subscribeNewsletter, INITIAL);
 	const headingId = useId();
 	const emailId = useId();

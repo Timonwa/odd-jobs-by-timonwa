@@ -5,7 +5,7 @@ import { buttonClasses, LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { getAllProducts } from "@/lib/shop/loader";
 
-export default function ShopPreview() {
+export function ShopPreview() {
 	const products = getAllProducts().slice(0, 3);
 	if (products.length === 0) return null;
 

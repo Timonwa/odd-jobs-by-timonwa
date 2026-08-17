@@ -3,11 +3,7 @@ import { ROUTES } from "@/lib/config/routes";
 import type { ProductMeta } from "@/lib/shop/products";
 
 /** Sidebar list of sibling products shown alongside a product's detail. */
-export default function MoreProducts({
-	products,
-}: {
-	products: ProductMeta[];
-}) {
+export function MoreProducts({ products }: { products: ProductMeta[] }) {
 	if (products.length === 0) return null;
 
 	return (

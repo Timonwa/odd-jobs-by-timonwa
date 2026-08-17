@@ -34,7 +34,7 @@ const mask = (k: string) =>
 	k.length > 10 ? `${k.slice(0, 6)}…${k.slice(-4)}` : "•••";
 
 /** The BYOK form: Gemini key input (masked reveal + format check), model picker, and save/clear. */
-export default function ByokSection({
+export function ByokSection({
 	savedKey,
 	byokModel,
 	onSave,

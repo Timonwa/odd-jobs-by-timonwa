@@ -21,11 +21,7 @@ type HashtagsProps = {
 type FieldType = "alwaysIncludeHashtags" | "neverUseHashtags";
 
 /** All hashtag settings in one place: how many the agent adds (amount), plus optional always-include / never-use rules. */
-export default function HashtagsSection({
-	prefs,
-	onChange,
-	showRules,
-}: HashtagsProps) {
+export function HashtagsSection({ prefs, onChange, showRules }: HashtagsProps) {
 	const headingId = useId();
 	const amountLabelId = useId();
 

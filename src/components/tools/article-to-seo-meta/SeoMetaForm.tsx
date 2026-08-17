@@ -10,8 +10,8 @@ import {
 } from "react";
 import { useFormStatus } from "react-dom";
 
-import ArticleSourceInput from "@/components/_shared/source/ArticleSourceInput";
-import ErrorNotice from "@/components/_shared/result/ErrorNotice";
+import { ArticleSourceInput } from "@/components/_shared/source/ArticleSourceInput";
+import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
 import { useArticleSource } from "@/lib/hooks";
 import type {
 	ArticleSourceType,
@@ -77,7 +77,7 @@ function SubmitButton({
 	);
 }
 
-export default function SeoMetaForm({
+export function SeoMetaForm({
 	onResult,
 	onLoadingChange,
 	onReset,

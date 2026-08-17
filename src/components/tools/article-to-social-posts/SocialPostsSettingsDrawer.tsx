@@ -1,12 +1,13 @@
 "use client";
 
 import { socialPostsRuntime } from "@/lib/utils";
-import SettingsDrawer, {
+import {
+	SettingsDrawer,
 	type SettingsPresentationType,
 } from "@/components/_shared/writer/settings/SettingsDrawer";
 
 /** Article-to-Social-Posts settings drawer — the shared drawer bound to this tool's runtime and brand scope. */
-export default function SocialPostsSettingsDrawer({
+export function SocialPostsSettingsDrawer({
 	presentation,
 }: {
 	presentation?: SettingsPresentationType;

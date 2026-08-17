@@ -1,9 +1,9 @@
 import type { ComponentType, ReactNode, SVGProps } from "react";
 
-import ToolContent from "../content/ToolContent";
-import ToolBreadcrumbs from "../tool/ToolBreadcrumbs";
-import Navbar from "@/components/layout/Navbar";
-import PageMain from "@/components/layout/PageMain";
+import { ToolContent } from "../content/ToolContent";
+import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
+import { Navbar } from "@/components/layout/Navbar";
+import { PageMain } from "@/components/layout/PageMain";
 import { PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 
@@ -21,7 +21,7 @@ type ClientToolPageProps = {
 };
 
 /** Page shell for client-only (no-API) tools: navbar, hero, tool, then SEO content (AI tools use AiToolPage). */
-export default function ClientToolPage({
+export function ClientToolPage({
 	slug,
 	name,
 	icon,

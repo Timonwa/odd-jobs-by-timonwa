@@ -2,7 +2,7 @@
 
 import { useId, useMemo } from "react";
 
-import SourceReuseControls from "@/components/_shared/source/SourceReuseControls";
+import { SourceReuseControls } from "@/components/_shared/source/SourceReuseControls";
 import { useArticleSource } from "@/lib/hooks";
 import { Card, CardContent, StatCard, Textarea } from "@/components/ui";
 import { getTextCounts } from "@/lib/utils";
@@ -25,7 +25,7 @@ const PLATFORM_LIMITS: { label: string; limit: number }[] = [
 const numberFmt = new Intl.NumberFormat("en-US");
 
 /** Live word/character counter with reading-time estimates and per-platform character-limit bars. */
-export default function WordCounterTool() {
+export function WordCounterTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
 	const reuseId = useId();

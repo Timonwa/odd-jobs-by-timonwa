@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /** The shared page-content container — owns max-width and padding so every page (tools, guides, categories) aligns; pass `className` to override for narrower layouts. */
-export default function PageMain({
+export function PageMain({
 	children,
 	className,
 }: {

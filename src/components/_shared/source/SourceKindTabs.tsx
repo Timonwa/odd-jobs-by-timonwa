@@ -6,7 +6,7 @@ import type { ArticleSourceKindType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /** URL / paste-text tab switcher shared by the article-source tools (social posts, SEO meta). */
-export default function SourceKindTabs({
+export function SourceKindTabs({
 	value,
 	onChange,
 	disabled,

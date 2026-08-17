@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import CategoriesPageContent from "@/components/categories";
+import { CategoriesPageContent } from "@/components/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
 

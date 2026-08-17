@@ -19,7 +19,7 @@ const TILE_POSITIONS = [
 	"right-2 bottom-6 h-16 w-16 -rotate-3",
 ];
 
-export default function WhatItIs() {
+export function WhatItIs() {
 	return (
 		<section
 			aria-labelledby="about-heading"

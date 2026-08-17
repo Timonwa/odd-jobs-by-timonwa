@@ -58,7 +58,7 @@ const FEATURES: FeatureType[] = [
 	},
 ];
 
-export default function WhyUseIt() {
+export function WhyUseIt() {
 	return (
 		<Section aria-labelledby="why-heading">
 			<SectionHeader

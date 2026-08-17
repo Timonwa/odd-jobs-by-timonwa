@@ -98,7 +98,7 @@ function writeRootAttr(svg: string, name: string, value: string): string {
 }
 
 /** SVG-to-JSX converter with live preview, attribute rewriting, and optional typed component wrapping. */
-export default function SvgToJsxTool() {
+export function SvgToJsxTool() {
 	// The example ships in the input on mount so the tool is populated from the
 	// first paint — users paste over it, upload, or Clear it.
 	const [svg, setSvg] = useState(SAMPLE);

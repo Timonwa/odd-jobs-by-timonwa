@@ -6,8 +6,8 @@ import {
 	SparklesIcon,
 	Wand2Icon,
 } from "lucide-react";
-import ArticleSourceInput from "@/components/_shared/source/ArticleSourceInput";
-import ErrorNotice from "@/components/_shared/result/ErrorNotice";
+import { ArticleSourceInput } from "@/components/_shared/source/ArticleSourceInput";
+import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
 import type { ArticleSourceKindType } from "@/lib/types";
 import {
 	MAX_ARTICLE_INPUT_CHARS,
@@ -25,9 +25,9 @@ import {
 	CardTitle,
 } from "@/components/ui";
 
-import PlatformPicker from "./PlatformPicker";
-import TemplatesPicker from "./TemplatesPicker";
-import ThreadFormat from "./ThreadFormat";
+import { PlatformPicker } from "./PlatformPicker";
+import { TemplatesPicker } from "./TemplatesPicker";
+import { ThreadFormat } from "./ThreadFormat";
 
 type GenerateFormProps = {
 	sourceKind: ArticleSourceKindType;
@@ -61,7 +61,7 @@ type GenerateFormProps = {
 	onRenameTemplate: (id: string, name: string) => void;
 };
 
-export default function GenerateForm({
+export function GenerateForm({
 	sourceKind,
 	onSourceKindChange,
 	url,

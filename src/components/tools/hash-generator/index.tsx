@@ -1,9 +1,9 @@
 import { FingerprintIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import HashGeneratorTool from "./HashGeneratorTool";
+import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { HashGeneratorTool } from "./HashGeneratorTool";
 
-export default function HashGeneratorPageContent() {
+export function HashGeneratorPageContent() {
 	return (
 		<ClientToolPage
 			slug="hash-generator"

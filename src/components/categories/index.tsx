@@ -1,13 +1,13 @@
 import { TagsIcon } from "lucide-react";
 
-import Newsletter from "@/components/_shared/content/Newsletter";
-import CategoryGrid from "@/components/_shared/category/CategoryGrid";
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { CategoryGrid } from "@/components/_shared/category/CategoryGrid";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
 import { Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 
-export default function CategoriesPageContent() {
+export function CategoriesPageContent() {
 	return (
 		<>
 			<HubNavbar />

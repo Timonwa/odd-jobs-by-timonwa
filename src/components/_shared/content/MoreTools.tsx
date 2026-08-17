@@ -1,8 +1,8 @@
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
 import { getRelatedTools } from "@/lib/config/tools";
 
 /** "More tools" grid — same-category tools first, backfilled to `max` from the TOOLS config. */
-export default function MoreTools({
+export function MoreTools({
 	currentSlug,
 	max = 3,
 }: {

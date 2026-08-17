@@ -19,7 +19,7 @@ const EMPTY_HASHES = Object.fromEntries(
 	HASH_ALGORITHMS.map((algorithm) => [algorithm, ""]),
 ) as Hashes;
 
-export default function HashGeneratorTool() {
+export function HashGeneratorTool() {
 	const [input, setInput] = useState("");
 	const [uppercase, setUppercase] = useState(false);
 	const [hashes, setHashes] = useState<Hashes>(EMPTY_HASHES);

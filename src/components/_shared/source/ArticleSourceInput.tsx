@@ -2,8 +2,8 @@
 
 import { useId } from "react";
 
-import SourceReuseControls from "./SourceReuseControls";
-import SourceKindTabs from "./SourceKindTabs";
+import { SourceReuseControls } from "./SourceReuseControls";
+import { SourceKindTabs } from "./SourceKindTabs";
 import { Input, Textarea } from "@/components/ui";
 import type { ArticleSourceKindType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,7 @@ type Props = {
 };
 
 /** Article-source section for the AI tools: URL/paste tabs, field + counter, and reuse controls. */
-export default function ArticleSourceInput({
+export function ArticleSourceInput({
 	sourceKind,
 	onSourceKindChange,
 	url,

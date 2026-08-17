@@ -2,7 +2,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 
-import NavActions from "./NavActions";
+import { NavActions } from "./NavActions";
 import { ROUTES } from "@/lib/config/routes";
 
 type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
@@ -22,7 +22,7 @@ type NavbarProps = {
 };
 
 /** The primary navbar shell — brand link on the left, optional center slot, and the NavActions cluster on the right. */
-export default function Navbar({
+export function Navbar({
 	brand,
 	centerSlot,
 	actionsSlot,

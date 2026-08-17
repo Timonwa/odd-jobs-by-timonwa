@@ -2,7 +2,7 @@ import { SearchIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
 
-export default function SeoMetaHero() {
+export function SeoMetaHero() {
 	return (
 		<PageHero
 			className="mb-10"

@@ -1,9 +1,9 @@
 import { ArrowRightIcon, ShoppingBagIcon } from "lucide-react";
 import type { Metadata } from "next";
 
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
-import Newsletter from "@/components/_shared/content/Newsletter";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { LinkCard, PageHero } from "@/components/ui";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
 import { ROUTES } from "@/lib/config/routes";

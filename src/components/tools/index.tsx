@@ -1,17 +1,17 @@
 import { LayoutGridIcon } from "lucide-react";
 import { Suspense } from "react";
 
-import Newsletter from "@/components/_shared/content/Newsletter";
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
 import { Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
 
-import FilterableTools from "./FilterableTools";
+import { FilterableTools } from "./FilterableTools";
 
-export default function ToolsDirectoryPageContent() {
+export function ToolsDirectoryPageContent() {
 	return (
 		<>
 			<HubNavbar />

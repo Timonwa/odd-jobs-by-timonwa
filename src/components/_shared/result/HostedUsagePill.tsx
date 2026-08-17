@@ -16,7 +16,7 @@ type Props = {
 const LOW_REMAINING = 2;
 
 /** A hosted-usage pill shown once the daily quota is confirmed — starts as the "N free/day" cap, then updates in place to "X of N left" after each run (`getUsage` runs from an effect, not `use()`, to avoid a waterfall). */
-export default function HostedUsagePill({ perUserDaily, getUsage }: Props) {
+export function HostedUsagePill({ perUserDaily, getUsage }: Props) {
 	const [configured, setConfigured] = useState<boolean | null>(null);
 	const [remaining, setRemaining] = useState<number | null>(null);
 

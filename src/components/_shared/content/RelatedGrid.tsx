@@ -11,7 +11,7 @@ export type RelatedItemType = {
 };
 
 /** A "more like this" grid shown at the foot of a blog post or shop product. */
-export default function RelatedGrid({
+export function RelatedGrid({
 	heading,
 	items,
 }: {

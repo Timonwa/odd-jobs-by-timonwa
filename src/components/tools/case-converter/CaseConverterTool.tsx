@@ -14,7 +14,7 @@ import { CASE_GROUPS, type CaseIdType, convertCase } from "@/lib/utils";
 
 const ALL_CASES = CASE_GROUPS.flatMap((g) => g.cases);
 
-export default function CaseConverterTool() {
+export function CaseConverterTool() {
 	// Local-only: case conversion is for short strings/titles/code, not an
 	// article draft, so this tool opts out of the cross-tool shared draft.
 	const [text, setText] = useState("");

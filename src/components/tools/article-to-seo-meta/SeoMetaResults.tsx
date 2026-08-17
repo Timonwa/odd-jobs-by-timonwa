@@ -44,7 +44,7 @@ type Props = {
 };
 
 /** Grid of editable SEO variation cards with per-card regenerate and copy actions. */
-export default function SeoMetaResults({
+export function SeoMetaResults({
 	variations,
 	regeneratingIndex,
 	busy,

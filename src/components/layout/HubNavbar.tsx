@@ -1,10 +1,10 @@
 import { WrenchIcon } from "lucide-react";
 
-import Navbar from "./Navbar";
+import { Navbar } from "./Navbar";
 import { SITE_NAME } from "@/lib/config/site";
 
 /** The hub-level navbar — shared brand and actions for non-tool pages (home, guides, 404/error). */
-export default function HubNavbar() {
+export function HubNavbar() {
 	return (
 		<Navbar
 			brand={{

@@ -1,10 +1,10 @@
 import { CodeXmlIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import SvgToJsxTool from "./SvgToJsxTool";
+import { ClientToolPage } from "@/components/_shared/page/ClientToolPage";
+import { SvgToJsxTool } from "./SvgToJsxTool";
 
 /** Page-level shell that wires the SVG to JSX Converter into the shared ClientToolPage layout. */
-export default function SvgToJsxPageContent() {
+export function SvgToJsxPageContent() {
 	return (
 		<ClientToolPage
 			slug="svg-to-jsx"

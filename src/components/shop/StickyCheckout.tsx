@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 /** Fades in a fixed checkout button once the main `#buy` block scrolls off the
  * top, so the buy action stays reachable as you read the product page. */
-export default function StickyCheckout({
+export function StickyCheckout({
 	checkoutUrl,
 	price,
 }: {

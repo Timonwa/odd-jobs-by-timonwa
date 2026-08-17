@@ -22,11 +22,7 @@ type ToolsMenuProps = {
 };
 
 /** The tools switcher dropdown — search box, scrollable tool list, and an "all tools" footer link; width-clamped so it never clips on small screens. */
-export default function ToolsMenu({
-	open,
-	onToggle,
-	onNavigate,
-}: ToolsMenuProps) {
+export function ToolsMenu({ open, onToggle, onNavigate }: ToolsMenuProps) {
 	const [query, setQuery] = useState("");
 	const menuId = useId();
 	const pathname = usePathname();

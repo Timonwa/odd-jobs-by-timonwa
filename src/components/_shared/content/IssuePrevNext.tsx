@@ -10,7 +10,7 @@ const LABEL =
 	"flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
 /** Previous / next navigation between newsletter issues. */
-export default function IssuePrevNext({
+export function IssuePrevNext({
 	prev,
 	next,
 }: {

@@ -31,7 +31,7 @@ function safeHttpUrl(url: string | undefined): string | undefined {
 }
 
 /** Results header for the draft-based AI tools: source title/author/link, token usage, copy-all. */
-export default function ArticleCard({
+export function ArticleCard({
 	article,
 	usage,
 	copied,

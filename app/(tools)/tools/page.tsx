@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ToolsDirectoryPageContent from "@/components/tools";
+import { ToolsDirectoryPageContent } from "@/components/tools";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
 

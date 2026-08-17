@@ -24,7 +24,7 @@ const SEPARATORS: { value: SlugSeparatorType; label: string }[] = [
 // truncated in search results — a soft target, surfaced gently (not an error).
 const SLUG_LENGTH_TARGET = 60;
 
-export default function SlugGeneratorTool() {
+export function SlugGeneratorTool() {
 	const [title, setTitle] = useState("");
 	const [separator, setSeparator] = useState<SlugSeparatorType>("-");
 	const [lowercase, setLowercase] = useState(true);

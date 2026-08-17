@@ -36,7 +36,7 @@ const STEPS: {
 	},
 ];
 
-export default function HowItWorks() {
+export function HowItWorks() {
 	return (
 		<Section aria-labelledby="how-heading">
 			<SectionHeader

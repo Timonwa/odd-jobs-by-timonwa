@@ -3,7 +3,7 @@
 import { useId } from "react";
 
 import { ToggleButton } from "@/components/ui";
-import TonePicker from "@/components/_shared/writer/TonePicker";
+import { TonePicker } from "@/components/_shared/writer/TonePicker";
 
 import {
 	SOCIAL_POST_EMOJI_DENSITY_LABELS,
@@ -52,7 +52,7 @@ function Chip({
 }
 
 /** Voice, emoji density, and post-length controls — the core of a writing style. Tone and hashtags are their own controls in the same panel. */
-export default function WritingStyleControls({
+export function WritingStyleControls({
 	prefs,
 	onChange,
 }: WritingStyleControlsProps) {

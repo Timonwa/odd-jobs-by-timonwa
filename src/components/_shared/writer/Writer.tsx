@@ -2,14 +2,14 @@
 
 import { FilePlus2Icon, Loader2Icon, RefreshCwIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
-import ArticleCard from "@/components/_shared/result/ArticleCard";
-import HistorySidebar from "@/components/_shared/result/HistorySidebar";
+import { ArticleCard } from "@/components/_shared/result/ArticleCard";
+import { HistorySidebar } from "@/components/_shared/result/HistorySidebar";
 import type { SocialPostHistoryType } from "@/lib/types";
 import type { WriterRuntimeType } from "@/lib/types";
 import { useWriter } from "@/lib/hooks";
 import { Button } from "@/components/ui";
-import PostCard from "./PostCard";
-import GenerateForm from "./GenerateForm";
+import { PostCard } from "./PostCard";
+import { GenerateForm } from "./GenerateForm";
 
 /** History row headline: the article title, else the URL, else a text snippet. */
 const historyLabel = (h: SocialPostHistoryType): string => {
@@ -19,7 +19,7 @@ const historyLabel = (h: SocialPostHistoryType): string => {
 	return firstLine.slice(0, 80) || "Untitled";
 };
 
-export default function Writer({ runtime }: { runtime: WriterRuntimeType }) {
+export function Writer({ runtime }: { runtime: WriterRuntimeType }) {
 	const w = useWriter(runtime);
 	const resultsRef = useRef<HTMLDivElement>(null);
 

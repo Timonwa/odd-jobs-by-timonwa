@@ -6,7 +6,7 @@ type YouTubeEmbedProps = {
 };
 
 /** A privacy-friendly (youtube-nocookie) 16:9 embed for guide pages; renders a "coming soon" placeholder when `id` is empty so the guide still previews. */
-export default function YouTubeEmbed({ id, title }: YouTubeEmbedProps) {
+export function YouTubeEmbed({ id, title }: YouTubeEmbedProps) {
 	return (
 		<div className="relative mt-6 aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted/40">
 			{id ? (

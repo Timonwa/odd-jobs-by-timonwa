@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import CategoryDetail from "@/components/categories/CategoryDetail";
+import { CategoryDetail } from "@/components/categories/CategoryDetail";
 import {
 	type CategoryIdType,
 	getCategory,

@@ -3,14 +3,14 @@
 import { KeyRoundIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button, Drawer } from "@/components/ui";
-import ByokSection from "./ByokSection";
+import { ByokSection } from "./ByokSection";
 
 import { type ByokModelType, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
 import { OPEN_BYOK_EVENT } from "@/lib/constants";
 import { byokModelStorage, byokStorage, subscribeByok } from "@/lib/utils";
 
 /** Hub-level BYOK drawer (one instance in the Navbar); open it by dispatching `OPEN_BYOK_EVENT`. */
-export default function ByokDrawer() {
+export function ByokDrawer() {
 	const [open, setOpen] = useState(false);
 	// BYOK key + model live in sessionStorage — read them as an external store so
 	// same-tab writes and cross-tab storage events keep every reader in sync

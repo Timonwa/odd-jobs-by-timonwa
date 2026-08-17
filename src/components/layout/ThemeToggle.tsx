@@ -2,7 +2,7 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import NavIconButton from "@/components/layout/NavIconButton";
+import { NavIconButton } from "@/components/layout/NavIconButton";
 import { Button } from "@/components/ui";
 import { type ThemeType, useTheme } from "@/lib/hooks";
 
@@ -12,7 +12,7 @@ const NEXT: Record<ThemeType, ThemeType> = {
 	system: "light",
 };
 
-export default function ThemeToggle({
+export function ThemeToggle({
 	presentation = "icon",
 }: {
 	presentation?: "icon" | "menuItem";

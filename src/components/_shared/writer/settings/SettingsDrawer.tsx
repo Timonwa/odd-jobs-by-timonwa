@@ -6,12 +6,12 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import type { WriterRuntimeType } from "@/lib/types";
 import { OPEN_SOCIAL_POST_SETTINGS_EVENT } from "@/lib/constants";
 import type { SocialPostStyleType } from "@/lib/types";
-import TemplatesPicker from "@/components/_shared/writer/TemplatesPicker";
-import NavIconButton from "@/components/layout/NavIconButton";
+import { TemplatesPicker } from "@/components/_shared/writer/TemplatesPicker";
+import { NavIconButton } from "@/components/layout/NavIconButton";
 import { Button, Drawer } from "@/components/ui";
 
-import HashtagsSection from "./Hashtags";
-import WritingStyleControls from "./WritingStyleControls";
+import { HashtagsSection } from "./HashtagsSection";
+import { WritingStyleControls } from "./WritingStyleControls";
 
 export type SettingsPresentationType = "icon" | "menuItem";
 
@@ -22,7 +22,7 @@ type SettingsDrawerProps = {
 };
 
 /** Slide-out drawer for a tool's writing style, bound to a tool via runtime; presentation picks the trigger — bar icon or full-width menu row. */
-export default function SettingsDrawer({
+export function SettingsDrawer({
 	runtime,
 	presentation = "icon",
 	drawerClassName,

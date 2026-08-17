@@ -14,11 +14,11 @@ import {
 	TagsIcon,
 } from "lucide-react";
 
-import ArticleCard from "@/components/_shared/result/ArticleCard";
-import ErrorNotice from "@/components/_shared/result/ErrorNotice";
-import HistorySidebar from "@/components/_shared/result/HistorySidebar";
-import SeoMetaForm, { type SeoMetaFormParamsType } from "./SeoMetaForm";
-import SeoMetaResults from "./SeoMetaResults";
+import { ArticleCard } from "@/components/_shared/result/ArticleCard";
+import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
+import { HistorySidebar } from "@/components/_shared/result/HistorySidebar";
+import { SeoMetaForm, type SeoMetaFormParamsType } from "./SeoMetaForm";
+import { SeoMetaResults } from "./SeoMetaResults";
 import { useSeoMetaHistory, type SeoMetaHistoryType } from "@/lib/hooks";
 import type { SeoMetaResultType, TokenUsageType } from "@/lib/types";
 import {
@@ -41,7 +41,7 @@ const historyLabel = (h: SeoMetaHistoryType): string => {
 };
 
 /** Orchestrator for the Article to SEO Meta tool — form, results, history, and regeneration. */
-export default function SeoMetaTool() {
+export function SeoMetaTool() {
 	const [result, setResult] = useState<SeoMetaResultType | undefined>();
 	const [editableVariations, setEditableVariations] = useState<
 		SeoMetaResultType["variations"]

@@ -45,7 +45,7 @@ type TemplatesPickerProps = {
 };
 
 /** Style-template picker — apply a saved writing style on click. Unless `selectOnly`, also save the current style and rename/update/delete existing ones. */
-export default function TemplatesPicker({
+export function TemplatesPicker({
 	templates,
 	activeTemplateId,
 	onApply,

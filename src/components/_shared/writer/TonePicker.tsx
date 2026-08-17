@@ -13,11 +13,7 @@ type TonePickerProps = {
 	disabled?: boolean;
 };
 
-export default function TonePicker({
-	value,
-	onChange,
-	disabled,
-}: TonePickerProps) {
+export function TonePicker({ value, onChange, disabled }: TonePickerProps) {
 	const labelId = useId();
 	return (
 		<div className="flex flex-col gap-2">

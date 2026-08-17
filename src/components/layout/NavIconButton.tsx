@@ -8,7 +8,7 @@ type NavIconButtonProps = ComponentProps<typeof Button> & {
 };
 
 /** Navbar icon button with a consistent custom tooltip at every breakpoint — reuse for every icon-only navbar control so tooltips never diverge. `label` is both the tooltip text and the accessible name. */
-export default function NavIconButton({
+export function NavIconButton({
 	label,
 	tooltipAlign = "end",
 	variant = "ghost",

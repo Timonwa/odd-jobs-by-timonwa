@@ -8,7 +8,7 @@ type GuideFigureProps = {
 };
 
 /** A screenshot slot for guide pages — renders the image when `src` is provided, or a labeled placeholder so the layout stays intact during authoring. */
-export default function GuideFigure({ src, alt, caption }: GuideFigureProps) {
+export function GuideFigure({ src, alt, caption }: GuideFigureProps) {
 	return (
 		<figure className="mt-6">
 			{src ? (

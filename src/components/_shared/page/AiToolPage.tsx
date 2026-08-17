@@ -1,9 +1,9 @@
 import type { ComponentType, ReactNode, SVGProps } from "react";
 
-import ToolContent from "../content/ToolContent";
-import ToolBreadcrumbs from "../tool/ToolBreadcrumbs";
-import Navbar from "@/components/layout/Navbar";
-import PageMain from "@/components/layout/PageMain";
+import { ToolContent } from "../content/ToolContent";
+import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
+import { Navbar } from "@/components/layout/Navbar";
+import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 
 type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
@@ -21,7 +21,7 @@ type AiToolPageProps = {
 };
 
 /** Page shell for the AI tools: navbar with usage notice, BYOK, optional settings drawer, then the tool + (optional) SEO content. */
-export default function AiToolPage({
+export function AiToolPage({
 	slug,
 	name,
 	icon,

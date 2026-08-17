@@ -3,7 +3,7 @@
 import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
 import { ToggleButton } from "@/components/ui";
 import { type CategoryIdType, TOOL_CATEGORIES } from "@/lib/config/categories";
 import { LIVE_TOOLS } from "@/lib/config/tools";
@@ -53,7 +53,7 @@ function FilterChip({
 	);
 }
 
-export default function FilterableTools() {
+export function FilterableTools() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const params = useSearchParams();

@@ -2,7 +2,7 @@ import { WrenchIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
 
-export default function Hero() {
+export function Hero() {
 	return (
 		<div className="relative isolate py-10 sm:py-16">
 			{/* Full-bleed ambient wash — breaks out of the max-w container to span the viewport (the root clips any overflow); blurred so it fades with no hard edges. */}

@@ -3,9 +3,9 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 
-import GuideFigure from "@/components/guides/GuideFigure";
-import OpenKeyPanelButton from "@/components/guides/OpenKeyPanelButton";
-import YouTubeEmbed from "@/components/guides/YouTubeEmbed";
+import { GuideFigure } from "@/components/guides/GuideFigure";
+import { OpenKeyPanelButton } from "@/components/guides/OpenKeyPanelButton";
+import { YouTubeEmbed } from "@/components/guides/YouTubeEmbed";
 
 /**
  * Global MDX element styling for every guide, plus the custom components guides

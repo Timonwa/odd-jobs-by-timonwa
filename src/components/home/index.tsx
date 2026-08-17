@@ -1,15 +1,15 @@
-import HubNavbar from "@/components/layout/HubNavbar";
-import Newsletter from "@/components/_shared/content/Newsletter";
-import BrowseByCategory from "./BrowseByCategory";
-import Hero from "./Hero";
-import HowItWorks from "./HowItWorks";
-import LatestPosts from "./LatestPosts";
-import ShopPreview from "./ShopPreview";
-import ToolsPreview from "./ToolsPreview";
-import WhatItIs from "./WhatItIs";
-import WhyUseIt from "./WhyUseIt";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { BrowseByCategory } from "./BrowseByCategory";
+import { Hero } from "./Hero";
+import { HowItWorks } from "./HowItWorks";
+import { LatestPosts } from "./LatestPosts";
+import { ShopPreview } from "./ShopPreview";
+import { ToolsPreview } from "./ToolsPreview";
+import { WhatItIs } from "./WhatItIs";
+import { WhyUseIt } from "./WhyUseIt";
 
-export default function HubHomePageContent() {
+export function HubHomePageContent() {
 	return (
 		<>
 			<HubNavbar />

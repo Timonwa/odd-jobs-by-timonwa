@@ -10,7 +10,7 @@ type ThreadFormatProps = {
 	disabled?: boolean;
 };
 
-export default function ThreadFormat({
+export function ThreadFormat({
 	length,
 	onChange,
 	disabled,

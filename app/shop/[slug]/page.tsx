@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
-import Newsletter from "@/components/_shared/content/Newsletter";
-import MoreProducts from "@/components/shop/MoreProducts";
-import StickyCheckout from "@/components/shop/StickyCheckout";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { MoreProducts } from "@/components/shop/MoreProducts";
+import { StickyCheckout } from "@/components/shop/StickyCheckout";
 import { buttonClasses } from "@/components/ui";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
 import { ROUTES } from "@/lib/config/routes";

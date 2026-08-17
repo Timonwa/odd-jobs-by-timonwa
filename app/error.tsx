@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import HubNavbar from "@/components/layout/HubNavbar";
+import { HubNavbar } from "@/components/layout/HubNavbar";
 import { Button } from "@/components/ui";
 
 export default function Error({

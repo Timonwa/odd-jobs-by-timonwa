@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
-import Newsletter from "@/components/_shared/content/Newsletter";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { PageHero } from "@/components/ui";
 import {
 	CREATOR_NAME,
@@ -15,7 +15,7 @@ import {
 	SITE_URL,
 } from "@/lib/config/site";
 import { ROUTES } from "@/lib/config/routes";
-import IssuePrevNext from "@/components/_shared/content/IssuePrevNext";
+import { IssuePrevNext } from "@/components/_shared/content/IssuePrevNext";
 import { splitTitle } from "@/lib/content/split-title";
 import { getAllIssues, getIssue, getIssueSlugs } from "@/lib/issues/loader";
 
