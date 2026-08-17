@@ -12,16 +12,18 @@ Operational rules for AI agents working in this repo. Keep the block above intac
 
 A hub of small, single-purpose web tools (Next.js 16 App Router, React 19, TypeScript, Tailwind v4). Two kinds of tool:
 
-- **AI tools** (e.g. Article to SEO Meta, Article to Social Posts) — a `"use server"` action calls Gemini via the Vercel AI SDK. Server code is **kind-first** in `lib/`: the action in `lib/actions/<slug>.ts`, the agent in `lib/agents/<name>/agent.ts`.
+- **AI tools** (e.g. Article to SEO Meta, Article to Social Posts) — a `"use server"` action calls Gemini via the Vercel AI SDK. Server code lives under the **`lib/server/` boundary**: the action in `lib/server/actions/<slug>.action.ts`, the agent in `lib/server/services/<name>.service.ts`.
 - **Client-only tools** (e.g. Word Counter, Case Converter, Slug Generator, Reading Time) — run entirely in the browser: no server action.
 
 `TOOLS` in `lib/config/tools.ts` is the single registry — one entry wires a tool into the home grid, navbar, and sitemap.
 
 ## Structure
 
-- **`lib/` is kind-first, domain-within** — `config/ constants/ types/ hooks/ utils/ actions/ agents/` (plus `og/`, `rate-limit/`, `guides/`). No `lib/tools/` bucket. Each kind has a barrel; import as `@/lib/<kind>`.
-- **`utils/ai/` is server-only** (reads `@env`) with its own barrel — never pull it into a client bundle; client-safe helpers live in `lib/utils/`.
-- **`components/`** — `ui/` (primitives, barrel `@/components/ui`); `_shared/` (cross-feature: the `writer/` engine, `category/`, `result/`, `source/`, `page/`, `byok/`, `content/`, `tool/`); `layout/`; `home/`, `categories/`, `tools/` (the `/tools` directory page is `tools/index.tsx`; each tool is `tools/<slug>/`); `guides/`. Components hold `.tsx` only — hooks/constants/types live in `lib/`.
+- **`lib/` is strictly kind-first, flat inside each kind** — client-safe kinds at the root: `config/ constants/ data/ hooks/ schemas/ types/ utils/`. The domain is a filename prefix, not a subfolder: `constants/<domain>.constant.ts`, `types/<domain>.type.ts`, `schemas/<domain>.schema.ts`, `data/<domain>.data.ts`, `utils/<domain>.utils.ts` (a single-function file whose name is the function may stay bare: `cn.ts`, `is-browser.ts`). A domain that outgrows one file becomes a folder whose files carry only the concern (`utils/text/case.ts`, `utils/storage/`). Each kind has a barrel with **one explicit export line per file** (never `export *`); import as `@/lib/<kind>`.
+- **Server-only code lives under `lib/server/`** — the one sanctioned non-kind root folder, itself kind-first: `actions/<domain>.action.ts` (Server Actions; barrel importable from client components), `services/<domain>.service.ts` (content loaders + AI agents), `clients/<service>.client.ts` (configured SDK singletons, e.g. `gemini.client.ts`), `utils/` (`ai/`, `rate-limit.utils.ts`, `og-image.utils.tsx`, `create-mdx-loader.ts`). The top `@/lib/server` barrel is marked `server-only` and exports **services only**; never pull anything under `server/` into a client bundle.
+- **`schemas/` owns Zod schemas and their inferred types together** (`post.schema.ts` → `PostMetaType`) — never re-declare an inferred type in `types/`.
+- **`components/`** — `ui/` in **4 tiers** (`base/` atoms, `blocks/` composed, `patterns/` page regions, `layouts/` shells — one folder per component, tier barrels, root barrel `@/components/ui`); `_shared/` (cross-feature: the `writer/` engine, `category/`, `result/`, `source/`, `page/`, `byok/`, `content/`, `tool/`); `layout/`; feature folders mirroring the route tree — `home/`, `categories/`, `tools/<slug>/`, `blog/` (+`post/`, `_shared/` MDX widgets), `newsletter/` (+`issue/`), `shop/` (+`product/`). Components hold `.tsx` only — hooks/constants/types live in `lib/`. **Named exports everywhere** — file name, export name, and import name always match.
+- **Thin route entries.** `app/**/page.tsx` holds only framework surface (metadata, `generateStaticParams`, guards) and renders a named `…PageContent` composed in `components/<feature>/<page>/index.tsx` from one-file-per-section components.
 
 ## Verify before you claim done
 
@@ -43,7 +45,7 @@ Prettier and the pre-commit hook handle formatting.
 - **Semantic HTML + accessibility.** Real elements (`<dl>`, headings, lists, `<button>`), not div-soup. A jsx-a11y ruleset gates CI — keep labels, focus order, and keyboard paths intact.
 - **Specific, self-contained copy.** Name the subject; avoid vague headings and deixis ("the box", "here"). UI text should stand alone.
 - **No scope creep.** Do the task in front of you. Refactors, renames, and unrelated cleanups go in their own change.
-- **Reuse the shared layer.** Before adding plumbing, check `lib/utils/ai/` (`createGeminiClient`, `resolvePlatformApiKey`, `enforceDailyQuota`, `generateSchemaOutputFromArticle`, `resolveArticleSource`, `toUserMessage`), `lib/utils/` (client-safe: `isBrowser`, `articleSourceIdentity`, the `createLocalStore`/`createHistoryStore` factories), and `components/_shared/` (incl. the `writer/` engine — `Writer`, `useWriter`, `WriterRuntimeType`).
+- **Reuse the shared layer.** Before adding plumbing, check `lib/server/` (`createGeminiClient` in `clients/`, plus `resolvePlatformApiKey`, `enforceDailyQuota`, `generateSchemaOutputFromArticle`, `resolveArticleSource`, `toUserMessage` in `utils/ai/`), `lib/utils/` (client-safe: `isBrowser`, `articleSourceIdentity`, the `createLocalStore`/`createHistoryStore`/`createWriterStorage` factories in `storage/`), and `components/_shared/` (incl. the `writer/` engine — `Writer`, `useWriter`, `WriterRuntimeType` — and `JsonLdScript`).
 
 ## Git — ask first
 

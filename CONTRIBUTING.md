@@ -67,7 +67,7 @@ Type-check with `pnpm exec tsc --noEmit`. A `pre-commit` hook runs **lint-staged
 
 ## Codebase layout
 
-App Router with thin routes. A tool's **UI** lives in `components/tools/<slug>/`; its **server code** is kind-first under `lib/` (no per-tool `lib/` folder).
+App Router with thin routes: every `page.tsx` holds only framework surface (metadata, static params, guards) and renders a `…PageContent` composed from section components. A tool's **UI** lives in `components/tools/<slug>/`; **server code** lives under the `lib/server/` boundary (no per-tool `lib/` folder). All components use **named exports** — file name, export name, and import name always match.
 
 ```text
 app/
@@ -77,32 +77,47 @@ app/
   opengraph-image.tsx  twitter-image.tsx        # social share images
   error.tsx  not-found.tsx  global-error.tsx  loading.tsx
   (tools)/<slug>/                              # thin page.tsx + layout.tsx (metadata + JSON-LD)
+  blog/  newsletter/  shop/                    # thin entries; sections in components/<feature>/
 src/styles/                                    # globals.css + tokens/theme/base/... partials
 components/
-  ui/          # app-agnostic primitives (barrel: @/components/ui)
+  ui/          # app-agnostic reusables in 4 tiers (barrel: @/components/ui)
+    base/      # atoms: Button, Input, Badge, ... (one folder per component)
+    blocks/    # composed: Card, Drawer, Section, ...
+    patterns/  # page regions: PageHero
   _shared/     # cross-feature: writer/ (the shared engine), category/, result/,
                #   source/, page/, byok/, content/, tool/
   layout/      # navbar, footer, page shell, ThemeToggle
   home/  categories/                           # hub page compositions
   tools/       # index.tsx = /tools directory; <slug>/ = each tool's UI
-  guides/
-lib/                                           # kind-first, domain-within (barrel per kind)
-  config/  constants/  types/  hooks/          # tools/site/byok/env; derived types; store hooks
-  utils/       # client-safe helpers; utils/ai/ is server-only (@env)
-  actions/     # <slug>.ts  "use server" actions (AI tools)
-  agents/      # <name>/agent.ts  (AI tools only)
-  og/  rate-limit/  guides/
+  blog/        # blog index sections + post/ + _shared/ (MDX widgets)
+  newsletter/  # archive sections + issue/
+  shop/        # listing sections + product/
+lib/                                           # kind-first, flat inside each kind
+  config/      # env, routes, site, tools, byok, ... (bare names)
+  constants/   # <domain>.constant.ts — frozen values + their inferred types
+  data/        # <domain>.data.ts — static page copy records
+  hooks/       # use-<subject>.ts (+ writer/ concern group)
+  schemas/     # <domain>.schema.ts — Zod schemas + inferred ...MetaType types
+  types/       # <domain>.type.ts — shapes with no const or schema behind them
+  utils/       # <domain>.utils.ts + text/ svg/ storage/ writer/ groups (client-safe)
+  server/      # server-only boundary (barrel exports services; marked server-only)
+    actions/   # <domain>.action.ts — "use server" actions (AI tools + newsletter)
+    services/  # <domain>.service.ts — content loaders + AI agents
+    clients/   # <service>.client.ts — configured SDK singletons (gemini)
+    utils/     # ai/, rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.ts
 ```
+
+Every kind barrel lists one explicit export line per file — no `export *` from a directory.
 
 ## Anatomy of a tool
 
 When building or extending a tool, reuse the shared layer rather than re-implementing plumbing:
 
 1. **Route** — `app/(tools)/<slug>/page.tsx` (thin: import + render the content component) and `layout.tsx` (metadata + JSON-LD).
-2. **UI** — `components/tools/<slug>/`: section components + an `index.tsx` composer, all **tool-prefixed** (`FooBarHero`, `FooBarTool`). Use primitives from `@/components/ui`. State hooks, constants, and types live in `lib/` (`hooks/`, `constants/`, `types/`), not the component folder.
-3. **Server** _(AI tools only — client-only tools like the counters and converters stop at step 2)_ — `lib/actions/<slug>.ts` (a `"use server"` action) + `lib/agents/<name>/agent.ts`. Reuse from `@/lib/utils/ai` (server-only) and `@/lib/utils` (client-safe):
+2. **UI** — `components/tools/<slug>/`: section components + an `index.tsx` composer, all **tool-prefixed** (`FooBarHero`, `FooBarTool`) and **named-exported**. Use primitives from `@/components/ui`. State hooks, constants, and types live in `lib/` (`hooks/`, `constants/`, `types/`), not the component folder.
+3. **Server** _(AI tools only — client-only tools like the counters and converters stop at step 2)_ — `lib/server/actions/<slug>.action.ts` (a `"use server"` action) + `lib/server/services/<name>.service.ts` (the agent). Reuse from `@/lib/server/utils/ai`, `@/lib/server/clients`, and `@/lib/utils` (client-safe):
    - `generateSchemaOutputFromArticle` — runs the agent over a URL/text article source
-   - `createGeminiClient` / `toTokenUsage` — Gemini provider + usage mapping
+   - `createGeminiClient` / `toTokenUsage` (`clients/gemini.client.ts`) — Gemini provider + usage mapping
    - `enforceDailyQuota` / `readUsage` — hosted daily quota · `resolvePlatformApiKey` — server key
    - `resolveArticleSource` / `articleSourceErrorRules` / `toUserMessage` — validate the source, map errors
    - `createHistoryStore` (`@/lib/utils`) — local run history
@@ -118,7 +133,7 @@ When building or extending a tool, reuse the shared layer rather than re-impleme
 
 ## Agent prompt changes
 
-Each tool's agent lives under `lib/agents/<name>/agent.ts`. Prompt tweaks are welcome, but please:
+Each tool's agent lives under `lib/server/services/<name>.service.ts`. Prompt tweaks are welcome, but please:
 
 - Include a **before/after example** in the PR — same input, old prompt vs. yours.
 - Note any token-count impact (longer inputs = more cost per run).
