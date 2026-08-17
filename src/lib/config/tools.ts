@@ -23,7 +23,9 @@ export type Tool = {
 	tagline: string;
 	href: Route;
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
-	categories: CategoryId[];
+	/** Non-empty by design: the first entry is the tool's primary category, used
+	 * for its breadcrumb. Typed as a tuple so that access is checked, not asserted. */
+	categories: [CategoryId, ...CategoryId[]];
 	featured?: boolean;
 	status?: "live" | "soon";
 };
@@ -153,7 +155,7 @@ export const getRelatedTools = (slug: string, max = 3): Tool[] => {
 	const sharesCategory = (t: Tool) =>
 		t.categories.some((c) => current.categories.includes(c));
 	const sharesPrimary = (t: Tool) =>
-		t.categories.includes(current.categories[0]);
+		t.categories.includes(getPrimaryCategoryId(current));
 
 	const related = pool
 		.filter(sharesCategory)

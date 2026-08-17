@@ -24,6 +24,7 @@ import {
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_URL } from "@/lib/config/site";
 import { getToolBySlug } from "@/lib/config/tools";
+import { COPY_FEEDBACK_MS } from "@/lib/constants";
 type ShareLink = {
 	key: string;
 	label: string;
@@ -161,7 +162,7 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 		try {
 			await navigator.clipboard.writeText(url);
 			setCopied(true);
-			setTimeout(() => setCopied(false), 1500);
+			setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
 		} catch {
 			// Clipboard blocked (insecure context / permissions) — no-op.
 		}

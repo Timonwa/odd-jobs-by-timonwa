@@ -13,12 +13,22 @@ import {
 	SPEAKING_WPM,
 	cn,
 } from "@/lib/utils";
+import {
+	SEO_META_DESC_MAX,
+	SEO_META_TITLE_MAX,
+	SOCIAL_POST_PLATFORM_CHAR_LIMITS,
+} from "@/lib/constants";
+// Every number here already exists as a constant elsewhere in the app — read
+// them rather than restating, so retuning a limit can't leave this bar behind.
 const PLATFORM_LIMITS: { label: string; limit: number }[] = [
-	{ label: "SEO title", limit: 60 },
-	{ label: "Meta description", limit: 160 },
-	{ label: "X / Twitter post", limit: 280 },
-	{ label: "Bluesky post", limit: 300 },
-	{ label: "LinkedIn post", limit: 3000 },
+	{ label: "SEO title", limit: SEO_META_TITLE_MAX },
+	{ label: "Meta description", limit: SEO_META_DESC_MAX },
+	{ label: "X / Twitter post", limit: SOCIAL_POST_PLATFORM_CHAR_LIMITS.x },
+	{ label: "Bluesky post", limit: SOCIAL_POST_PLATFORM_CHAR_LIMITS.bluesky },
+	{
+		label: "LinkedIn post",
+		limit: SOCIAL_POST_PLATFORM_CHAR_LIMITS.linkedin,
+	},
 ];
 
 const numberFmt = new Intl.NumberFormat("en-US");

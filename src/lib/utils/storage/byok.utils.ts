@@ -37,19 +37,29 @@ export const byokStorage = {
 			return null;
 		}
 	},
-	set(key: string) {
-		if (!isBrowser()) return;
+	// Both report whether the write landed. sessionStorage throws where it is
+	// unavailable or full (Safari private browsing, partitioned embeds, hardened
+	// privacy settings) — swallowing that let the UI claim a key was saved, or
+	// worse, cleared, when it wasn't.
+	set(key: string): boolean {
+		if (!isBrowser()) return false;
 		try {
 			window.sessionStorage.setItem(BYOK_API_KEY, key);
 			emitByokChange();
-		} catch {}
+			return true;
+		} catch {
+			return false;
+		}
 	},
-	clear() {
-		if (!isBrowser()) return;
+	clear(): boolean {
+		if (!isBrowser()) return false;
 		try {
 			window.sessionStorage.removeItem(BYOK_API_KEY);
 			emitByokChange();
-		} catch {}
+			return true;
+		} catch {
+			return false;
+		}
 	},
 };
 

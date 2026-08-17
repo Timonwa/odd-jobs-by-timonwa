@@ -37,7 +37,9 @@ export function tokenizeMarkup(input: string): MarkupNode[] {
 			nodes.push({ kind: "comment", text: m[1].trim() });
 			continue;
 		}
-		const inner = m[2].trim();
+		// Group 2 is the tag body; the loop only reaches here when group 1 (a
+		// comment) didn't match, so the alternation guarantees one of them.
+		const inner = (m[2] ?? "").trim();
 		if (inner.startsWith("/")) {
 			nodes.push({ kind: "close", name: inner.slice(1).trim() });
 			continue;
@@ -69,9 +71,13 @@ export function parseAttrs(raw: string): ParsedAttr[] {
 	const re = /([:\w-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'))?/g;
 	let m: RegExpExecArray | null;
 	while ((m = re.exec(raw))) {
-		if (m[2] !== undefined) attrs.push({ name: m[1], value: m[2] });
-		else if (m[3] !== undefined) attrs.push({ name: m[1], value: m[3] });
-		else attrs.push({ name: m[1], value: null });
+		// Group 1 (the attribute name) is not optional in the pattern, so a match
+		// always has it; the value groups are the alternation.
+		const name = m[1];
+		if (name === undefined) continue;
+		if (m[2] !== undefined) attrs.push({ name, value: m[2] });
+		else if (m[3] !== undefined) attrs.push({ name, value: m[3] });
+		else attrs.push({ name, value: null });
 	}
 	return attrs;
 }

@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Button } from "../../base/Button";
 import { cn } from "@/lib/utils";
+import { COPY_FEEDBACK_MS } from "@/lib/constants";
 
 type CopyButtonProps = {
 	value: string;
@@ -32,7 +33,7 @@ export function CopyButton({
 		try {
 			await navigator.clipboard.writeText(value);
 			setCopied(true);
-			setTimeout(() => setCopied(false), 1500);
+			setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
 		} catch {
 			// Clipboard blocked (insecure context / permissions) — no-op.
 		}

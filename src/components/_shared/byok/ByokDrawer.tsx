@@ -51,13 +51,29 @@ export function ByokDrawer() {
 				message:
 					"That doesn't look like a full API key. Copy the entire key from Google AI Studio and paste it again.",
 			};
-		byokStorage.set(trimmed);
+		// Only claim success if the write actually landed — sessionStorage can be
+		// unavailable, and telling someone their key is saved when it isn't sends
+		// them back to the hosted quota with no explanation.
+		if (!byokStorage.set(trimmed))
+			return {
+				type: "error" as const,
+				message:
+					"Your browser blocked storing the key for this tab. Check your privacy settings, or try a normal (non-private) window.",
+			};
 		return { type: "success" as const, message: "Key saved for this tab." };
 	};
 
 	const handleClear = () => {
-		byokStorage.clear();
+		const cleared = byokStorage.clear();
 		byokModelStorage.clear();
+		// The worse direction to get wrong: saying a key was removed when it wasn't.
+		return cleared
+			? { type: "success" as const, message: "Key cleared." }
+			: {
+					type: "error" as const,
+					message:
+						"Your browser blocked clearing the key. Close this tab to end the session.",
+				};
 	};
 
 	const handleModelChange = (model: ByokModel) => {

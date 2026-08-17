@@ -4,7 +4,9 @@ import {
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
 
-/** Edge runtime declaration for the OG image route. */
+// Edge runtime: a deliberate choice for image generation, not a Next.js
+// requirement (these routes build fine on Node). Content-backed OG routes must
+// NOT copy it — they read MDX with node:fs, which the edge runtime lacks.
 export const runtime = "edge";
 /** Alt text for the Slug Generator OG image. */
 export const alt = "Slug Generator — turn any text into a clean, URL-safe slug";

@@ -6,6 +6,8 @@ import {
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
 
+// Deliberately NOT `runtime = "edge"`: this route loads MDX through
+// createMdxLoader, which uses node:fs and is unavailable on the edge.
 export const alt = "Blog post — The Productivity Bug";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;

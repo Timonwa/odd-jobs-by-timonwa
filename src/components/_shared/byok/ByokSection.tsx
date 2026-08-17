@@ -26,7 +26,7 @@ type ByokSectionProps = {
 	savedKey: string | null;
 	byokModel: ByokModel;
 	onSave: (key: string) => Status;
-	onClear: () => void;
+	onClear: () => Status;
 	onModelChange: (model: ByokModel) => void;
 };
 
@@ -49,9 +49,10 @@ export function ByokSection({
 
 	const handleSave = () => setStatus(onSave(input.trim()));
 	const handleClear = () => {
-		onClear();
+		const result = onClear();
 		setInput("");
-		setStatus({ type: "success", message: "Key cleared." });
+		// Report what actually happened rather than assuming the clear landed.
+		setStatus(result);
 	};
 
 	return (

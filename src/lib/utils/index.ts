@@ -1,4 +1,5 @@
 // Barrel — the client-safe utils, one line per file (server-only helpers live in lib/server).
+export { toActionCallErrorMessage } from "./action-error.utils";
 export { articleSourceIdentity, isArticleSource } from "./article-source.utils";
 export { cn } from "./cn";
 export { hashText } from "./hash.utils";

@@ -56,7 +56,8 @@ function toJsxAttrName(name: string): string {
 	if (name === "for") return "htmlFor";
 	// data-* and aria-* keep their dashes in JSX.
 	if (/^(data|aria)-/.test(name)) return name;
-	if (name in NAMESPACED_ATTRS) return NAMESPACED_ATTRS[name];
+	const namespaced = NAMESPACED_ATTRS[name];
+	if (namespaced !== undefined) return namespaced;
 	if (name.includes("-") || name.includes(":")) return toCamelCase(name);
 	return name;
 }

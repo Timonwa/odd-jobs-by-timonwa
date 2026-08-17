@@ -2,6 +2,7 @@
 
 export type Tint = 1 | 2 | 3 | 4 | 5;
 
+/** The scale, enumerable — the maps below are keyed by it, so anything iterating tints reads this rather than restating 1-5. */
 export const TINTS: Tint[] = [1, 2, 3, 4, 5];
 
 /** Pill / badge surface: subtle fill + matching border and text. */

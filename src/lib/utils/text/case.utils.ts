@@ -29,7 +29,8 @@ const tokens = (input: string): string[] =>
 		.filter(Boolean);
 
 const cap = (w: string): string =>
-	w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w;
+	// charAt over w[0]: it returns "" for an empty string rather than undefined.
+	w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w;
 
 // Minor words that title-case standards lowercase (unless first/last word).
 const ARTICLES = ["a", "an", "the"];

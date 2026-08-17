@@ -4,6 +4,9 @@ import {
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
 
+// Edge runtime: a deliberate choice for image generation, not a Next.js
+// requirement (these routes build fine on Node). Content-backed OG routes must
+// NOT copy it — they read MDX with node:fs, which the edge runtime lacks.
 export const runtime = "edge";
 export const alt = "SVG to JSX Converter — turn raw SVG into a React component";
 export const size = OG_SIZE;

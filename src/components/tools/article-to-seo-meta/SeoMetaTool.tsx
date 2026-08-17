@@ -35,7 +35,13 @@ import {
 	generateSeoMeta,
 	regenerateSeoMetaVariation,
 } from "@/lib/server/actions";
-import { byokModelStorage, byokStorage, emitHostedUsage } from "@/lib/utils";
+import {
+	byokModelStorage,
+	byokStorage,
+	emitHostedUsage,
+	toActionCallErrorMessage,
+} from "@/lib/utils";
+import { COPY_FEEDBACK_MS, HISTORY_DEBOUNCE_MS } from "@/lib/constants";
 /** History row label — article title, then URL, then a text snippet. */
 const historyLabel = (h: SeoMetaHistory): string => {
 	if (h.result.article?.title) return h.result.article.title;
@@ -139,9 +145,9 @@ export function SeoMetaTool() {
 					cur.map((v, i) => (i === index ? res.variation : v)),
 				);
 				setUsage(res.usage);
-			} catch {
+			} catch (error) {
 				setRegenError(
-					"We couldn't reach the server. Check your internet connection and try again.",
+					toActionCallErrorMessage(error, "seo-meta:regenerate-one"),
 				);
 			} finally {
 				setRegeneratingIndex(null);
@@ -158,16 +164,24 @@ export function SeoMetaTool() {
 		setRegenError(null);
 	}, []);
 
-	const handleCopyAll = useCallback(() => {
+	const handleCopyAll = useCallback(async () => {
 		const text = editableVariations
 			.map(
 				(v, i) =>
 					`Variation ${i + 1}\nTitle: ${v.title}\nDescription: ${v.description}`,
 			)
 			.join("\n\n");
-		navigator.clipboard.writeText(text);
-		setCopiedAll(true);
-		setTimeout(() => setCopiedAll(false), 1200);
+		try {
+			// Awaited so a blocked clipboard (no user activation, insecure context)
+			// doesn't leave the UI claiming "Copied" with nothing copied.
+			await navigator.clipboard.writeText(text);
+			setCopiedAll(true);
+			setTimeout(() => setCopiedAll(false), COPY_FEEDBACK_MS);
+		} catch {
+			setRegenError(
+				"Your browser blocked copying. Select the text and copy manually.",
+			);
+		}
 	}, [editableVariations]);
 
 	const regenerateAll = useCallback(async () => {
@@ -199,10 +213,8 @@ export function SeoMetaTool() {
 				usage: res.usage,
 				timestamp: Date.now(),
 			});
-		} catch {
-			setRegenError(
-				"We couldn't reach the server. Check your internet connection and try again.",
-			);
+		} catch (error) {
+			setRegenError(toActionCallErrorMessage(error, "seo-meta:regenerate-all"));
 		} finally {
 			setRegeneratingAll(false);
 		}
@@ -223,7 +235,7 @@ export function SeoMetaTool() {
 
 	useEffect(() => {
 		if (editableVariations.length === 0) return;
-		const id = setTimeout(persistEdits, 600);
+		const id = setTimeout(persistEdits, HISTORY_DEBOUNCE_MS);
 		return () => clearTimeout(id);
 	}, [editableVariations]);
 

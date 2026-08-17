@@ -20,9 +20,10 @@ export function StickyCheckout({
 	useEffect(() => {
 		const target = document.getElementById("buy");
 		if (!target) return;
-		const observer = new IntersectionObserver(([entry]) =>
-			setShow(!entry.isIntersecting && entry.boundingClientRect.top < 0),
-		);
+		const observer = new IntersectionObserver(([entry]) => {
+			if (!entry) return;
+			setShow(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		});
 		observer.observe(target);
 		return () => observer.disconnect();
 	}, []);

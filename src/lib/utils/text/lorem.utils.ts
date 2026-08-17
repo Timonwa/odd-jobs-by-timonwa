@@ -7,7 +7,7 @@ export type LoremOptions = {
 	startWithLorem?: boolean;
 };
 
-const WORDS = [
+const WORDS: [string, ...string[]] = [
 	"lorem",
 	"ipsum",
 	"dolor",
@@ -109,7 +109,9 @@ const capitalize = (text: string) =>
 function randomWords(n: number, random: () => number): string[] {
 	const out: string[] = [];
 	for (let i = 0; i < n; i++) {
-		out.push(WORDS[randInt(0, WORDS.length - 1, random)]);
+		// randInt is bounded by WORDS.length, so this is always a hit; WORDS is
+		// typed non-empty, which makes the fallback a real value rather than a cast.
+		out.push(WORDS[randInt(0, WORDS.length - 1, random)] ?? WORDS[0]);
 	}
 	return out;
 }

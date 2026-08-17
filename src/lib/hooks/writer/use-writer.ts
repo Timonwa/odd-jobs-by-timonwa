@@ -20,7 +20,9 @@ import type {
 	SocialPostHistory,
 } from "@/lib/types";
 import { useArticleSource } from "@/lib/hooks/use-article-source";
+import { COPY_FEEDBACK_MS, HISTORY_DEBOUNCE_MS } from "@/lib/constants";
 import {
+	toActionCallErrorMessage,
 	articleSourceIdentity,
 	buildAllPostsCopyText,
 	buildPostCopyText,
@@ -28,6 +30,7 @@ import {
 	byokStorage,
 	emitHostedUsage,
 } from "@/lib/utils";
+
 /** Central state and action hook for the writer engine — wires the article source, generation, editing, history, and style templates. Stores, server actions, and the history/template hooks are injected via `runtime`, so one engine powers several tools. */
 export function useWriter(runtime: WriterRuntime) {
 	const {
@@ -114,7 +117,7 @@ export function useWriter(runtime: WriterRuntime) {
 	// Debounced 600 ms — avoids hammering localStorage on every keystroke.
 	useEffect(() => {
 		if (editablePosts.length === 0) return;
-		const id = setTimeout(persistPostEdits, 600);
+		const id = setTimeout(persistPostEdits, HISTORY_DEBOUNCE_MS);
 		return () => clearTimeout(id);
 	}, [editablePosts]);
 
@@ -193,10 +196,8 @@ export function useWriter(runtime: WriterRuntime) {
 						result: generated,
 						timestamp: Date.now(),
 					});
-				} catch {
-					setError(
-						"We couldn't reach the server. Check your internet connection and try again.",
-					);
+				} catch (error) {
+					setError(toActionCallErrorMessage(error, "writer:generate"));
 				}
 			});
 		},
@@ -284,10 +285,8 @@ export function useWriter(runtime: WriterRuntime) {
 						cur.map((d) => (d.platform === post.platform ? response.post : d)),
 					);
 					setLastUsage(response.usage);
-				} catch {
-					setError(
-						"We couldn't reach the server. Check your internet connection and try again.",
-					);
+				} catch (error) {
+					setError(toActionCallErrorMessage(error, "writer:generate"));
 				} finally {
 					setRegenerating((r) => ({ ...r, [post.platform]: false }));
 				}
@@ -300,7 +299,10 @@ export function useWriter(runtime: WriterRuntime) {
 		try {
 			await navigator.clipboard.writeText(text);
 			setCopiedKey(key);
-			setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
+			setTimeout(
+				() => setCopiedKey((k) => (k === key ? null : k)),
+				COPY_FEEDBACK_MS,
+			);
 		} catch {
 			setError(
 				"Your browser blocked copying. Select the text and copy it manually instead.",

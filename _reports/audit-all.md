@@ -8,7 +8,7 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 
 | Audit                    | Score  | Critical | High   | Med    | Low    | Trend  | Report                                           |
 | ------------------------ | ------ | -------- | ------ | ------ | ------ | ------ | ------------------------------------------------ |
-| codebase-audit           | 7/10   | 1        | 3      | 8      | 9      | —      | [codebase-audit.md](codebase-audit.md)           |
+| codebase-audit ✅        | 9/10   | 0        | 1      | 1      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
 | conventions-audit        | 7/10   | 0        | 4      | 14     | 7      | —      | [conventions-audit.md](conventions-audit.md)     |
 | security-audit           | 7/10   | 0        | 3      | 4      | 4      | —      | [security-audit.md](security-audit.md)           |
 | environment-audit ✅     | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +2.5 | [environment-audit.md](environment-audit.md)     |
@@ -37,8 +37,8 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 9. **HIGH ×3 — the structure docs contradict the code and each other.** Both AGENTS.md and CONTRIBUTING.md still show `app/`, `components/`, `lib/` at the repo root after the move under `src/`; AGENTS.md says feature PRs target `dev` while CONTRIBUTING.md says branch from and PR against `main`. Introduced during this refactor. → docs F1–F3.
 10. ~~**HIGH — the `postcss` override has gone stale.**~~ **FIXED** — floor raised to `>=8.5.23`, resolving postcss 8.5.26 and nanoid 3.3.18. Original detail: It is still necessary (Next pins postcss 8.4.31 exactly), but its `>=8.5.10` floor no longer patches: the lockfile resolved 8.5.17, carrying a high advisory fixed in 8.5.18, and drags `nanoid` 3.3.15 with two high advisories. Build-time-only reachability; one-line fix to `>=8.5.23`. → dependency F2, codebase F1.
 11. **HIGH ×2 — the nine tool layouts duplicate and hardcode.** Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
-12. **HIGH — no test infrastructure at all,** and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
-13. **HIGH — 26 OG/Twitter image routes opt into `runtime = "edge"`,** which the build explicitly warns disables static generation; every image route is `ƒ Dynamic` while every page is `○ Static`. → frontend F1, performance F3. Whether `edge` is needed at all on Next 16 is **unconfirmed** (docs read was denied in-session).
+12. **HIGH — no test infrastructure at all** (DEFERRED by decision — tests are a separate branch; the dead CI job that claimed otherwise was removed), and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
+13. ~~**HIGH — 26 OG/Twitter image routes opt into `runtime = "edge"`.**~~ **CORRECTED, then fixed** — testing showed removing `edge` does _not_ restore static generation (non-parameterized image routes are dynamic either way), so the premise was wrong; the real defect was three contradictory comments, now one accurate note per route. Original detail: which the build explicitly warns disables static generation; every image route is `ƒ Dynamic` while every page is `○ Static`. → frontend F1, performance F3. Whether `edge` is needed at all on Next 16 is **unconfirmed** (docs read was denied in-session).
 14. **HIGH — layout shift on every blog post.** `next/image` is called with `width={0} height={0}`, reserving no space for all six lazy screenshots — confirmed in the prerendered HTML. → performance F1.
 15. **HIGH — a synchronous `localStorage` write per keystroke.** With source-reuse on, `setText` serialises the entire article on every keypress in the AI tools and word counter. → performance F2.
 16. **HIGH — the structured-data graph is disconnected.** No `Organization`/`WebSite` node and no `@id` anywhere; the home page renders zero JSON-LD, so every block is an island — and no `alternateName` teaches Google about the rebrand from "Tools by Timonwa". → seo F2.
@@ -76,8 +76,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 
 ### Backlog
 
-18. Stand up test infrastructure and enable the CI test job (planned as its own branch). [P12]
-19. Confirm whether OG routes need `runtime = "edge"` on Next 16; drop it if not, to restore static generation. [P13]
+18. Stand up test infrastructure and enable the CI test job (planned as its own branch — the dead `if: false` job has been removed). [P12]
+19. ~~Confirm whether OG routes need `runtime = "edge"`.~~ **RESOLVED** (codebase pass — not required, but removing it changes nothing; comments corrected instead) [P13]
 20. Expand the four thin content files or de-index them until they earn inclusion. [P17]
 21. ~~Add a CSP and security headers.~~ **DONE** (security pass — enforcing CSP plus HSTS, Permissions-Policy, frame/nosniff/referrer headers in `next.config.ts`) [security MEDIUM]
 22. Redis hygiene: central key builders, atomic `incr`+`expire`, a burst window, and a single reused client. [redis MEDIUM set]
@@ -94,6 +94,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 ## Resolved since last run
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
+
+**codebase-audit — complete (7/10 → 9/10).** Seventeen of twenty-one findings fixed. `noUncheckedIndexedAccess` is now on, with all eleven resulting errors fixed by encoding invariants as non-empty tuples rather than asserting past them. Blind catch blocks now log and classify instead of blaming the network, BYOK storage reports whether a write landed, the duplicated history factory is gone, and dead code/config removed. Deferred by decision: test infrastructure (own branch) and local branch cleanup. Routed to `frontend-audit`: the four oversized components.
 
 **security-audit — complete (7/10 → 9/10).** All eleven findings closed — five were already resolved by the dependency, environment, and redis passes; this pass added Zod validation at every Server Action boundary, an enforcing CSP and full security-header set, two SSRF denylist gaps, and made `IP_HASH_SECRET` required in production. Note the CSP is enforcing and only observable in a real browser, so it is worth a console check after deploy.
 

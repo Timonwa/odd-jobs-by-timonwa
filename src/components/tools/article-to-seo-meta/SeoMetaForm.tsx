@@ -18,7 +18,13 @@ import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
 import { Button, Input, SegmentedControl } from "@/components/ui";
 
 import { generateSeoMeta } from "@/lib/server/actions";
-import { byokModelStorage, byokStorage, emitHostedUsage } from "@/lib/utils";
+import {
+	byokModelStorage,
+	byokStorage,
+	emitHostedUsage,
+	toActionCallErrorMessage,
+} from "@/lib/utils";
+
 export type SeoMetaFormParams = {
 	source: ArticleSource;
 	primaryKeyword?: string;
@@ -174,10 +180,9 @@ export function SeoMetaForm({
 					variationCount: count,
 				});
 				return null;
-			} catch {
+			} catch (error) {
 				return {
-					error:
-						"We couldn't reach the server. Check your internet connection and try again.",
+					error: toActionCallErrorMessage(error, "seo-meta:generate"),
 				};
 			} finally {
 				onLoadingChange?.(false);

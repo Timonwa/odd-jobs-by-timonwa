@@ -30,6 +30,9 @@ export {
 	SEO_META_TITLE_MAX,
 	SEO_META_DESC_MIN,
 	SEO_META_DESC_MAX,
+	SEO_META_VARIATION_COUNTS,
+	SEO_META_DEFAULT_VARIATION_COUNT,
+	type SeoMetaVariationCount,
 } from "./seo-meta.constant";
 export {
 	SOCIAL_POST_PLATFORMS,
@@ -61,3 +64,4 @@ export {
 	SOCIAL_POST_DAILY_SHARED_POOL,
 } from "./social-posts.constant";
 export { STORAGE_KEYS } from "./storage-keys.constant";
+export { COPY_FEEDBACK_MS, HISTORY_DEBOUNCE_MS } from "./ui.constant";

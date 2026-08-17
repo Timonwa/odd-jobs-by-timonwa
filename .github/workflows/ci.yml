@@ -92,22 +92,3 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-  # ──────────────────────────────────────────────
-  # Test (enable when tests are configured)
-  # ──────────────────────────────────────────────
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: [changes, lint-and-typecheck]
-    if: false # Enable when tests are configured
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup environment
-        uses: ./.github/actions/setup
-
-      - name: Test
-        run: pnpm test

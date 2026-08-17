@@ -25,8 +25,6 @@ export const CREATOR_TWITTER = "@timonwa_";
 export const CREATOR_SITE_URL = "https://www.timonwa.com";
 export const CREATOR_TWITTER_URL = `https://x.com/${CREATOR_TWITTER.slice(1)}`;
 export const CREATOR_LINKEDIN_URL = "https://linkedin.com/in/timonwa";
-/** Creator's shop — linked from the footer. */
-export const CREATOR_SHOP_URL = `${CREATOR_SITE_URL}/shop`;
 /** Creator's dev blog (Timonwa's Notes) — a separate property from this site's blog. */
 export const CREATOR_BLOG_URL = "https://tech.timonwa.com/blog";
 export const CREATOR_SAME_AS = [
