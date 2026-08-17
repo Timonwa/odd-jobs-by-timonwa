@@ -7,7 +7,7 @@ export default function BrowseByCategory() {
 			<SectionHeader
 				id="categories-heading"
 				title="Browse by category"
-				subtitle="Jump to the kind of tool you need — or see what's coming next."
+				subtitle="Jump to the kind of tool you need — writing, code, SEO, media, and more."
 			/>
 			<CategoryGrid />
 		</Section>

@@ -53,10 +53,11 @@ export default function Newsletter({ className }: { className?: string }) {
 					<MailIcon className="h-6 w-6" />
 				</span>
 				<h2 id={headingId} className="text-2xl font-semibold tracking-tight">
-					New tools, in your inbox
+					Productivity, in your inbox
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					One short email when a new tool ships — no spam, unsubscribe anytime.
+					New tools, posts, and the occasional newsletter issue — no spam,
+					unsubscribe anytime.
 				</p>
 
 				{state.status === "success" ? (

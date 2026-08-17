@@ -1,18 +1,18 @@
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og/og-image";
 
 export const runtime = "edge";
-export const alt = "Guides — Tools by Timonwa";
+export const alt = "Shop — The Productivity Bug";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "Guides · Tools by Timonwa",
-		titleLead: "Guides &",
-		titleAccent: "walkthroughs",
+		eyebrow: "Shop · The Productivity Bug",
+		titleLead: "Products that get",
+		titleAccent: "things done",
 		subtitle:
-			"Short, practical guides for the tools — setup, tips, and step-by-step walkthroughs.",
-		pills: ["Setup", "Tips", "Walkthroughs"],
+			"Notion templates and digital products — built and used by me to help you get things done.",
+		pills: ["Notion", "Templates", "Digital"],
 		accent: "#818cf8",
 		backgroundTint: "#1e1b4b",
 	});

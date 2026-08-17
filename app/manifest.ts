@@ -10,7 +10,7 @@ import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/config/site";
 export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: SITE_NAME,
-		short_name: "Timonwa Tools",
+		short_name: "The Prod Bug",
 		description: SITE_DESCRIPTION,
 		id: "/",
 		start_url: "/",

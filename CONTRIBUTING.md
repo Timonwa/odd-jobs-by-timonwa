@@ -1,6 +1,6 @@
-# Contributing to Tools by Timonwa
+# Contributing to The Productivity Bug
 
-Thanks for your interest. **Tools by Timonwa** is an open-source collection of small, single-purpose tools. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
+Thanks for your interest. **The Productivity Bug** is a productivity site (tools, blog, newsletter, and shop) whose **tools and code** are open source. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
 
 - 🐛 Bug fixes
 - ✨ UX / accessibility polish on existing tools
@@ -9,7 +9,7 @@ Thanks for your interest. **Tools by Timonwa** is an open-source collection of s
 - 💡 **New-tool suggestions** — open an issue; if it fits, it may get built
 - 🔧 Code toward a new or existing tool — coordinate via an issue first
 
-By participating, you agree to the [Code of Conduct](https://tech.timonwa.com/code-of-conduct).
+By participating, you agree to the [Code of Conduct](https://www.timonwa.com/coc).
 
 ## Before you start
 
@@ -145,4 +145,9 @@ Don't open a public issue for security bugs — use [GitHub's private security a
 
 ## License
 
-By contributing, you agree your work is released under the [AGPL-3.0 License](./LICENSE).
+This project splits licensing between **code** and **content**:
+
+- **Code** — everything except `src/content/**` — is [AGPL-3.0](./LICENSE). By contributing code, you agree your work is released under it.
+- **Content** — `src/content/**` (blog posts, newsletter issues, product copy) and the brand — is **not** open source (see [LICENSE-content](./LICENSE-content) and [TRADEMARK.md](./TRADEMARK.md)). It's the maintainer's editorial/personal material, so **content PRs aren't accepted**; typo fixes are fine via an issue.
+
+Contribute to the tools and the code — that's what's open.

@@ -8,7 +8,7 @@ import { env } from "@env";
 const SENDER_API_BASE_URL = "https://api.sender.net/v2/subscribers";
 
 // Groups a new subscriber joins: "All customers" (account-wide) and
-// "Tools by Timonwa" (this hub's list).
+// "The Productivity Bug" (this site's list).
 const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
 
 const emailSchema = z.email();
@@ -62,7 +62,8 @@ export async function subscribeNewsletter(
 		if (response.ok) {
 			return {
 				status: "success",
-				message: "You're on the list — we'll email you when a new tool ships.",
+				message:
+					"You're on the list — expect new tools, posts, and the occasional issue.",
 			};
 		}
 

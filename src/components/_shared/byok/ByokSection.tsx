@@ -15,7 +15,7 @@ import { Button, Input } from "@/components/ui";
 import { BYOK_MODELS, type ByokModelType } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
 import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
-import { GUIDE_SLUGS } from "@/lib/guides/guides";
+import { POST_SLUGS } from "@/lib/blog/blog";
 
 type StatusType =
 	| { type: "success"; message: string }
@@ -83,7 +83,7 @@ export default function ByokSection({
 					<span className="sr-only">(opens in a new tab)</span>
 				</Link>
 				<Link
-					href={ROUTES.guide(GUIDE_SLUGS.geminiApiKey)}
+					href={ROUTES.post(POST_SLUGS.geminiApiKey)}
 					className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
 				>
 					New to API keys? Read the 2-minute guide

@@ -1,10 +1,10 @@
 # Security Policy
 
-Thanks for helping keep Tools by Timonwa and its users safe.
+Thanks for helping keep The Productivity Bug and its users safe.
 
 ## Supported versions
 
-Tools by Timonwa is a single-version, actively-developed web app. Security fixes are applied to the **latest commit on `main`** and rolled out to the hosted instance shortly after.
+The Productivity Bug is a single-version, actively-developed web app. Security fixes are applied to the **latest commit on `main`** and rolled out to the hosted instance shortly after.
 
 | Version         | Supported |
 | --------------- | --------- |

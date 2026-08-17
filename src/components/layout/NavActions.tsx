@@ -5,7 +5,9 @@ import {
 	HeartIcon,
 	HomeIcon,
 	LayoutGridIcon,
+	MailIcon,
 	MenuIcon,
+	ShoppingBagIcon,
 	TagsIcon,
 	XIcon,
 } from "lucide-react";
@@ -149,9 +151,19 @@ export default function NavActions({
 					<span>Categories</span>
 				</Link>
 
-				<Link href={ROUTES.guides} onClick={close} className={menuRow}>
+				<Link href={ROUTES.blog} onClick={close} className={menuRow}>
 					<BookOpenTextIcon aria-hidden className="w-4 h-4" />
-					<span>Guides</span>
+					<span>Blog</span>
+				</Link>
+
+				<Link href={ROUTES.shop} onClick={close} className={menuRow}>
+					<ShoppingBagIcon aria-hidden className="w-4 h-4" />
+					<span>Shop</span>
+				</Link>
+
+				<Link href={ROUTES.newsletter} onClick={close} className={menuRow}>
+					<MailIcon aria-hidden className="w-4 h-4" />
+					<span>Newsletter</span>
 				</Link>
 
 				{/* Menu slot for page-specific links */}

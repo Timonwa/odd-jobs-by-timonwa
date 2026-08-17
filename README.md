@@ -1,14 +1,14 @@
 <div align="center">
-  <h1>Tools by Timonwa</h1>
-  <b>Small, focused, open-source web tools — each does one thing well.</b>
+  <h1>The Productivity Bug</h1>
+  <b>Free, focused tools that skip the busywork of writing and code — for writers, developers, and creators.</b>
   <br/><br/>
 
 <a href="https://tools.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Ftools.timonwa.com&style=flat-square&label=tools.timonwa.com&up_message=online&down_message=offline" /></a>
 <a href="https://github.com/Timonwa/tools-by-timonwa/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Timonwa/tools-by-timonwa?style=flat-square&logo=github&label=stars&color=f5c518" /></a>
 <a href="./LICENSE"><img alt="License: AGPL v3.0" src="https://img.shields.io/badge/License-AGPL%20v3.0-blue?style=flat-square" /></a>
 <a href="./CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" /></a>
-<a href="https://tech.timonwa.com/code-of-conduct"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.1-7c3aed?style=flat-square" /></a>
-<a href="https://tech.timonwa.com/support"><img alt="Support" src="https://img.shields.io/badge/Support-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white" /></a>
+<a href="https://www.timonwa.com/coc"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.1-7c3aed?style=flat-square" /></a>
+<a href="https://www.timonwa.com/support"><img alt="Support" src="https://img.shields.io/badge/Support-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white" /></a>
 
 <br/>
 
@@ -21,7 +21,7 @@
 
 ---
 
-Focused web tools for everyday content work — AI tools that turn an article into SEO metadata or social posts, plus instant browser-side utilities for counting, converting, and slugifying text. Free to use, no sign-up, with an optional bring-your-own-key for unlimited AI runs.
+The Productivity Bug is a growing set of free, focused web tools — AI tools that turn an article into SEO metadata or social posts, plus instant browser-side utilities for counting, converting, and slugifying text. A blog and newsletter share the workflows behind them, and a shop offers digital products when you want more. The tools are free to use, no sign-up, with an optional bring-your-own-key for unlimited AI runs.
 
 **[tools.timonwa.com →](https://tools.timonwa.com)**
 
@@ -83,7 +83,7 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK
 
 ## Contributing
 
-Contributions are welcome — bug fixes, UX and accessibility improvements, agent-prompt tweaks, docs, and ideas for new tools. See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, scope, the codebase layout, and the PR workflow. By participating you agree to the [Code of Conduct](https://tech.timonwa.com/code-of-conduct).
+Contributions are welcome — bug fixes, UX and accessibility improvements, agent-prompt tweaks, docs, and ideas for new tools. See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, scope, the codebase layout, and the PR workflow. By participating you agree to the [Code of Conduct](https://www.timonwa.com/coc).
 
 ## Privacy
 
@@ -93,7 +93,7 @@ Contributions are welcome — bug fixes, UX and accessibility improvements, agen
 - **Rate-limit counters** store a keyed (HMAC-SHA256) hash of your IP plus a daily count in Upstash Redis (resets at UTC midnight); bring-your-own-key requests skip this.
 - **No accounts, no profiles, no cross-site tracking.** Anonymous, cookieless usage analytics via [Umami](https://umami.is) — no personal data.
 
-Full details: [tech.timonwa.com/privacy](https://tech.timonwa.com/privacy).
+Full details: [www.timonwa.com/privacy](https://www.timonwa.com/privacy).
 
 ## Security
 
@@ -101,12 +101,16 @@ Please report vulnerabilities privately — see [SECURITY.md](./SECURITY.md). Do
 
 ## License
 
-AGPL-3.0 — see [LICENSE](./LICENSE). You can use, modify, and self-host it freely; if you run a modified version as a public service, your source must stay public too.
+This project is split between open-source **code** and reserved **content**:
+
+- **Code** — all source (everything except `src/content/**`) is **AGPL-3.0**, see [LICENSE](./LICENSE). Use, modify, and self-host it freely; if you run a modified version as a public service, your source must stay public too.
+- **Content** — `src/content/**` (blog posts, newsletter issues, product copy) is **© Timonwa, all rights reserved**, see [LICENSE-content](./LICENSE-content).
+- **Brand** — the names and logos aren't covered by the code license, see [TRADEMARK.md](./TRADEMARK.md). Fork the code freely, but give your version its own name.
 
 ## Support
 
 - ⭐️ [Star the repo](https://github.com/Timonwa/tools-by-timonwa)
-- ❤️ [Support](https://tech.timonwa.com/support)
+- ❤️ [Support](https://www.timonwa.com/support)
 
 ---
 

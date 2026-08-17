@@ -4,13 +4,15 @@ import { TOOL_CATEGORIES } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_URL } from "@/lib/config/site";
 import { getToolsInCategory, TOOLS } from "@/lib/config/tools";
-import { getAllGuides } from "@/lib/guides/loader";
+import { getAllPosts } from "@/lib/blog/loader";
+import { getAllIssues } from "@/lib/issues/loader";
 
 /**
  * Served at /sitemap.xml. The hub home, the tool directory, the categories index
  * plus each non-empty category page, every live tool route (derived from the
- * TOOLS config — "soon" tools are excluded until they ship), and the guides
- * index plus every guide.
+ * TOOLS config — "soon" tools are excluded until they ship), the blog index
+ * plus every post, the newsletter archive plus every issue, and the shop index
+ * (product detail pages canonicalize to www, so they're omitted here).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
 	return [
@@ -38,15 +40,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			priority: 0.8,
 		})),
 		{
-			url: `${SITE_URL}${ROUTES.guides}`,
+			url: `${SITE_URL}${ROUTES.blog}`,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
-		...getAllGuides().map((g) => ({
-			url: `${SITE_URL}${ROUTES.guide(g.slug)}`,
-			lastModified: g.updatedAt ?? g.publishedAt,
+		...getAllPosts().map((p) => ({
+			url: `${SITE_URL}${ROUTES.post(p.slug)}`,
+			lastModified: p.updatedAt ?? p.publishedAt,
 			changeFrequency: "monthly" as const,
 			priority: 0.7,
 		})),
+		{
+			url: `${SITE_URL}${ROUTES.newsletter}`,
+			changeFrequency: "weekly",
+			priority: 0.7,
+		},
+		...getAllIssues().map((issue) => ({
+			url: `${SITE_URL}${ROUTES.issue(issue.slug)}`,
+			lastModified: issue.updatedAt ?? issue.publishedAt,
+			changeFrequency: "monthly" as const,
+			priority: 0.6,
+		})),
+		// Shop index only — product detail pages canonicalize to the www listing,
+		// so they're intentionally left out of this sitemap.
+		{
+			url: `${SITE_URL}${ROUTES.shop}`,
+			changeFrequency: "weekly",
+			priority: 0.7,
+		},
 	];
 }
