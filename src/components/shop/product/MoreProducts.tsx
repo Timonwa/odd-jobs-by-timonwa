@@ -1,9 +1,9 @@
 import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import type { ProductMetaType } from "@/lib/schemas";
+import type { ProductMeta } from "@/lib/schemas";
 
 /** Sidebar list of sibling products shown alongside a product's detail. */
-export function MoreProducts({ products }: { products: ProductMetaType[] }) {
+export function MoreProducts({ products }: { products: ProductMeta[] }) {
 	if (products.length === 0) return null;
 
 	return (

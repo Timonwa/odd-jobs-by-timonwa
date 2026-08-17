@@ -3,9 +3,9 @@
 import { PenLineIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import type { WriterRuntimeType } from "@/lib/types";
+import type { WriterRuntime } from "@/lib/types";
 import { OPEN_SOCIAL_POST_SETTINGS_EVENT } from "@/lib/constants";
-import type { SocialPostStyleType } from "@/lib/types";
+import type { SocialPostStyle } from "@/lib/types";
 import { TemplatesPicker } from "@/components/_shared/writer/TemplatesPicker";
 import { NavIconButton } from "@/components/layout/NavIconButton";
 import { Button, Drawer } from "@/components/ui";
@@ -13,11 +13,11 @@ import { Button, Drawer } from "@/components/ui";
 import { HashtagsSection } from "./HashtagsSection";
 import { WritingStyleControls } from "./WritingStyleControls";
 
-export type SettingsPresentationType = "icon" | "menuItem";
+export type SettingsPresentation = "icon" | "menuItem";
 
 type SettingsDrawerProps = {
-	runtime: WriterRuntimeType;
-	presentation?: SettingsPresentationType;
+	runtime: WriterRuntime;
+	presentation?: SettingsPresentation;
 	drawerClassName?: string;
 };
 
@@ -46,7 +46,7 @@ export function SettingsDrawer({
 			window.removeEventListener(OPEN_SOCIAL_POST_SETTINGS_EVENT, handler);
 	}, [presentation]);
 
-	const updateStyle = (patch: Partial<SocialPostStyleType>) => {
+	const updateStyle = (patch: Partial<SocialPostStyle>) => {
 		stores.styleStorage.set({ ...style, ...patch });
 	};
 

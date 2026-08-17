@@ -1,9 +1,9 @@
 // Writing-style constants for social posts — tones, voices, density scales, post-length limits, and the default style.
 
-import type { SocialPostStyleType } from "@/lib/types";
+import type { SocialPostStyle } from "@/lib/types";
 
 /** Factory-default writing style applied on first use. */
-export const SOCIAL_POST_DEFAULT_STYLE: SocialPostStyleType = {
+export const SOCIAL_POST_DEFAULT_STYLE: SocialPostStyle = {
 	voice: "i",
 	tone: "auto",
 	emojiLevel: 2,
@@ -21,7 +21,7 @@ export const SOCIAL_POST_TONES = [
 	{ value: "educational", label: "Educational", description: "Explanatory" },
 	{ value: "punchy", label: "Punchy", description: "Bold, short" },
 ] as const;
-export type SocialPostToneType = (typeof SOCIAL_POST_TONES)[number]["value"];
+export type SocialPostTone = (typeof SOCIAL_POST_TONES)[number]["value"];
 
 /** Upper bound per list — keeps the prompt small and the UI readable. */
 export const MAX_SOCIAL_POST_HASHTAG_RULES_PER_LIST = 10;
@@ -36,16 +36,16 @@ export const SOCIAL_POST_VOICE_LABELS = {
 	we: "We",
 	they: "Third-person",
 };
-export type SocialPostVoiceType = keyof typeof SOCIAL_POST_VOICE_LABELS;
+export type SocialPostVoice = keyof typeof SOCIAL_POST_VOICE_LABELS;
 
 /** Density scale (1 = none … 5 = heavy), shared by emoji and hashtag settings. */
 export const SOCIAL_POST_DENSITY_LEVELS = [1, 2, 3, 4, 5] as const;
-export type SocialPostDensityLevelType =
+export type SocialPostDensityLevel =
 	(typeof SOCIAL_POST_DENSITY_LEVELS)[number];
 
 /** Display label for each emoji-density level. */
 export const SOCIAL_POST_EMOJI_DENSITY_LABELS: Record<
-	SocialPostDensityLevelType,
+	SocialPostDensityLevel,
 	string
 > = {
 	1: "None",
@@ -57,7 +57,7 @@ export const SOCIAL_POST_EMOJI_DENSITY_LABELS: Record<
 
 /** Display label for each hashtag-density level. */
 export const SOCIAL_POST_HASHTAG_DENSITY_LABELS: Record<
-	SocialPostDensityLevelType,
+	SocialPostDensityLevel,
 	string
 > = {
 	1: "None",
@@ -73,12 +73,12 @@ export const LONGFORM_SOCIAL_POST_LENGTH_LIMITS = {
 	medium: 1500,
 	long: 3000,
 };
-export type LongformSocialPostLengthType =
+export type LongformSocialPostLength =
 	keyof typeof LONGFORM_SOCIAL_POST_LENGTH_LIMITS;
 
 /** Display label for each long-form post-length option. */
 export const LONGFORM_SOCIAL_POST_LENGTH_LABELS: Record<
-	LongformSocialPostLengthType,
+	LongformSocialPostLength,
 	string
 > = {
 	short: "Short (~600)",

@@ -6,7 +6,7 @@ export const READING_WPM = {
 	fast: 300,
 } as const;
 
-export type ReadingSpeedType = keyof typeof READING_WPM;
+export type ReadingSpeed = keyof typeof READING_WPM;
 
 /** Fixed conversational speaking pace in words-per-minute. */
 export const SPEAKING_WPM = 130;

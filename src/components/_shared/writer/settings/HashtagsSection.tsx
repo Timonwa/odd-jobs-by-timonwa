@@ -8,24 +8,24 @@ import {
 	SOCIAL_POST_HASHTAG_DENSITY_LABELS,
 } from "@/lib/constants";
 import { normalizeHashtag } from "@/lib/utils";
-import type { SocialPostStyleType } from "@/lib/types";
+import type { SocialPostStyle } from "@/lib/types";
 import { Badge, Input, ToggleButton } from "@/components/ui";
 
 type HashtagsProps = {
-	prefs: SocialPostStyleType;
-	onChange: (patch: Partial<SocialPostStyleType>) => void;
+	prefs: SocialPostStyle;
+	onChange: (patch: Partial<SocialPostStyle>) => void;
 	// Always-include / never-use lists — only for tools that enable hashtag rules.
 	showRules?: boolean;
 };
 
-type FieldType = "alwaysIncludeHashtags" | "neverUseHashtags";
+type Field = "alwaysIncludeHashtags" | "neverUseHashtags";
 
 /** All hashtag settings in one place: how many the agent adds (amount), plus optional always-include / never-use rules. */
 export function HashtagsSection({ prefs, onChange, showRules }: HashtagsProps) {
 	const headingId = useId();
 	const amountLabelId = useId();
 
-	const add = (field: FieldType, raw: string) => {
+	const add = (field: Field, raw: string) => {
 		const tag = normalizeHashtag(raw);
 		if (!tag) return;
 		const current = prefs[field];
@@ -35,7 +35,7 @@ export function HashtagsSection({ prefs, onChange, showRules }: HashtagsProps) {
 		onChange({ [field]: [...current, tag] });
 	};
 
-	const remove = (field: FieldType, tag: string) => {
+	const remove = (field: Field, tag: string) => {
 		onChange({ [field]: prefs[field].filter((t) => t !== tag) });
 	};
 

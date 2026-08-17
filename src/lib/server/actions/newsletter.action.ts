@@ -11,23 +11,23 @@ const SENDER_API_BASE_URL = "https://api.sender.net/v2/subscribers";
 // "The Productivity Bug" (this site's list).
 const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
 
-const emailSchema = z.email();
+const EmailSchema = z.email();
 
 /** Newsletter form state (React useActionState) — submit status plus a message to show the user. */
-export type NewsletterFormStateType = {
+export type NewsletterFormState = {
 	status: "idle" | "success" | "error";
 	message?: string;
 };
 
 /** Server action — validate and submit an email address to the Sender.net subscriber list. */
 export async function subscribeNewsletter(
-	_prevState: NewsletterFormStateType,
+	_prevState: NewsletterFormState,
 	formData: FormData,
-): Promise<NewsletterFormStateType> {
+): Promise<NewsletterFormState> {
 	const raw = formData.get("email");
 	const email = typeof raw === "string" ? raw.trim() : "";
 
-	const parsed = emailSchema.safeParse(email);
+	const parsed = EmailSchema.safeParse(email);
 	if (!parsed.success) {
 		return { status: "error", message: "Enter a valid email address." };
 	}

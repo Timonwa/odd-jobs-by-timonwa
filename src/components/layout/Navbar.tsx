@@ -5,13 +5,13 @@ import type { ComponentType, ReactNode, SVGProps } from "react";
 import { NavActions } from "./NavActions";
 import { ROUTES } from "@/lib/config/routes";
 
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type NavbarProps = {
 	brand: {
 		href: Route;
 		name: string;
-		icon: IconComponentType;
+		icon: IconComponent;
 		ariaLabel?: string;
 	};
 	centerSlot?: ReactNode;

@@ -3,7 +3,7 @@
 
 import {
 	BYOK_MODELS,
-	type ByokModelType,
+	type ByokModel,
 	DEFAULT_BYOK_MODEL,
 } from "@/lib/config/byok";
 import { BYOK_CHANGE_EVENT, STORAGE_KEYS } from "@/lib/constants";
@@ -55,19 +55,19 @@ export const byokStorage = {
 
 /** sessionStorage accessor for the BYOK model preference; get never returns null — falls back to DEFAULT_BYOK_MODEL. */
 export const byokModelStorage = {
-	get(): ByokModelType {
+	get(): ByokModel {
 		if (!isBrowser()) return DEFAULT_BYOK_MODEL;
 		try {
 			const raw = window.sessionStorage.getItem(BYOK_MODEL_KEY);
 			if (!raw) return DEFAULT_BYOK_MODEL;
 			return BYOK_MODELS.some((m) => m.value === raw)
-				? (raw as ByokModelType)
+				? (raw as ByokModel)
 				: DEFAULT_BYOK_MODEL;
 		} catch {
 			return DEFAULT_BYOK_MODEL;
 		}
 	},
-	set(model: ByokModelType) {
+	set(model: ByokModel) {
 		if (!isBrowser()) return;
 		try {
 			window.sessionStorage.setItem(BYOK_MODEL_KEY, model);

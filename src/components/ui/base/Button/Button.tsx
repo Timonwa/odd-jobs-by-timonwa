@@ -2,16 +2,16 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-type VariantType =
+type Variant =
 	"default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-type SizeType = "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
+type Size = "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
 
 type ButtonProps = React.ComponentProps<"button"> & {
-	variant?: VariantType;
-	size?: SizeType;
+	variant?: Variant;
+	size?: Size;
 };
 
-const VARIANT_CLASSES: Record<VariantType, string> = {
+const VARIANT_CLASSES: Record<Variant, string> = {
 	default: "bg-primary text-primary-foreground hover:bg-primary/90",
 	destructive: "bg-destructive text-white hover:bg-destructive/90",
 	outline:
@@ -21,7 +21,7 @@ const VARIANT_CLASSES: Record<VariantType, string> = {
 	link: "text-primary underline-offset-4 hover:underline",
 };
 
-const SIZE_CLASSES: Record<SizeType, string> = {
+const SIZE_CLASSES: Record<Size, string> = {
 	default: "h-9 px-4 py-2",
 	sm: "h-8 px-3 text-sm",
 	lg: "h-10 px-6",
@@ -39,8 +39,8 @@ export function buttonClasses({
 	size = "default",
 	className,
 }: {
-	variant?: VariantType;
-	size?: SizeType;
+	variant?: Variant;
+	size?: Size;
 	className?: string;
 } = {}) {
 	return cn(BASE, VARIANT_CLASSES[variant], SIZE_CLASSES[size], className);

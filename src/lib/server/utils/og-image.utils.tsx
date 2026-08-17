@@ -8,7 +8,7 @@ import { SITE_DOMAIN } from "@/lib/config/site";
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 
-export type OgImageConfigType = {
+export type OgImageConfig = {
 	eyebrow: string;
 	titleLead: string;
 	titleAccent: string;
@@ -20,7 +20,7 @@ export type OgImageConfigType = {
 };
 
 /** Branded 1200×630 social card renderer — shared by every OG/Twitter route; inline styles only because Satori has no external CSS or component support. */
-export function renderOgImage(config: OgImageConfigType) {
+export function renderOgImage(config: OgImageConfig) {
 	const {
 		eyebrow,
 		titleLead,

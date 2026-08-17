@@ -4,9 +4,9 @@ import { Monitor, Moon, Sun } from "lucide-react";
 
 import { NavIconButton } from "@/components/layout/NavIconButton";
 import { Button } from "@/components/ui";
-import { type ThemeType, useTheme } from "@/lib/hooks";
+import { type Theme, useTheme } from "@/lib/hooks";
 
-const NEXT: Record<ThemeType, ThemeType> = {
+const NEXT: Record<Theme, Theme> = {
 	light: "dark",
 	dark: "system",
 	system: "light",

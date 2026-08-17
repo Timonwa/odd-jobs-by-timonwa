@@ -4,12 +4,12 @@ export {
 	OG_SIZE,
 	OG_CONTENT_TYPE,
 	renderOgImage,
-	type OgImageConfigType,
+	type OgImageConfig,
 } from "./og-image.utils";
 export {
 	checkAndIncrementQuota,
 	getRateLimitStatus,
-	type QuotaConfigType,
-	type QuotaCheckResultType,
-	type RateLimitStatusType,
+	type QuotaConfig,
+	type QuotaCheckResult,
+	type RateLimitStatus,
 } from "./rate-limit.utils";

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui";
 import { timeAgo } from "@/lib/utils";
 
-type HistoryItemType = {
+type HistoryItem = {
 	id: string;
 	kind: "url" | "text";
 	title: string;
@@ -27,7 +27,7 @@ type HistoryItemType = {
 };
 
 type Props = {
-	items: HistoryItemType[];
+	items: HistoryItem[];
 	onLoad: (id: string) => void;
 	onRemove: (id: string) => void;
 	description?: string;

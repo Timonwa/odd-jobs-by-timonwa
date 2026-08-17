@@ -7,24 +7,24 @@ import { TonePicker } from "@/components/_shared/writer/TonePicker";
 
 import {
 	SOCIAL_POST_EMOJI_DENSITY_LABELS,
-	type SocialPostDensityLevelType,
+	type SocialPostDensityLevel,
 	LONGFORM_SOCIAL_POST_LENGTH_LABELS,
-	type LongformSocialPostLengthType,
+	type LongformSocialPostLength,
 	SOCIAL_POST_VOICE_LABELS,
-	type SocialPostVoiceType,
+	type SocialPostVoice,
 } from "@/lib/constants";
-import type { SocialPostStyleType } from "@/lib/types";
+import type { SocialPostStyle } from "@/lib/types";
 
 type WritingStyleControlsProps = {
-	prefs: SocialPostStyleType;
-	onChange: (patch: Partial<SocialPostStyleType>) => void;
+	prefs: SocialPostStyle;
+	onChange: (patch: Partial<SocialPostStyle>) => void;
 };
 
-const LEVELS: SocialPostDensityLevelType[] = [1, 2, 3, 4, 5];
-const VOICES = Object.keys(SOCIAL_POST_VOICE_LABELS) as SocialPostVoiceType[];
+const LEVELS: SocialPostDensityLevel[] = [1, 2, 3, 4, 5];
+const VOICES = Object.keys(SOCIAL_POST_VOICE_LABELS) as SocialPostVoice[];
 const SOCIAL_POST_LENGTHS = Object.keys(
 	LONGFORM_SOCIAL_POST_LENGTH_LABELS,
-) as LongformSocialPostLengthType[];
+) as LongformSocialPostLength[];
 
 /** Styled ToggleButton alias used across the style fieldsets. */
 function Chip({

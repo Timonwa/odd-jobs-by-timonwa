@@ -2,13 +2,13 @@
 export { getPostSlugs, getAllPosts, getPost } from "./blog.service";
 export { getIssueSlugs, getAllIssues, getIssue } from "./issues.service";
 export {
-	seoMetaSchema,
+	SeoMetaSchema,
 	generateSeoMetaVariations,
-	type SeoMetaOutputType,
+	type SeoMetaOutput,
 } from "./seo-meta.service";
 export { getProductSlugs, getAllProducts, getProduct } from "./shop.service";
 export {
-	socialPostsSchema,
+	SocialPostsSchema,
 	generateSocialPostDrafts,
-	type SocialPostsOutputType,
+	type SocialPostsOutput,
 } from "./social-posts.service";

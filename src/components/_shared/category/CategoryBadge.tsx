@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui";
-import { type CategoryIdType, getCategory } from "@/lib/config/categories";
+import { type CategoryId, getCategory } from "@/lib/config/categories";
 
 /** A small, non-interactive category pill (icon + label) shown on tool cards. */
-export function CategoryBadge({ category }: { category: CategoryIdType }) {
+export function CategoryBadge({ category }: { category: CategoryId }) {
 	const { label, icon: Icon, tint } = getCategory(category);
 	return (
 		<Badge tint={tint}>

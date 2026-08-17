@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { CategoryDetail } from "@/components/categories/CategoryDetail";
 import {
-	type CategoryIdType,
+	type CategoryId,
 	getCategory,
 	TOOL_CATEGORIES,
 } from "@/lib/config/categories";
@@ -15,7 +15,7 @@ export function generateStaticParams() {
 	return TOOL_CATEGORIES.map((category) => ({ category: category.id }));
 }
 
-const isCategoryId = (id: string): id is CategoryIdType =>
+const isCategoryId = (id: string): id is CategoryId =>
 	TOOL_CATEGORIES.some((category) => category.id === id);
 
 type CategoryPageProps = { params: Promise<{ category: string }> };

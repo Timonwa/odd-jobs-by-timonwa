@@ -25,7 +25,7 @@ import { SITE_URL } from "@/lib/config/site";
 import { getToolBySlug } from "@/lib/config/tools";
 import { Button } from "@/components/ui";
 
-type ShareLinkType = {
+type ShareLink = {
 	key: string;
 	label: string;
 	Icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -72,7 +72,7 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 	const forText = encodeURIComponent(shareText);
 	const forTextWithUrl = encodeURIComponent(`${shareText} ${url}`);
 
-	const links: ShareLinkType[] = [
+	const links: ShareLink[] = [
 		{
 			key: "x",
 			label: "Share on X",

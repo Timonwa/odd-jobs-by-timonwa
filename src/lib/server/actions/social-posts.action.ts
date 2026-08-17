@@ -9,57 +9,57 @@ import {
 	THREADABLE_SOCIAL_POST_PLATFORMS,
 } from "@/lib/constants";
 import type {
-	SocialPostPlatformType,
-	LongformSocialPostLengthType,
+	SocialPostPlatform,
+	LongformSocialPostLength,
 } from "@/lib/constants";
 import type {
-	ArticleMetaType,
-	ArticleSourceType,
-	SocialPostType,
-	SocialPostsResultType,
-	TokenUsageType,
-	SocialPostStyleType,
+	ArticleMeta,
+	ArticleSource,
+	SocialPost,
+	SocialPostsResult,
+	TokenUsage,
+	SocialPostStyle,
 } from "@/lib/types";
 import { generateSocialPostDrafts } from "@/lib/server/services";
 import {
 	articleSourceErrorRules,
 	enforceDailyQuota,
-	type QuotaConfigType,
-	readUsage,
+	type QuotaConfig,
+	getHostedQuotaStatus,
 	resolveArticleSource,
 	toUserMessage,
 	withResolvedArticleUrl,
 } from "@/lib/server/utils/ai";
 
 /** Hosted-tier rate limits for this tool — per-user daily cap + the shared daily pool. */
-const SOCIAL_POST_QUOTA_CONFIG: QuotaConfigType = {
+const SOCIAL_POST_QUOTA_CONFIG: QuotaConfig = {
 	toolSlug: "article-to-social-posts",
 	perUserDaily: SOCIAL_POST_DAILY_USER_CAP,
 	dailyPool: SOCIAL_POST_DAILY_SHARED_POOL,
 };
 
 /** Outcome of {@link generateSocialPosts} — success carries all posts + article meta + usage; failure carries a user-facing error message. */
-export type GenerateSocialPostsResultType =
-	| { ok: true; data: SocialPostsResultType; remaining: number | null }
+export type GenerateSocialPostsResult =
+	| { ok: true; data: SocialPostsResult; remaining: number | null }
 	| { ok: false; error: string };
 
 /** Outcome of {@link regenerateSocialPost} — success carries the one rewritten post + usage + remaining quota; failure carries a user-facing error message. */
-export type RegenerateSocialPostResultType =
+export type RegenerateSocialPostResult =
 	| {
 			ok: true;
-			post: SocialPostType;
-			usage: TokenUsageType;
+			post: SocialPost;
+			usage: TokenUsage;
 			remaining: number | null;
 	  }
 	| { ok: false; error: string };
 
 /** Which action a thrown error came from — picks the right fallback message. */
-type SocialPostErrorContextType = "generate" | "regenerate";
+type SocialPostErrorContext = "generate" | "regenerate";
 
 /** Turn a thrown error into a user-facing message using this tool's error rules (unreadable URL, empty/too-long text, missing post, quota exhausted, …). */
 function toSocialPostErrorMessage(
 	error: unknown,
-	context: SocialPostErrorContextType,
+	context: SocialPostErrorContext,
 	byok: boolean,
 ): string {
 	return toUserMessage(error, {
@@ -82,8 +82,8 @@ function toSocialPostErrorMessage(
 
 /** Resolves a platform's character ceiling — long-form platforms (LinkedIn/Substack) use the chosen post length; microblogs use their fixed limit. */
 function resolveSocialPostCharLimit(
-	platform: SocialPostPlatformType,
-	postLength: LongformSocialPostLengthType,
+	platform: SocialPostPlatform,
+	postLength: LongformSocialPostLength,
 ): number {
 	if (platform === "linkedin" || platform === "substack") {
 		return LONGFORM_SOCIAL_POST_LENGTH_LIMITS[postLength];
@@ -93,12 +93,12 @@ function resolveSocialPostCharLimit(
 
 /** Assemble one post from the agent's output, computing charCount (longest thread item for threads, else content length). */
 function buildSocialPost(
-	platform: SocialPostPlatformType,
+	platform: SocialPostPlatform,
 	content: string,
 	hashtags: string[],
 	charLimit: number,
 	thread?: string[],
-): SocialPostType {
+): SocialPost {
 	const charCount = thread
 		? Math.max(...thread.map((p) => p.length))
 		: content.length;
@@ -107,7 +107,7 @@ function buildSocialPost(
 
 /** The instruction line telling the agent whether to thread (only when a thread-capable platform is selected and length > 1). */
 function buildThreadModeInstruction(
-	platforms: SocialPostPlatformType[],
+	platforms: SocialPostPlatform[],
 	xThreadLength: number,
 ): string {
 	const threadable = platforms.some((p) =>
@@ -120,8 +120,8 @@ function buildThreadModeInstruction(
 
 /** The per-request instruction block appended to the agent's system prompt — platforms, thread mode, and the full writing style. */
 function buildSocialPostInstructions(
-	style: SocialPostStyleType,
-	platforms: SocialPostPlatformType[],
+	style: SocialPostStyle,
+	platforms: SocialPostPlatform[],
 	xThreadLength: number,
 ): string {
 	const { postLength } = style;
@@ -144,13 +144,13 @@ function buildSocialPostInstructions(
 
 /** Server action — generate one platform-optimized post per selected platform from an article (URL or pasted text). */
 export async function generateSocialPosts(params: {
-	source: ArticleSourceType;
-	platforms: SocialPostPlatformType[];
+	source: ArticleSource;
+	platforms: SocialPostPlatform[];
 	xThreadLength: number;
-	style: SocialPostStyleType;
+	style: SocialPostStyle;
 	byokApiKey?: string;
 	byokModel?: string;
-}): Promise<GenerateSocialPostsResultType> {
+}): Promise<GenerateSocialPostsResult> {
 	const { source, platforms, xThreadLength, style, byokApiKey, byokModel } =
 		params;
 	try {
@@ -175,7 +175,7 @@ export async function generateSocialPosts(params: {
 		});
 
 		const postLength = style.postLength;
-		const posts: SocialPostType[] = object.posts.map((p) =>
+		const posts: SocialPost[] = object.posts.map((p) =>
 			buildSocialPost(
 				p.platform,
 				p.content,
@@ -184,10 +184,7 @@ export async function generateSocialPosts(params: {
 				p.thread,
 			),
 		);
-		const article: ArticleMetaType = withResolvedArticleUrl(
-			object.article,
-			url,
-		);
+		const article: ArticleMeta = withResolvedArticleUrl(object.article, url);
 
 		return { ok: true, data: { article, posts, usage }, remaining };
 	} catch (error) {
@@ -200,13 +197,13 @@ export async function generateSocialPosts(params: {
 
 /** Server action — regenerate a single platform's post; runs at a higher temperature so the rewrite diverges from the first attempt. */
 export async function regenerateSocialPost(params: {
-	source: ArticleSourceType;
-	platform: SocialPostPlatformType;
+	source: ArticleSource;
+	platform: SocialPostPlatform;
 	xThreadLength: number;
-	style: SocialPostStyleType;
+	style: SocialPostStyle;
 	byokApiKey?: string;
 	byokModel?: string;
-}): Promise<RegenerateSocialPostResultType> {
+}): Promise<RegenerateSocialPostResult> {
 	const { source, platform, xThreadLength, style, byokApiKey, byokModel } =
 		params;
 
@@ -260,6 +257,6 @@ export async function regenerateSocialPost(params: {
 }
 
 /** Server action — remaining-hosted-quota snapshot for the navbar usage pill. */
-export async function getSocialPostsUsage() {
-	return readUsage();
+export async function fetchSocialPostsUsage() {
+	return getHostedQuotaStatus();
 }

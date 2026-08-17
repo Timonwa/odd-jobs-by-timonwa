@@ -11,12 +11,12 @@ import {
 	EmptyState,
 	PageHero,
 } from "@/components/ui";
-import type { CategoryType } from "@/lib/config/categories";
+import type { Category } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { getToolsInCategory } from "@/lib/config/tools";
 
 /** A single category's page: its tools, with a link back to the full directory. */
-export function CategoryDetail({ category }: { category: CategoryType }) {
+export function CategoryDetail({ category }: { category: Category }) {
 	const tools = getToolsInCategory(category.id);
 
 	return (

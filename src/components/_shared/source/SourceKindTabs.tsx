@@ -2,7 +2,7 @@
 
 import { FileTextIcon, LinkIcon } from "lucide-react";
 
-import type { ArticleSourceKindType } from "@/lib/types";
+import type { ArticleSourceKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /** URL / paste-text tab switcher shared by the article-source tools (social posts, SEO meta). */
@@ -12,13 +12,13 @@ export function SourceKindTabs({
 	disabled,
 	textLabel = "Paste text",
 }: {
-	value: ArticleSourceKindType;
-	onChange: (kind: ArticleSourceKindType) => void;
+	value: ArticleSourceKind;
+	onChange: (kind: ArticleSourceKind) => void;
 	disabled?: boolean;
 	textLabel?: string;
 }) {
 	const tabs: {
-		id: ArticleSourceKindType;
+		id: ArticleSourceKind;
 		label: string;
 		icon: typeof LinkIcon;
 	}[] = [

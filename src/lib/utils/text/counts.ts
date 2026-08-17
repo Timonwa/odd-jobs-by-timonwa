@@ -1,6 +1,6 @@
 // Text metrics — word, character, sentence, and paragraph counts (the Word Counter tool).
 
-export type TextCountsType = {
+export type TextCounts = {
 	characters: number;
 	charactersNoSpaces: number;
 	words: number;
@@ -38,7 +38,7 @@ const countLines = (text: string): number =>
 	text ? text.split(/\r\n|\r|\n/).length : 0;
 
 /** Aggregate all text metrics from a single string. */
-export const getTextCounts = (text: string): TextCountsType => ({
+export const getTextCounts = (text: string): TextCounts => ({
 	characters: countCharacters(text),
 	charactersNoSpaces: countCharactersNoSpaces(text),
 	words: countWords(text),

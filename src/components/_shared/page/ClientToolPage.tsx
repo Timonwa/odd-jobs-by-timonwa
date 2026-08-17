@@ -7,12 +7,12 @@ import { PageMain } from "@/components/layout/PageMain";
 import { PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type ClientToolPageProps = {
 	slug: string;
 	name: string;
-	icon: IconComponentType;
+	icon: IconComponent;
 	eyebrowLabel: string;
 	title: ReactNode;
 	subtitle: string;

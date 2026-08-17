@@ -2,33 +2,30 @@
 // Factory that builds a writer tool's localStorage stores (style, workflow, style templates) and mutators.
 
 import type {
-	SocialPostDensityLevelType,
-	SocialPostPlatformType,
-	SocialPostToneType,
+	SocialPostDensityLevel,
+	SocialPostPlatform,
+	SocialPostTone,
 } from "@/lib/constants";
-import type {
-	SocialPostStyleTemplateType,
-	SocialPostStyleType,
-} from "@/lib/types";
+import type { SocialPostStyleTemplate, SocialPostStyle } from "@/lib/types";
 import { createLocalStore } from "@/lib/utils/storage/local-store";
 
 /** Per-run workflow shared by article-generator tools — targets and structure, remembered as last-used (never part of a style template). */
-export type WorkflowStateType = {
-	platforms: SocialPostPlatformType[];
+export type WorkflowState = {
+	platforms: SocialPostPlatform[];
 	xThreadLength: number;
 };
 
-type WriterStorageOptionsType = {
+type WriterStorageOptions = {
 	prefix: string;
-	defaultStyle: SocialPostStyleType;
-	defaultWorkflow: WorkflowStateType;
-	toneValues: ReadonlySet<SocialPostToneType>;
-	platformValues: ReadonlySet<SocialPostPlatformType>;
+	defaultStyle: SocialPostStyle;
+	defaultWorkflow: WorkflowState;
+	toneValues: ReadonlySet<SocialPostTone>;
+	platformValues: ReadonlySet<SocialPostPlatform>;
 	maxStyleTemplates: number;
 };
 
 /** Builds a tool's localStorage-backed stores under a `prefix`, so two tools that share the writer engine keep isolated style, workflow, and style templates. */
-export function createWriterStorage(opts: WriterStorageOptionsType) {
+export function createWriterStorage(opts: WriterStorageOptions) {
 	const {
 		prefix,
 		defaultStyle,
@@ -43,23 +40,23 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 	const TEMPLATES_KEY = `${prefix}style-templates`;
 
 	// Style persists across sessions — not secrets.
-	const readStyle = (): SocialPostStyleType => {
+	const readStyle = (): SocialPostStyle => {
 		try {
 			const raw = window.localStorage.getItem(STYLE_KEY);
 			if (!raw) return defaultStyle;
-			const parsed = JSON.parse(raw) as Partial<SocialPostStyleType>;
+			const parsed = JSON.parse(raw) as Partial<SocialPostStyle>;
 			return {
 				voice: parsed.voice ?? defaultStyle.voice,
 				tone:
 					typeof parsed.tone === "string" &&
-					toneValues.has(parsed.tone as SocialPostToneType)
-						? (parsed.tone as SocialPostToneType)
+					toneValues.has(parsed.tone as SocialPostTone)
+						? (parsed.tone as SocialPostTone)
 						: defaultStyle.tone,
 				emojiLevel:
-					(parsed.emojiLevel as SocialPostDensityLevelType) ??
+					(parsed.emojiLevel as SocialPostDensityLevel) ??
 					defaultStyle.emojiLevel,
 				hashtagLevel:
-					(parsed.hashtagLevel as SocialPostDensityLevelType) ??
+					(parsed.hashtagLevel as SocialPostDensityLevel) ??
 					defaultStyle.hashtagLevel,
 				alwaysIncludeHashtags: Array.isArray(parsed.alwaysIncludeHashtags)
 					? parsed.alwaysIncludeHashtags.filter(
@@ -83,7 +80,7 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 		}
 	};
 
-	const styleStorage = createLocalStore<SocialPostStyleType>({
+	const styleStorage = createLocalStore<SocialPostStyle>({
 		read: readStyle,
 		write: (style) => {
 			try {
@@ -93,17 +90,17 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 		serverValue: defaultStyle,
 	});
 
-	const readWorkflow = (): WorkflowStateType => {
+	const readWorkflow = (): WorkflowState => {
 		try {
 			const raw = window.localStorage.getItem(WORKFLOW_KEY);
 			if (!raw) return defaultWorkflow;
-			const parsed = JSON.parse(raw) as Partial<WorkflowStateType>;
+			const parsed = JSON.parse(raw) as Partial<WorkflowState>;
 			const platforms = Array.isArray(parsed.platforms)
 				? (parsed.platforms.filter(
-						(p): p is SocialPostPlatformType =>
+						(p): p is SocialPostPlatform =>
 							typeof p === "string" &&
-							platformValues.has(p as SocialPostPlatformType),
-					) as SocialPostPlatformType[])
+							platformValues.has(p as SocialPostPlatform),
+					) as SocialPostPlatform[])
 				: defaultWorkflow.platforms;
 			const xThreadLength =
 				typeof parsed.xThreadLength === "number" &&
@@ -119,7 +116,7 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 		}
 	};
 
-	const workflowStorage = createLocalStore<WorkflowStateType>({
+	const workflowStorage = createLocalStore<WorkflowState>({
 		read: readWorkflow,
 		write: (state) => {
 			try {
@@ -130,10 +127,10 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 	});
 
 	// Tone lives in the style store — read the latest at call time so there's no stale closure.
-	const setTone = (tone: SocialPostToneType) =>
+	const setTone = (tone: SocialPostTone) =>
 		styleStorage.set({ ...styleStorage.get(), tone });
 
-	const togglePlatform = (platform: SocialPostPlatformType) => {
+	const togglePlatform = (platform: SocialPostPlatform) => {
 		const current = workflowStorage.get();
 		const platforms = current.platforms.includes(platform)
 			? current.platforms.filter((p) => p !== platform)
@@ -144,42 +141,40 @@ export function createWriterStorage(opts: WriterStorageOptionsType) {
 	const setXThreadLength = (xThreadLength: number) =>
 		workflowStorage.set({ ...workflowStorage.get(), xThreadLength });
 
-	const EMPTY_TEMPLATES: SocialPostStyleTemplateType[] = [];
+	const EMPTY_TEMPLATES: SocialPostStyleTemplate[] = [];
 
 	// Drop entries lacking a `style` object — old presets bundled workflow and no longer fit this shape.
-	const readTemplates = (): SocialPostStyleTemplateType[] => {
+	const readTemplates = (): SocialPostStyleTemplate[] => {
 		try {
 			const raw = window.localStorage.getItem(TEMPLATES_KEY);
 			if (!raw) return EMPTY_TEMPLATES;
 			const parsed = JSON.parse(raw) as unknown;
 			if (!Array.isArray(parsed)) return EMPTY_TEMPLATES;
 			return parsed.filter(
-				(t): t is SocialPostStyleTemplateType =>
+				(t): t is SocialPostStyleTemplate =>
 					!!t &&
 					typeof t === "object" &&
-					typeof (t as SocialPostStyleTemplateType).id === "string" &&
-					!!(t as SocialPostStyleTemplateType).style &&
-					typeof (t as SocialPostStyleTemplateType).style === "object",
+					typeof (t as SocialPostStyleTemplate).id === "string" &&
+					!!(t as SocialPostStyleTemplate).style &&
+					typeof (t as SocialPostStyleTemplate).style === "object",
 			);
 		} catch {
 			return EMPTY_TEMPLATES;
 		}
 	};
 
-	const styleTemplatesStorage = createLocalStore<SocialPostStyleTemplateType[]>(
-		{
-			read: readTemplates,
-			write: (items) => {
-				try {
-					window.localStorage.setItem(
-						TEMPLATES_KEY,
-						JSON.stringify(items.slice(0, maxStyleTemplates)),
-					);
-				} catch {}
-			},
-			serverValue: EMPTY_TEMPLATES,
+	const styleTemplatesStorage = createLocalStore<SocialPostStyleTemplate[]>({
+		read: readTemplates,
+		write: (items) => {
+			try {
+				window.localStorage.setItem(
+					TEMPLATES_KEY,
+					JSON.stringify(items.slice(0, maxStyleTemplates)),
+				);
+			} catch {}
 		},
-	);
+		serverValue: EMPTY_TEMPLATES,
+	});
 
 	return {
 		styleStorage,

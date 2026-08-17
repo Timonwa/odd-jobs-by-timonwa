@@ -9,11 +9,11 @@ import {
 } from "@/lib/constants";
 import {
 	createWriterStorage,
-	type WorkflowStateType,
+	type WorkflowState,
 } from "./create-writer-storage";
 
 /** First-run workflow for this tool — LinkedIn + X, single posts. */
-export const SOCIAL_POST_DEFAULT_WORKFLOW: WorkflowStateType = {
+export const SOCIAL_POST_DEFAULT_WORKFLOW: WorkflowState = {
 	platforms: ["linkedin", "x"],
 	xThreadLength: 1,
 };

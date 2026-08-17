@@ -5,11 +5,11 @@ import { useId } from "react";
 import { ToggleButton } from "@/components/ui";
 
 import { SOCIAL_POST_TONES } from "@/lib/constants";
-import type { SocialPostToneType } from "@/lib/constants";
+import type { SocialPostTone } from "@/lib/constants";
 
 type TonePickerProps = {
-	value: SocialPostToneType;
-	onChange: (tone: SocialPostToneType) => void;
+	value: SocialPostTone;
+	onChange: (tone: SocialPostTone) => void;
 	disabled?: boolean;
 };
 

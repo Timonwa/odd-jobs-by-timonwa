@@ -36,7 +36,7 @@ export const ProductFrontmatterSchema = z.object({
 });
 
 /** A loaded product — frontmatter plus the slug and derived reading time. */
-export type ProductMetaType = z.infer<typeof ProductFrontmatterSchema> & {
+export type ProductMeta = z.infer<typeof ProductFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
 };

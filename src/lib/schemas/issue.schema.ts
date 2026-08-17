@@ -25,7 +25,7 @@ export const IssueFrontmatterSchema = z.object({
 });
 
 /** A loaded issue — frontmatter plus the slug and derived reading time. */
-export type IssueMetaType = z.infer<typeof IssueFrontmatterSchema> & {
+export type IssueMeta = z.infer<typeof IssueFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
 };

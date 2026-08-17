@@ -8,10 +8,10 @@ import { Fragment, useState } from "react";
 import { SITE_URL } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
-export type BreadcrumbItemType = { label: string; href?: Route };
+export type BreadcrumbItem = { label: string; href?: Route };
 
 /** Breadcrumb trail with matching BreadcrumbList JSON-LD; the last item is the current page. On small screens the middle levels collapse behind a "…" that expands them. */
-export function Breadcrumbs({ items }: { items: BreadcrumbItemType[] }) {
+export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
 	const [expanded, setExpanded] = useState(false);
 
 	const lastIndex = items.length - 1;

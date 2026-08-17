@@ -1,12 +1,12 @@
 import { ArrowRightIcon } from "lucide-react";
 
 import { IconBadge, LinkCard } from "@/components/ui";
-import type { CategoryType } from "@/lib/config/categories";
+import type { Category } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
 
 /** A category tile linking into the filtered /tools; empty categories show "Coming soon". */
-export function CategoryCard({ category }: { category: CategoryType }) {
+export function CategoryCard({ category }: { category: Category }) {
 	const Icon = category.icon;
 	const count = LIVE_TOOLS.filter((t) =>
 		t.categories.includes(category.id),

@@ -5,14 +5,14 @@ import { useId } from "react";
 import { SourceReuseControls } from "./SourceReuseControls";
 import { SourceKindTabs } from "./SourceKindTabs";
 import { Input, Textarea } from "@/components/ui";
-import type { ArticleSourceKindType } from "@/lib/types";
+import type { ArticleSourceKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_MAX_CHARS = 15000;
 
 type Props = {
-	sourceKind: ArticleSourceKindType;
-	onSourceKindChange: (kind: ArticleSourceKindType) => void;
+	sourceKind: ArticleSourceKind;
+	onSourceKindChange: (kind: ArticleSourceKind) => void;
 	url: string;
 	onUrlChange: (value: string) => void;
 	urlReuse: boolean;

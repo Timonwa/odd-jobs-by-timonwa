@@ -1,7 +1,7 @@
 /** The granularity of lorem ipsum output. */
 export type LoremUnit = "paragraphs" | "sentences" | "words";
 
-export type LoremOptionsType = {
+export type LoremOptions = {
 	unit: LoremUnit;
 	count: number;
 	startWithLorem?: boolean;
@@ -136,7 +136,7 @@ function makeParagraph(random: () => number, lead?: string[]): string {
 
 /** Lorem ipsum generator; `random` is injectable so output can be seeded in tests. */
 export function generateLorem(
-	options: LoremOptionsType,
+	options: LoremOptions,
 	random: () => number = Math.random,
 ): string {
 	const count = Math.max(1, Math.floor(options.count));

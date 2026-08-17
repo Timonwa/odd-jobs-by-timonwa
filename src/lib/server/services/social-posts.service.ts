@@ -12,7 +12,7 @@ import {
 	SOCIAL_POST_PLATFORM_CHAR_LIMITS,
 	THREADABLE_SOCIAL_POST_PLATFORMS,
 } from "@/lib/constants";
-import type { TokenUsageType } from "@/lib/types";
+import type { TokenUsage } from "@/lib/types";
 
 /** Per-tool Gemini key (per-tool env var → hub fallback), resolved once. */
 const PLATFORM_GEMINI_KEY = resolvePlatformApiKey(
@@ -28,7 +28,7 @@ const THREADABLE_LIMITS = THREADABLE_SOCIAL_POST_PLATFORMS.map(
 ).join(", ");
 
 /** Structured output the agent must return — article meta plus one post per selected platform, with optional thread and hashtags. */
-export const socialPostsSchema = z.object({
+export const SocialPostsSchema = z.object({
 	article: z.object({
 		url: z
 			.string()
@@ -67,8 +67,8 @@ export const socialPostsSchema = z.object({
 		.describe("Exactly one post per selected platform."),
 });
 
-/** Validated shape of socialPostsSchema — the agent's raw output. */
-export type SocialPostsOutputType = z.infer<typeof socialPostsSchema>;
+/** Validated shape of SocialPostsSchema — the agent's raw output. */
+export type SocialPostsOutput = z.infer<typeof SocialPostsSchema>;
 
 const SYSTEM = `You are a social media content specialist for writers sharing their articles. You generate post drafts — you do NOT publish.
 
@@ -181,9 +181,9 @@ export function generateSocialPostDrafts(opts: {
 	byokApiKey?: string;
 	byokModel?: string;
 	temperature?: number;
-}): Promise<{ object: SocialPostsOutputType; usage: TokenUsageType }> {
-	return generateSchemaOutputFromArticle<SocialPostsOutputType>({
-		schema: socialPostsSchema,
+}): Promise<{ object: SocialPostsOutput; usage: TokenUsage }> {
+	return generateSchemaOutputFromArticle<SocialPostsOutput>({
+		schema: SocialPostsSchema,
 		schemaName: "SocialPosts",
 		schemaDescription:
 			"One platform-optimized social media post per selected platform.",

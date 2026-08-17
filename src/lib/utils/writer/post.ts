@@ -1,7 +1,7 @@
 // Clipboard-copy builders for generated posts — a single post and all posts combined.
 
 import { SOCIAL_POST_PLATFORM_LABELS } from "@/lib/constants";
-import type { SocialPostType } from "@/lib/types";
+import type { SocialPost } from "@/lib/types";
 
 const appendUrl = (body: string, articleUrl?: string): string => {
 	const u = articleUrl?.trim();
@@ -14,7 +14,7 @@ const appendUrl = (body: string, articleUrl?: string): string => {
 
 /** Builds the clipboard string for a single post — formats threads as numbered posts and appends the article URL. */
 export const buildPostCopyText = (
-	post: SocialPostType,
+	post: SocialPost,
 	articleUrl?: string,
 ): string => {
 	if (post.thread && post.thread.length > 1) {
@@ -29,7 +29,7 @@ export const buildPostCopyText = (
 
 /** Builds a combined clipboard string for all posts, separated by Markdown dividers. */
 export const buildAllPostsCopyText = (
-	posts: SocialPostType[],
+	posts: SocialPost[],
 	articleUrl?: string,
 ): string =>
 	posts

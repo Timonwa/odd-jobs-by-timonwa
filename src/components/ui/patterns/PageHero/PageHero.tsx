@@ -3,10 +3,10 @@ import { useId } from "react";
 
 import { cn } from "@/lib/utils";
 
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type PageHeroProps = {
-	eyebrow?: { icon?: IconComponentType; label: string };
+	eyebrow?: { icon?: IconComponent; label: string };
 	title: ReactNode;
 	subtitle?: ReactNode;
 	className?: string;

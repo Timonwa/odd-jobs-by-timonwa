@@ -1,8 +1,8 @@
 // Converts an SVG string into JSX/React component source (the SVG to JSX tool).
 
 import {
-	type AttrFormatterType,
-	type IndentUnitType,
+	type AttrFormatter,
+	type IndentUnit,
 	parseAttrs,
 	printMarkup,
 	quoteValue,
@@ -11,11 +11,11 @@ import {
 } from "./format-svg";
 
 /** Options controlling SVG-to-JSX conversion. */
-export type SvgToJsxOptionsType = {
+export type SvgToJsxOptions = {
 	componentName?: string;
 	typescript?: boolean;
 	spreadProps?: boolean;
-	indent?: IndentUnitType;
+	indent?: IndentUnit;
 	quotes?: "single" | "double";
 };
 
@@ -83,7 +83,7 @@ function styleToObject(value: string, quote: '"' | "'"): string {
 	return `{{ ${entries.join(", ")} }}`;
 }
 
-function jsxAttrFormatter(quote: '"' | "'"): AttrFormatterType {
+function jsxAttrFormatter(quote: '"' | "'"): AttrFormatter {
 	return (raw) =>
 		parseAttrs(raw)
 			.map((a) => {
@@ -99,10 +99,7 @@ function jsxAttrFormatter(quote: '"' | "'"): AttrFormatterType {
 }
 
 /** Raw SVG string to JSX: renames attrs to React names, converts inline style strings to objects, re-indents, and optionally wraps in a named component. */
-export function svgToJsx(
-	input: string,
-	options: SvgToJsxOptionsType = {},
-): string {
+export function svgToJsx(input: string, options: SvgToJsxOptions = {}): string {
 	const {
 		componentName,
 		typescript,

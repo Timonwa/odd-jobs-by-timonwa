@@ -1,27 +1,27 @@
 // Barrel — the app's shared types, one line per file.
 export type {
-	ArticleSourceType,
-	ArticleSourceKindType,
-	ArticleMetaType,
+	ArticleSource,
+	ArticleSourceKind,
+	ArticleMeta,
 } from "./article.type";
-export type { HistoryEntryType } from "./history.type";
-export type { SeoMetaVariationType, SeoMetaResultType } from "./seo-meta.type";
+export type { HistoryEntry } from "./history.type";
+export type { SeoMetaVariation, SeoMetaResult } from "./seo-meta.type";
 export type {
-	SocialPostType,
-	SocialPostsResultType,
-	SocialPostStyleType,
-	SocialPostStyleTemplateType,
-	SocialPostHistoryType,
+	SocialPost,
+	SocialPostsResult,
+	SocialPostStyle,
+	SocialPostStyleTemplate,
+	SocialPostHistory,
 } from "./social-post.type";
-export type { TokenUsageType } from "./token-usage.type";
+export type { TokenUsage } from "./token-usage.type";
 export type {
-	GenerateExtrasType,
-	GenerateParamsType,
-	RegenerateParamsType,
-	GenerateResultType,
-	RegenerateResultType,
-	StyleTemplatesApiType,
-	HistoryApiType,
-	WriterFeaturesType,
-	WriterRuntimeType,
+	GenerateExtras,
+	GenerateParams,
+	RegenerateParams,
+	GenerateResult,
+	RegenerateResult,
+	StyleTemplatesApi,
+	HistoryApi,
+	WriterFeatures,
+	WriterRuntime,
 } from "./writer.type";

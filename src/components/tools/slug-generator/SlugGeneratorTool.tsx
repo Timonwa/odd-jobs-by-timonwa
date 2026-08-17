@@ -12,10 +12,10 @@ import {
 	SegmentedControl,
 } from "@/components/ui";
 import { TINT_TEXT } from "@/lib/config/tints";
-import { slugify, type SlugSeparatorType } from "@/lib/utils";
+import { slugify, type SlugSeparator } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
-const SEPARATORS: { value: SlugSeparatorType; label: string }[] = [
+const SEPARATORS: { value: SlugSeparator; label: string }[] = [
 	{ value: "-", label: "hyphen ( - )" },
 	{ value: "_", label: "underscore ( _ )" },
 ];
@@ -26,7 +26,7 @@ const SLUG_LENGTH_TARGET = 60;
 
 export function SlugGeneratorTool() {
 	const [title, setTitle] = useState("");
-	const [separator, setSeparator] = useState<SlugSeparatorType>("-");
+	const [separator, setSeparator] = useState<SlugSeparator>("-");
 	const [lowercase, setLowercase] = useState(true);
 	const [removeStopWords, setRemoveStopWords] = useState(false);
 

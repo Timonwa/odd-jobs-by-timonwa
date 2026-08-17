@@ -1,6 +1,6 @@
 /** Text case transforms, grouped for the Case Converter UI; programmer cases tokenize first, whole-text cases preserve words in place. */
 
-export type CaseIdType =
+export type CaseId =
 	| "title-ap"
 	| "title-chicago"
 	| "title-apa"
@@ -117,7 +117,7 @@ const titleCase = (
 		.join(" ");
 };
 
-const TRANSFORMS: Record<CaseIdType, (text: string) => string> = {
+const TRANSFORMS: Record<CaseId, (text: string) => string> = {
 	"title-ap": (t) => titleCase(t, { minor: AP_MINOR, capLast: true }),
 	"title-chicago": (t) => titleCase(t, { minor: CHICAGO_MINOR, capLast: true }),
 	"title-apa": (t) => titleCase(t, { minor: APA_MINOR, capLongWords: true }),
@@ -166,22 +166,22 @@ const TRANSFORMS: Record<CaseIdType, (text: string) => string> = {
 		),
 };
 
-export type CaseOptionType = {
-	id: CaseIdType;
+export type CaseOption = {
+	id: CaseId;
 	label: string;
 	icon: string;
 	description: string;
 };
 
-export type CaseGroupType = {
+export type CaseGroup = {
 	id: string;
 	label: string;
 	icon: string;
-	cases: CaseOptionType[];
+	cases: CaseOption[];
 };
 
 /** All case groups in display order, wiring ids to labels and icons. */
-export const CASE_GROUPS: CaseGroupType[] = [
+export const CASE_GROUPS: CaseGroup[] = [
 	{
 		id: "writing",
 		label: "Writing styles",
@@ -288,5 +288,5 @@ export const CASE_GROUPS: CaseGroupType[] = [
 ];
 
 /** Apply the named case transform to a string. */
-export const convertCase = (text: string, id: CaseIdType): string =>
+export const convertCase = (text: string, id: CaseId): string =>
 	TRANSFORMS[id](text);

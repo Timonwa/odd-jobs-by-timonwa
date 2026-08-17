@@ -18,11 +18,11 @@ import {
 	formatDuration,
 	READING_WPM,
 	readingMinutes,
-	type ReadingSpeedType,
+	type ReadingSpeed,
 	SPEAKING_WPM,
 } from "@/lib/utils";
 
-const SPEEDS: { id: ReadingSpeedType; label: string }[] = [
+const SPEEDS: { id: ReadingSpeed; label: string }[] = [
 	{ id: "slow", label: "Slow" },
 	{ id: "average", label: "Average" },
 	{ id: "fast", label: "Fast" },
@@ -33,7 +33,7 @@ const numberFmt = new Intl.NumberFormat("en-US");
 export function ReadingTimeTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
-	const [speed, setSpeed] = useState<ReadingSpeedType>("average");
+	const [speed, setSpeed] = useState<ReadingSpeed>("average");
 	const reuseId = useId();
 
 	const words = useMemo(() => countWords(text), [text]);

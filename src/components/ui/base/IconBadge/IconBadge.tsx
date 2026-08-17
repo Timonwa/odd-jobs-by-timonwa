@@ -1,13 +1,13 @@
 import type { ComponentType, SVGProps } from "react";
 
-import { type TintType, TINT_ICON } from "@/lib/config/tints";
+import { type Tint, TINT_ICON } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
 type IconBadgeSize = "md" | "lg";
 
 type IconBadgeProps = {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
-	tint?: TintType;
+	tint?: Tint;
 	colorClass?: string;
 	size?: IconBadgeSize;
 	className?: string;

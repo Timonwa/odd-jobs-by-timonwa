@@ -10,7 +10,7 @@ import {
 	SOCIAL_POST_PLATFORM_COLORS,
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
-import type { SocialPostType } from "@/lib/types";
+import type { SocialPost } from "@/lib/types";
 import { PLATFORM_ICONS } from "@/components/ui";
 import {
 	Badge,
@@ -33,7 +33,7 @@ const charCountClass = (count: number, limit: number): string =>
 			: "text-muted-foreground";
 
 type Props = {
-	post: SocialPostType;
+	post: SocialPost;
 	isRegenerating: boolean;
 	busy: boolean;
 	copied: boolean;

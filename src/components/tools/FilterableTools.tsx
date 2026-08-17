@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
 import { ToggleButton } from "@/components/ui";
-import { type CategoryIdType, TOOL_CATEGORIES } from "@/lib/config/categories";
+import { type CategoryId, TOOL_CATEGORIES } from "@/lib/config/categories";
 import { LIVE_TOOLS } from "@/lib/config/tools";
 import { cn } from "@/lib/utils";
 
@@ -13,9 +13,9 @@ import { cn } from "@/lib/utils";
 const PRESENT = TOOL_CATEGORIES.filter((c) =>
 	LIVE_TOOLS.some((t) => t.categories.includes(c.id)),
 );
-const VALID = new Set<CategoryIdType>(PRESENT.map((c) => c.id));
+const VALID = new Set<CategoryId>(PRESENT.map((c) => c.id));
 
-const countIn = (category: CategoryIdType) =>
+const countIn = (category: CategoryId) =>
 	LIVE_TOOLS.filter((t) => t.categories.includes(category)).length;
 
 /** Category filter pill — tinted when active, muted when not. */
@@ -60,13 +60,13 @@ export function FilterableTools() {
 
 	const raw = params.get("category");
 	const active =
-		raw && VALID.has(raw as CategoryIdType) ? (raw as CategoryIdType) : null;
+		raw && VALID.has(raw as CategoryId) ? (raw as CategoryId) : null;
 
 	const tools = active
 		? LIVE_TOOLS.filter((t) => t.categories.includes(active))
 		: LIVE_TOOLS;
 
-	const select = (category: CategoryIdType | null) => {
+	const select = (category: CategoryId | null) => {
 		const url = category ? `${pathname}?category=${category}` : pathname;
 		router.replace(url as Route, { scroll: false });
 	};

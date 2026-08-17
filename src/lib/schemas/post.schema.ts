@@ -19,7 +19,7 @@ export const PostFrontmatterSchema = z.object({
 });
 
 /** A loaded post — frontmatter plus the slug and derived reading time. */
-export type PostMetaType = z.infer<typeof PostFrontmatterSchema> & {
+export type PostMeta = z.infer<typeof PostFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
 };

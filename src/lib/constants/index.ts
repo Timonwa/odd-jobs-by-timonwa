@@ -8,7 +8,7 @@ export {
 	HOSTED_USAGE_EVENT,
 	THEME_EVENT,
 } from "./events.constant";
-export { HASH_ALGORITHMS, type HashAlgorithmType } from "./hash.constant";
+export { HASH_ALGORITHMS, type HashAlgorithm } from "./hash.constant";
 export { MAX_HISTORY_ENTRIES } from "./history.constant";
 export { APP_NAMESPACE, namespaced } from "./namespace.constant";
 export {
@@ -25,7 +25,7 @@ export {
 	SOCIAL_POST_PLATFORM_LABELS,
 	SOCIAL_POST_PLATFORM_CHAR_LIMITS,
 	SOCIAL_POST_PLATFORM_COLORS,
-	type SocialPostPlatformType,
+	type SocialPostPlatform,
 } from "./social-post-platforms.constant";
 export {
 	SOCIAL_POST_DEFAULT_STYLE,
@@ -39,10 +39,10 @@ export {
 	SOCIAL_POST_HASHTAG_DENSITY_LABELS,
 	LONGFORM_SOCIAL_POST_LENGTH_LIMITS,
 	LONGFORM_SOCIAL_POST_LENGTH_LABELS,
-	type SocialPostToneType,
-	type SocialPostVoiceType,
-	type SocialPostDensityLevelType,
-	type LongformSocialPostLengthType,
+	type SocialPostTone,
+	type SocialPostVoice,
+	type SocialPostDensityLevel,
+	type LongformSocialPostLength,
 } from "./social-post-style.constant";
 export {
 	SOCIAL_POST_DAILY_USER_CAP,

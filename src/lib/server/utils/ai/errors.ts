@@ -3,7 +3,7 @@
 import { APICallError, NoObjectGeneratedError } from "ai";
 
 /** Options for `toUserMessage` — log tag, quota shape, BYOK flag, and tool-specific error rules. */
-export type ToolErrorOptionsType = {
+export type ToolErrorOptions = {
 	logTag: string;
 	perUserDaily: number;
 	byok?: boolean;
@@ -12,10 +12,7 @@ export type ToolErrorOptionsType = {
 };
 
 /** AI SDK error → plain-English user message — reads typed SDK errors directly, adapts advice to BYOK vs hosted, checks tool-specific rules first. */
-export function toUserMessage(
-	error: unknown,
-	opts: ToolErrorOptionsType,
-): string {
+export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 	console.error(`[${opts.logTag}]`, error);
 	const byok = opts.byok ?? false;
 	const message = error instanceof Error ? error.message : String(error);

@@ -3,14 +3,14 @@
 import {
 	checkAndIncrementQuota,
 	getRateLimitStatus,
-	type QuotaConfigType,
+	type QuotaConfig,
 } from "../rate-limit.utils";
 
 /**
  * Per-tool hosted-demo quota config. Counters are scoped by `toolSlug` so tools
  * don't share budgets. New AI tools define one and pass it to `enforceDailyQuota`.
  */
-export type { QuotaConfigType };
+export type { QuotaConfig };
 
 /**
  * Enforce a tool's two hosted daily caps — the per-user daily limit and the
@@ -20,7 +20,7 @@ export type { QuotaConfigType };
  * `RATE_LIMIT_POOL`, mapped to a friendly message at the action boundary.
  */
 export async function enforceDailyQuota(
-	config: QuotaConfigType,
+	config: QuotaConfig,
 	byokKey?: string,
 ): Promise<number | null> {
 	if (byokKey) return null;
@@ -34,6 +34,6 @@ export async function enforceDailyQuota(
 }
 
 /** Whether hosted rate-limiting is active (for the navbar pill). */
-export function readUsage() {
+export function getHostedQuotaStatus() {
 	return getRateLimitStatus();
 }

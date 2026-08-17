@@ -8,14 +8,14 @@ import {
 } from "lucide-react";
 import { ArticleSourceInput } from "@/components/_shared/source/ArticleSourceInput";
 import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
-import type { ArticleSourceKindType } from "@/lib/types";
+import type { ArticleSourceKind } from "@/lib/types";
 import {
 	MAX_ARTICLE_INPUT_CHARS,
 	OPEN_SOCIAL_POST_SETTINGS_EVENT,
-	type SocialPostPlatformType,
+	type SocialPostPlatform,
 	THREADABLE_SOCIAL_POST_PLATFORMS,
 } from "@/lib/constants";
-import type { SocialPostStyleTemplateType } from "@/lib/types";
+import type { SocialPostStyleTemplate } from "@/lib/types";
 import {
 	Button,
 	Card,
@@ -30,8 +30,8 @@ import { TemplatesPicker } from "./TemplatesPicker";
 import { ThreadFormat } from "./ThreadFormat";
 
 type GenerateFormProps = {
-	sourceKind: ArticleSourceKindType;
-	onSourceKindChange: (kind: ArticleSourceKindType) => void;
+	sourceKind: ArticleSourceKind;
+	onSourceKindChange: (kind: ArticleSourceKind) => void;
 	url: string;
 	onUrlChange: (url: string) => void;
 	text: string;
@@ -41,8 +41,8 @@ type GenerateFormProps = {
 	urlReuse: boolean;
 	onToggleUrlReuse: (next: boolean) => void;
 	onClearSource: () => void;
-	platforms: SocialPostPlatformType[];
-	onTogglePlatform: (p: SocialPostPlatformType) => void;
+	platforms: SocialPostPlatform[];
+	onTogglePlatform: (p: SocialPostPlatform) => void;
 	xThreadLength: number;
 	onXThreadLengthChange: (n: number) => void;
 	isGenerating: boolean;
@@ -52,9 +52,9 @@ type GenerateFormProps = {
 	onStartOver: () => void;
 	error: string | null;
 	onSubmit: (e: React.FormEvent) => void;
-	templates: SocialPostStyleTemplateType[];
+	templates: SocialPostStyleTemplate[];
 	activeTemplateId: string | null;
-	onApplyTemplate: (t: SocialPostStyleTemplateType) => void;
+	onApplyTemplate: (t: SocialPostStyleTemplate) => void;
 	onSaveTemplate: (name: string) => void;
 	onDeleteTemplate: (id: string) => void;
 	onUpdateTemplate: (id: string) => void;

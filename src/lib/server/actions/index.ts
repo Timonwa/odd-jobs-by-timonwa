@@ -2,19 +2,19 @@
 // components ("use server" modules are safe boundaries), so no server-only marker.
 export {
 	subscribeNewsletter,
-	type NewsletterFormStateType,
+	type NewsletterFormState,
 } from "./newsletter.action";
 export {
 	generateSeoMeta,
 	regenerateSeoMetaVariation,
-	getSeoMetaUsage,
-	type GenerateSeoMetaResultType,
-	type RegenerateSeoMetaVariationResultType,
+	fetchSeoMetaUsage,
+	type GenerateSeoMetaResult,
+	type RegenerateSeoMetaVariationResult,
 } from "./seo-meta.action";
 export {
 	generateSocialPosts,
 	regenerateSocialPost,
-	getSocialPostsUsage,
-	type GenerateSocialPostsResultType,
-	type RegenerateSocialPostResultType,
+	fetchSocialPostsUsage,
+	type GenerateSocialPostsResult,
+	type RegenerateSocialPostResult,
 } from "./social-posts.action";

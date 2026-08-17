@@ -1,9 +1,9 @@
 // Converts text into a URL-safe slug (the Slug Generator tool).
 
-export type SlugSeparatorType = "-" | "_";
+export type SlugSeparator = "-" | "_";
 
-export type SlugOptionsType = {
-	separator?: SlugSeparatorType;
+export type SlugOptions = {
+	separator?: SlugSeparator;
 	lowercase?: boolean;
 	removeStopWords?: boolean;
 };
@@ -40,10 +40,7 @@ const STOP_WORDS = new Set([
 ]);
 
 /** Title or headline to a clean, URL-safe slug. */
-export const slugify = (
-	input: string,
-	options: SlugOptionsType = {},
-): string => {
+export const slugify = (input: string, options: SlugOptions = {}): string => {
 	const separator = options.separator ?? "-";
 	const lowercase = options.lowercase ?? true;
 

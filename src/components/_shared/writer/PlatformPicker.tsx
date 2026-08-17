@@ -7,12 +7,12 @@ import {
 	SOCIAL_POST_PLATFORM_COLORS,
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
-import type { SocialPostPlatformType } from "@/lib/constants";
+import type { SocialPostPlatform } from "@/lib/constants";
 import { PLATFORM_ICONS } from "@/components/ui";
 
 type PlatformPickerProps = {
-	value: SocialPostPlatformType[];
-	onToggle: (platform: SocialPostPlatformType) => void;
+	value: SocialPostPlatform[];
+	onToggle: (platform: SocialPostPlatform) => void;
 	disabled?: boolean;
 };
 

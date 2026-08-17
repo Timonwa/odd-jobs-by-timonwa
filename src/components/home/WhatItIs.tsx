@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui";
 import { TOOL_CATEGORIES } from "@/lib/config/categories";
-import type { TintType } from "@/lib/config/tints";
+import type { Tint } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-const AUDIENCES: { label: string; tint: TintType }[] = [
+const AUDIENCES: { label: string; tint: Tint }[] = [
 	{ label: "Writers", tint: 1 },
 	{ label: "Developers", tint: 2 },
 	{ label: "Creators", tint: 3 },

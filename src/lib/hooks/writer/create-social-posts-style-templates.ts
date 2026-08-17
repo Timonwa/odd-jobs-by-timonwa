@@ -3,10 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 
-import type {
-	SocialPostStyleTemplateType,
-	SocialPostStyleType,
-} from "@/lib/types";
+import type { SocialPostStyleTemplate, SocialPostStyle } from "@/lib/types";
 
 type Store<T> = {
 	get: () => T;
@@ -25,10 +22,7 @@ function isSameHashtags(a: string[], b: string[]): boolean {
 }
 
 /** True when two styles are identical on every field. Drives which saved template shows as "active": the current style is compared against each saved one, so the active highlight lights up on an exact match and clears the moment the user changes any setting. Field-by-field (not `===`) because styles hold array fields. */
-function isStylesEqual(
-	a: SocialPostStyleType,
-	b: SocialPostStyleType,
-): boolean {
+function isStylesEqual(a: SocialPostStyle, b: SocialPostStyle): boolean {
 	return (
 		a.voice === b.voice &&
 		a.tone === b.tone &&
@@ -40,19 +34,16 @@ function isStylesEqual(
 	);
 }
 
-type SocialPostStyleTemplatesOptionsType = {
-	styleStorage: Store<SocialPostStyleType>;
-	styleTemplatesStorage: Store<SocialPostStyleTemplateType[]>;
-	starterStyleTemplates: Omit<
-		SocialPostStyleTemplateType,
-		"id" | "createdAt"
-	>[];
+type SocialPostStyleTemplatesOptions = {
+	styleStorage: Store<SocialPostStyle>;
+	styleTemplatesStorage: Store<SocialPostStyleTemplate[]>;
+	starterStyleTemplates: Omit<SocialPostStyleTemplate, "id" | "createdAt">[];
 	maxStyleTemplates: number;
 };
 
 /** Builds a style-template CRUD hook bound to a tool's stores — save/apply/rename/update/delete named writing styles, with the active template derived from the current style. */
 export function createSocialPostsStyleTemplates(
-	opts: SocialPostStyleTemplatesOptionsType,
+	opts: SocialPostStyleTemplatesOptions,
 ) {
 	const {
 		styleStorage,
@@ -92,7 +83,7 @@ export function createSocialPostsStyleTemplates(
 		const save = useCallback((name: string) => {
 			const trimmed = name.trim();
 			if (!trimmed) return;
-			const entry: SocialPostStyleTemplateType = {
+			const entry: SocialPostStyleTemplate = {
 				id: crypto.randomUUID(),
 				name: trimmed,
 				createdAt: Date.now(),
@@ -107,7 +98,7 @@ export function createSocialPostsStyleTemplates(
 			);
 		}, []);
 
-		const apply = useCallback((t: SocialPostStyleTemplateType) => {
+		const apply = useCallback((t: SocialPostStyleTemplate) => {
 			styleStorage.set(t.style);
 		}, []);
 

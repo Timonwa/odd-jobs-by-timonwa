@@ -2,9 +2,9 @@ import { MailIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
 import { splitTitle } from "@/lib/utils";
-import type { IssueMetaType } from "@/lib/schemas";
+import type { IssueMeta } from "@/lib/schemas";
 
-export function IssueHero({ issue }: { issue: IssueMetaType }) {
+export function IssueHero({ issue }: { issue: IssueMeta }) {
 	const { lead, accent } = splitTitle(issue);
 	return (
 		<PageHero

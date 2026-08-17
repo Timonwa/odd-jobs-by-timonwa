@@ -13,7 +13,7 @@ import {
 	SEO_META_TITLE_MAX,
 	SEO_META_TITLE_MIN,
 } from "@/lib/constants";
-import type { TokenUsageType } from "@/lib/types";
+import type { TokenUsage } from "@/lib/types";
 
 /** Per-tool Gemini key (per-tool env var → hub fallback), resolved once. */
 const PLATFORM_GEMINI_KEY = resolvePlatformApiKey(
@@ -27,7 +27,7 @@ const TITLE_TARGET = Math.round((SEO_META_TITLE_MIN + SEO_META_TITLE_MAX) / 2);
 const DESC_TARGET = Math.round((SEO_META_DESC_MIN + SEO_META_DESC_MAX) / 2);
 
 /** Structured output the agent must return — article meta plus 1-3 SEO title/description variations. */
-export const seoMetaSchema = z.object({
+export const SeoMetaSchema = z.object({
 	article: z.object({
 		url: z
 			.string()
@@ -61,8 +61,8 @@ export const seoMetaSchema = z.object({
 		),
 });
 
-/** Validated shape of seoMetaSchema — the agent's raw output. */
-export type SeoMetaOutputType = z.infer<typeof seoMetaSchema>;
+/** Validated shape of SeoMetaSchema — the agent's raw output. */
+export type SeoMetaOutput = z.infer<typeof SeoMetaSchema>;
 
 const SYSTEM = `You are an SEO specialist writing meta tags for articles.
 
@@ -133,9 +133,9 @@ export function generateSeoMetaVariations(opts: {
 	text?: string;
 	byokApiKey?: string;
 	byokModel?: string;
-}): Promise<{ object: SeoMetaOutputType; usage: TokenUsageType }> {
-	return generateSchemaOutputFromArticle<SeoMetaOutputType>({
-		schema: seoMetaSchema,
+}): Promise<{ object: SeoMetaOutput; usage: TokenUsage }> {
+	return generateSchemaOutputFromArticle<SeoMetaOutput>({
+		schema: SeoMetaSchema,
 		schemaName: "SeoMetaVariations",
 		schemaDescription:
 			"Search-optimized title + description variations sized to Google's display limits.",

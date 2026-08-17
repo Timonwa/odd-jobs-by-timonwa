@@ -17,10 +17,10 @@ import {
 import { ArticleCard } from "@/components/_shared/result/ArticleCard";
 import { ErrorNotice } from "@/components/_shared/result/ErrorNotice";
 import { HistorySidebar } from "@/components/_shared/result/HistorySidebar";
-import { SeoMetaForm, type SeoMetaFormParamsType } from "./SeoMetaForm";
+import { SeoMetaForm, type SeoMetaFormParams } from "./SeoMetaForm";
 import { SeoMetaResults } from "./SeoMetaResults";
-import { useSeoMetaHistory, type SeoMetaHistoryType } from "@/lib/hooks";
-import type { SeoMetaResultType, TokenUsageType } from "@/lib/types";
+import { useSeoMetaHistory, type SeoMetaHistory } from "@/lib/hooks";
+import type { SeoMetaResult, TokenUsage } from "@/lib/types";
 import {
 	Button,
 	Card,
@@ -37,7 +37,7 @@ import { byokModelStorage, byokStorage } from "@/lib/utils";
 import { emitHostedUsage } from "@/lib/utils";
 
 /** History row label — article title, then URL, then a text snippet. */
-const historyLabel = (h: SeoMetaHistoryType): string => {
+const historyLabel = (h: SeoMetaHistory): string => {
 	if (h.result.article?.title) return h.result.article.title;
 	if (h.source.kind === "url") return h.source.url;
 	return h.source.text.trim().slice(0, 120) || "Article";
@@ -45,11 +45,11 @@ const historyLabel = (h: SeoMetaHistoryType): string => {
 
 /** Orchestrator for the Article to SEO Meta tool — form, results, history, and regeneration. */
 export function SeoMetaTool() {
-	const [result, setResult] = useState<SeoMetaResultType | undefined>();
+	const [result, setResult] = useState<SeoMetaResult | undefined>();
 	const [editableVariations, setEditableVariations] = useState<
-		SeoMetaResultType["variations"]
+		SeoMetaResult["variations"]
 	>([]);
-	const [usage, setUsage] = useState<TokenUsageType | null>(null);
+	const [usage, setUsage] = useState<TokenUsage | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [regeneratingIndex, setRegeneratingIndex] = useState<number | null>(
 		null,
@@ -57,7 +57,7 @@ export function SeoMetaTool() {
 	const [regenError, setRegenError] = useState<string | null>(null);
 	const [regeneratingAll, setRegeneratingAll] = useState(false);
 	const [copiedAll, setCopiedAll] = useState(false);
-	const [initial, setInitial] = useState<SeoMetaFormParamsType | undefined>();
+	const [initial, setInitial] = useState<SeoMetaFormParams | undefined>();
 	// Lets the bottom "new article" button clear the form's inputs, which the form owns.
 	const formResetRef = useRef<(() => void) | null>(null);
 	// Bumped on a history restore to remount SeoMetaForm with fresh seed values (key-reset pattern).
@@ -76,9 +76,9 @@ export function SeoMetaTool() {
 	}, [result]);
 
 	function handleResult(
-		res: SeoMetaResultType,
-		u: TokenUsageType,
-		params: SeoMetaFormParamsType,
+		res: SeoMetaResult,
+		u: TokenUsage,
+		params: SeoMetaFormParams,
 	) {
 		setInitial(params);
 		setResult(res);
@@ -94,7 +94,7 @@ export function SeoMetaTool() {
 		});
 	}
 
-	function handleLoadHistory(entry: SeoMetaHistoryType) {
+	function handleLoadHistory(entry: SeoMetaHistory) {
 		setInitial({
 			source: entry.source,
 			primaryKeyword: entry.primaryKeyword,

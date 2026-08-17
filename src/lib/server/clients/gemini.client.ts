@@ -4,7 +4,7 @@ import { createGoogle } from "@ai-sdk/google";
 import { env } from "@env";
 
 import { BYOK_MODELS, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
-import type { TokenUsageType } from "@/lib/types";
+import type { TokenUsage } from "@/lib/types";
 
 const ALLOWED_BYOK_MODELS = new Set<string>(BYOK_MODELS.map((m) => m.value));
 
@@ -36,7 +36,7 @@ export function toTokenUsage(usage: {
 	inputTokens?: number;
 	outputTokens?: number;
 	totalTokens?: number;
-}): TokenUsageType {
+}): TokenUsage {
 	return {
 		promptTokens: usage.inputTokens ?? 0,
 		completionTokens: usage.outputTokens ?? 0,

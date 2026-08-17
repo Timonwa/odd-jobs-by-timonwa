@@ -1,9 +1,9 @@
 import { ShoppingBagIcon } from "lucide-react";
 
 import { splitTitle } from "@/lib/utils";
-import type { ProductMetaType } from "@/lib/schemas";
+import type { ProductMeta } from "@/lib/schemas";
 
-export function ProductHeader({ product }: { product: ProductMetaType }) {
+export function ProductHeader({ product }: { product: ProductMeta }) {
 	const { lead, accent } = splitTitle(product);
 	return (
 		<header className="mb-8">

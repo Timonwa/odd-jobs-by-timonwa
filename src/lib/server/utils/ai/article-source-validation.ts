@@ -1,7 +1,7 @@
 // Validates and resolves a tool's article source before generation — SSRF-safe URL check, empty/too-long guards with coded errors, and the tool-agnostic error copy for those codes.
 
 import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
-import type { ArticleSourceType } from "@/lib/types";
+import type { ArticleSource } from "@/lib/types";
 
 // Hostnames/IP literals that must never be fetched: loopback, link-local
 // (incl. the cloud metadata endpoint 169.254.169.254), and RFC 1918 ranges.
@@ -48,7 +48,7 @@ export function assertSafeArticleUrl(raw: string | undefined): string {
 }
 
 /** Validate an article source shared by every AI tool and return what the agent should read — a safe URL, or trimmed pasted text. Throws the coded, tool-agnostic errors ARTICLE_EMPTY / ARTICLE_TOO_LONG (or a URL_* error) that each tool maps to its own copy. */
-export function resolveArticleSource(source: ArticleSourceType): {
+export function resolveArticleSource(source: ArticleSource): {
 	url?: string;
 	text?: string;
 } {

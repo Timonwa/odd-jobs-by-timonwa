@@ -1,14 +1,14 @@
 /** Hub-level BYOK constants — one Google Gemini key + model, read from sessionStorage and shared by every AI tool. */
 
 // "-latest" aliases, not pinned versions: Google blocks pinned older models for newly-created keys, which would break BYOK for anyone who just made a key.
-export type ByokModelType =
+export type ByokModel =
 	"gemini-flash-lite-latest" | "gemini-flash-latest" | "gemini-pro-latest";
 
 /** Default model used when the user hasn't picked one. */
-export const DEFAULT_BYOK_MODEL: ByokModelType = "gemini-flash-lite-latest";
+export const DEFAULT_BYOK_MODEL: ByokModel = "gemini-flash-lite-latest";
 
 export const BYOK_MODELS: {
-	value: ByokModelType;
+	value: ByokModel;
 	label: string;
 	description: string;
 }[] = [

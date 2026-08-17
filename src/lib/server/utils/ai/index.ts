@@ -5,9 +5,13 @@ export {
 	resolveArticleSource,
 	articleSourceErrorRules,
 } from "./article-source-validation";
-export { toUserMessage, type ToolErrorOptionsType } from "./errors";
+export { toUserMessage, type ToolErrorOptions } from "./errors";
 export {
 	generateSchemaOutputFromArticle,
 	withResolvedArticleUrl,
 } from "./generate-from-article";
-export { enforceDailyQuota, readUsage, type QuotaConfigType } from "./quota";
+export {
+	enforceDailyQuota,
+	getHostedQuotaStatus,
+	type QuotaConfig,
+} from "./quota";

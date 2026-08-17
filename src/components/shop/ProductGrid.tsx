@@ -2,9 +2,9 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import type { ProductMetaType } from "@/lib/schemas";
+import type { ProductMeta } from "@/lib/schemas";
 
-export function ProductGrid({ products }: { products: ProductMetaType[] }) {
+export function ProductGrid({ products }: { products: ProductMeta[] }) {
 	return (
 		<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{products.map((product) => (

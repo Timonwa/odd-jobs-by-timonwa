@@ -1,7 +1,7 @@
 "use client";
 // Article to Social Posts binding of the shared writer engine — wires this tool's stores, hooks, and actions.
 
-import type { WriterRuntimeType } from "@/lib/types";
+import type { WriterRuntime } from "@/lib/types";
 import {
 	generateSocialPosts,
 	regenerateSocialPost,
@@ -19,7 +19,7 @@ import {
 } from "@/lib/utils";
 
 /** Article-to-Social-Posts binding of the shared writer engine: one post per platform, no prompt editor or repurposing. */
-export const socialPostsRuntime: WriterRuntimeType = {
+export const socialPostsRuntime: WriterRuntime = {
 	features: { hashtagRules: true, promptEditor: false, repurpose: false },
 	stores: {
 		styleStorage,

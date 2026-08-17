@@ -12,29 +12,21 @@ export { timeAgo } from "./time.utils";
 export {
 	CASE_GROUPS,
 	convertCase,
-	type CaseIdType,
-	type CaseOptionType,
-	type CaseGroupType,
+	type CaseId,
+	type CaseOption,
+	type CaseGroup,
 } from "./text/case";
-export { countWords, getTextCounts, type TextCountsType } from "./text/counts";
-export {
-	generateLorem,
-	type LoremUnit,
-	type LoremOptionsType,
-} from "./text/lorem";
+export { countWords, getTextCounts, type TextCounts } from "./text/counts";
+export { generateLorem, type LoremUnit, type LoremOptions } from "./text/lorem";
 export {
 	READING_WPM,
 	SPEAKING_WPM,
 	readingMinutes,
 	durationSeconds,
 	formatDuration,
-	type ReadingSpeedType,
+	type ReadingSpeed,
 } from "./text/reading-time";
-export {
-	slugify,
-	type SlugSeparatorType,
-	type SlugOptionsType,
-} from "./text/slugify";
+export { slugify, type SlugSeparator, type SlugOptions } from "./text/slugify";
 export {
 	stripXmlPreamble,
 	tokenizeMarkup,
@@ -42,11 +34,11 @@ export {
 	quoteValue,
 	printMarkup,
 	formatSvgMarkup,
-	type IndentUnitType,
-	type ParsedAttrType,
-	type AttrFormatterType,
+	type IndentUnit,
+	type ParsedAttr,
+	type AttrFormatter,
 } from "./svg/format-svg";
-export { svgToJsx, type SvgToJsxOptionsType } from "./svg/svg-to-jsx";
+export { svgToJsx, type SvgToJsxOptions } from "./svg/svg-to-jsx";
 export {
 	subscribeByok,
 	byokStorage,
@@ -59,7 +51,7 @@ export { normalizeHashtag } from "./writer/hashtag";
 export { buildPostCopyText, buildAllPostsCopyText } from "./writer/post";
 export {
 	createWriterStorage,
-	type WorkflowStateType,
+	type WorkflowState,
 } from "./storage/create-writer-storage";
 export {
 	SOCIAL_POST_DEFAULT_WORKFLOW,

@@ -7,4 +7,4 @@ export const HASH_ALGORITHMS = [
 ] as const;
 
 /** Union of the supported digest algorithm names. */
-export type HashAlgorithmType = (typeof HASH_ALGORITHMS)[number];
+export type HashAlgorithm = (typeof HASH_ALGORITHMS)[number];

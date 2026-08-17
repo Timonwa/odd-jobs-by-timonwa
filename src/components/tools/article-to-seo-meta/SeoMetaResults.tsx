@@ -8,7 +8,7 @@ import {
 	SEO_META_TITLE_MAX,
 	SEO_META_TITLE_MIN,
 } from "@/lib/constants";
-import type { SeoMetaVariationType } from "@/lib/types";
+import type { SeoMetaVariation } from "@/lib/types";
 import {
 	Button,
 	Card,
@@ -23,16 +23,16 @@ import {
 import { TINT_SURFACE } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-type RangeStatusType = "in-range" | "close" | "out";
+type RangeStatus = "in-range" | "close" | "out";
 
-function status(len: number, min: number, max: number): RangeStatusType {
+function status(len: number, min: number, max: number): RangeStatus {
 	if (len >= min && len <= max) return "in-range";
 	const delta = len < min ? min - len : len - max;
 	return delta <= 5 ? "close" : "out";
 }
 
 type Props = {
-	variations: SeoMetaVariationType[];
+	variations: SeoMetaVariation[];
 	regeneratingIndex: number | null;
 	busy: boolean;
 	onVariationChange: (
@@ -78,7 +78,7 @@ function VariationCard({
 	onRegenerate,
 }: {
 	index: number;
-	variation: SeoMetaVariationType;
+	variation: SeoMetaVariation;
 	isRegenerating: boolean;
 	canRegenerate: boolean;
 	onChange: (field: "title" | "description", value: string) => void;
@@ -163,7 +163,7 @@ function Field({
 	value: string;
 	min: number;
 	max: number;
-	status: RangeStatusType;
+	status: RangeStatus;
 	onChange: (value: string) => void;
 }) {
 	const over = value.length > max;

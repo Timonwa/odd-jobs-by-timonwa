@@ -1,11 +1,11 @@
 // Browser-side text hashing via Web Crypto (the Hash Generator tool).
 
-import type { HashAlgorithmType } from "@/lib/constants";
+import type { HashAlgorithm } from "@/lib/constants";
 
 /** Browser-side text hasher — uses `crypto.subtle` (secure context only) so input never leaves the device; returns a lowercase hex digest. */
 export async function hashText(
 	text: string,
-	algorithm: HashAlgorithmType,
+	algorithm: HashAlgorithm,
 ): Promise<string> {
 	const data = new TextEncoder().encode(text);
 	const digest = await crypto.subtle.digest(algorithm, data);

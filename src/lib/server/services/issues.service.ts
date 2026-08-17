@@ -2,7 +2,7 @@
 
 import "server-only";
 
-import { IssueFrontmatterSchema, type IssueMetaType } from "@/lib/schemas";
+import { IssueFrontmatterSchema, type IssueMeta } from "@/lib/schemas";
 import { createMdxLoader } from "../utils/create-mdx-loader";
 
 const loader = createMdxLoader({
@@ -21,8 +21,7 @@ const loader = createMdxLoader({
 export const getIssueSlugs = loader.getSlugs;
 
 /** Every issue, newest first. Used by the archive, sitemap, and static params. */
-export const getAllIssues: () => IssueMetaType[] = loader.getAll;
+export const getAllIssues: () => IssueMeta[] = loader.getAll;
 
 /** A single issue by slug, or undefined if there's no such file. */
-export const getIssue: (slug: string) => IssueMetaType | undefined =
-	loader.getOne;
+export const getIssue: (slug: string) => IssueMeta | undefined = loader.getOne;

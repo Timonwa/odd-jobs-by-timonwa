@@ -5,7 +5,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button, Drawer } from "@/components/ui";
 import { ByokSection } from "./ByokSection";
 
-import { type ByokModelType, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
+import { type ByokModel, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
 import { OPEN_BYOK_EVENT } from "@/lib/constants";
 import { byokModelStorage, byokStorage, subscribeByok } from "@/lib/utils";
 
@@ -60,7 +60,7 @@ export function ByokDrawer() {
 		byokModelStorage.clear();
 	};
 
-	const handleModelChange = (model: ByokModelType) => {
+	const handleModelChange = (model: ByokModel) => {
 		byokModelStorage.set(model);
 	};
 

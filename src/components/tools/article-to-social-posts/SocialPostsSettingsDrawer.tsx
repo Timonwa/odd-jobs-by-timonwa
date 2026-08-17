@@ -3,14 +3,14 @@
 import { socialPostsRuntime } from "@/lib/config/social-posts-writer";
 import {
 	SettingsDrawer,
-	type SettingsPresentationType,
+	type SettingsPresentation,
 } from "@/components/_shared/writer/settings/SettingsDrawer";
 
 /** Article-to-Social-Posts settings drawer — the shared drawer bound to this tool's runtime and brand scope. */
 export function SocialPostsSettingsDrawer({
 	presentation,
 }: {
-	presentation?: SettingsPresentationType;
+	presentation?: SettingsPresentation;
 }) {
 	return (
 		<SettingsDrawer

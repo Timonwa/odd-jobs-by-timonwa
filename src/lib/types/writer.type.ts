@@ -1,22 +1,19 @@
 // Types for the shared writer engine — the runtime contract, generation params, and results.
 
+import type { SocialPostPlatform, SocialPostTone } from "@/lib/constants";
 import type {
-	SocialPostPlatformType,
-	SocialPostToneType,
-} from "@/lib/constants";
-import type {
-	ArticleSourceType,
-	SocialPostHistoryType,
-	SocialPostType,
-	SocialPostStyleTemplateType,
-	SocialPostsResultType,
-	TokenUsageType,
-	SocialPostStyleType,
+	ArticleSource,
+	SocialPostHistory,
+	SocialPost,
+	SocialPostStyleTemplate,
+	SocialPostsResult,
+	TokenUsage,
+	SocialPostStyle,
 } from "@/lib/types";
-import type { WorkflowStateType } from "@/lib/utils";
+import type { WorkflowState } from "@/lib/utils";
 
 /** Minimal external-store shape (useSyncExternalStore-compatible) the engine reads and writes. */
-type StoreType<T> = {
+type Store<T> = {
 	get: () => T;
 	set: (value: T) => void;
 	subscribe: (cb: () => void) => () => void;
@@ -25,83 +22,83 @@ type StoreType<T> = {
 };
 
 /** Extras a tool may add to a generation request (populated by conditional form controls). */
-export type GenerateExtrasType = {
+export type GenerateExtras = {
 	prompt?: string;
 	variantCount?: number;
 };
 
 /** Inputs for a full generation run — article, target platforms, thread length, writing style, and optional BYOK credentials. */
-export type GenerateParamsType = {
-	source: ArticleSourceType;
-	platforms: SocialPostPlatformType[];
+export type GenerateParams = {
+	source: ArticleSource;
+	platforms: SocialPostPlatform[];
 	xThreadLength: number;
-	style: SocialPostStyleType;
+	style: SocialPostStyle;
 	byokApiKey?: string;
 	byokModel?: string;
-} & GenerateExtrasType;
+} & GenerateExtras;
 
 /** Inputs for regenerating a single platform's post. */
-export type RegenerateParamsType = {
-	source: ArticleSourceType;
-	platform: SocialPostPlatformType;
+export type RegenerateParams = {
+	source: ArticleSource;
+	platform: SocialPostPlatform;
 	xThreadLength: number;
-	style: SocialPostStyleType;
+	style: SocialPostStyle;
 	byokApiKey?: string;
 	byokModel?: string;
-} & GenerateExtrasType;
+} & GenerateExtras;
 
 /** What the engine returns from a run — posts on success, a user-facing error on failure. */
-export type GenerateResultType =
-	| { ok: true; data: SocialPostsResultType; remaining: number | null }
+export type GenerateResult =
+	| { ok: true; data: SocialPostsResult; remaining: number | null }
 	| { ok: false; error: string };
 
 /** What the engine returns from regenerating one post — the rewritten post plus usage on success, an error on failure. */
-export type RegenerateResultType =
+export type RegenerateResult =
 	| {
 			ok: true;
-			post: SocialPostType;
-			usage: TokenUsageType;
+			post: SocialPost;
+			usage: TokenUsage;
 			remaining: number | null;
 	  }
 	| { ok: false; error: string };
 
 /** Style-template CRUD surface a tool's hook exposes to the engine. */
-export type StyleTemplatesApiType = {
-	templates: SocialPostStyleTemplateType[];
+export type StyleTemplatesApi = {
+	templates: SocialPostStyleTemplate[];
 	activeId: string | null;
 	save: (name: string) => void;
-	apply: (t: SocialPostStyleTemplateType) => void;
+	apply: (t: SocialPostStyleTemplate) => void;
 	remove: (id: string) => void;
 	update: (id: string) => void;
 	rename: (id: string, name: string) => void;
 };
 
 /** Run-history surface a tool's hook exposes to the engine. */
-export type HistoryApiType = {
-	history: SocialPostHistoryType[];
-	upsert: (entry: Omit<SocialPostHistoryType, "id"> & { id?: string }) => void;
+export type HistoryApi = {
+	history: SocialPostHistory[];
+	upsert: (entry: Omit<SocialPostHistory, "id"> & { id?: string }) => void;
 	remove: (id: string) => void;
 };
 
 /** Which conditional writer features a tool turns on. */
-export type WriterFeaturesType = {
+export type WriterFeatures = {
 	hashtagRules: boolean;
 	promptEditor: boolean;
 	repurpose: boolean;
 };
 
 /** Everything the shared writer engine needs from a specific tool — injected so one engine can power several tools with isolated storage, actions, and features. */
-export type WriterRuntimeType = {
-	features: WriterFeaturesType;
+export type WriterRuntime = {
+	features: WriterFeatures;
 	stores: {
-		styleStorage: StoreType<SocialPostStyleType>;
-		workflowStorage: StoreType<WorkflowStateType>;
-		setTone: (tone: SocialPostToneType) => void;
-		togglePlatform: (platform: SocialPostPlatformType) => void;
+		styleStorage: Store<SocialPostStyle>;
+		workflowStorage: Store<WorkflowState>;
+		setTone: (tone: SocialPostTone) => void;
+		togglePlatform: (platform: SocialPostPlatform) => void;
 		setXThreadLength: (n: number) => void;
 	};
-	useStyleTemplates: () => StyleTemplatesApiType;
-	useHistory: () => HistoryApiType;
-	onGenerate: (params: GenerateParamsType) => Promise<GenerateResultType>;
-	onRegenerate: (params: RegenerateParamsType) => Promise<RegenerateResultType>;
+	useStyleTemplates: () => StyleTemplatesApi;
+	useHistory: () => HistoryApi;
+	onGenerate: (params: GenerateParams) => Promise<GenerateResult>;
+	onRegenerate: (params: RegenerateParams) => Promise<RegenerateResult>;
 };

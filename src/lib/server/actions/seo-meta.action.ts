@@ -6,24 +6,24 @@ import {
 	SEO_META_DAILY_USER_CAP,
 } from "@/lib/constants";
 import type {
-	ArticleSourceType,
-	SeoMetaResultType,
-	SeoMetaVariationType,
-	TokenUsageType,
+	ArticleSource,
+	SeoMetaResult,
+	SeoMetaVariation,
+	TokenUsage,
 } from "@/lib/types";
 import { generateSeoMetaVariations } from "@/lib/server/services";
 import {
 	articleSourceErrorRules,
 	enforceDailyQuota,
-	type QuotaConfigType,
-	readUsage,
+	type QuotaConfig,
+	getHostedQuotaStatus,
 	resolveArticleSource,
 	toUserMessage,
 	withResolvedArticleUrl,
 } from "@/lib/server/utils/ai";
 
 /** Hosted-tier rate limits for this tool — per-user daily cap + the shared daily pool. */
-const SEO_META_QUOTA_CONFIG: QuotaConfigType = {
+const SEO_META_QUOTA_CONFIG: QuotaConfig = {
 	toolSlug: "article-to-seo-meta",
 	perUserDaily: SEO_META_DAILY_USER_CAP,
 	dailyPool: SEO_META_DAILY_SHARED_POOL,
@@ -42,7 +42,7 @@ function buildSeoMetaInstructions(
 /** Instructions for regenerating ONE variation — lists the existing variations so the model returns a clearly different angle, not a near-duplicate. */
 function buildSeoMetaRegenerateInstructions(
 	keyword: string | undefined,
-	existing: SeoMetaVariationType[],
+	existing: SeoMetaVariation[],
 ): string {
 	const lines: string[] = ["variationCount: 1"];
 	if (keyword) lines.push(`primaryKeyword: ${keyword}`);
@@ -72,33 +72,33 @@ function toSeoMetaErrorMessage(error: unknown, byok: boolean): string {
 }
 
 /** Outcome of {@link generateSeoMeta} — success carries the variations, token usage, and remaining hosted quota; failure carries a user-facing error message. */
-export type GenerateSeoMetaResultType =
+export type GenerateSeoMetaResult =
 	| {
 			ok: true;
-			result: SeoMetaResultType;
-			usage: TokenUsageType;
+			result: SeoMetaResult;
+			usage: TokenUsage;
 			remaining: number | null;
 	  }
 	| { ok: false; error: string };
 
 /** Outcome of {@link regenerateSeoMetaVariation} — success carries the single fresh variation, token usage, and remaining quota; failure carries a user-facing error message. */
-export type RegenerateSeoMetaVariationResultType =
+export type RegenerateSeoMetaVariationResult =
 	| {
 			ok: true;
-			variation: SeoMetaVariationType;
-			usage: TokenUsageType;
+			variation: SeoMetaVariation;
+			usage: TokenUsage;
 			remaining: number | null;
 	  }
 	| { ok: false; error: string };
 
 /** Server action — generate 1-3 SEO title/description variations for an article (URL or pasted text). */
 export async function generateSeoMeta(params: {
-	source: ArticleSourceType;
+	source: ArticleSource;
 	primaryKeyword?: string;
 	variationCount?: number;
 	byokApiKey?: string;
 	byokModel?: string;
-}): Promise<GenerateSeoMetaResultType> {
+}): Promise<GenerateSeoMetaResult> {
 	try {
 		const { url, text } = resolveArticleSource(params.source);
 
@@ -117,7 +117,7 @@ export async function generateSeoMeta(params: {
 			byokApiKey: params.byokApiKey,
 			byokModel: params.byokModel,
 		});
-		const result: SeoMetaResultType = {
+		const result: SeoMetaResult = {
 			...object,
 			article: withResolvedArticleUrl(object.article, url),
 		};
@@ -132,12 +132,12 @@ export async function generateSeoMeta(params: {
 
 /** Server action — regenerate ONE SEO variation; the existing variations are passed in so the model returns a fresh angle rather than a near-duplicate. */
 export async function regenerateSeoMetaVariation(params: {
-	source: ArticleSourceType;
+	source: ArticleSource;
 	primaryKeyword?: string;
-	existing: SeoMetaVariationType[];
+	existing: SeoMetaVariation[];
 	byokApiKey?: string;
 	byokModel?: string;
-}): Promise<RegenerateSeoMetaVariationResultType> {
+}): Promise<RegenerateSeoMetaVariationResult> {
 	try {
 		const { url, text } = resolveArticleSource(params.source);
 
@@ -169,6 +169,6 @@ export async function regenerateSeoMetaVariation(params: {
 }
 
 /** Server action — remaining-hosted-quota snapshot for the navbar usage pill. */
-export async function getSeoMetaUsage() {
-	return readUsage();
+export async function fetchSeoMetaUsage() {
+	return getHostedQuotaStatus();
 }

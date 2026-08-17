@@ -2,7 +2,7 @@
 // Factory that builds a deduped, localStorage-backed run-history hook for a writer tool.
 
 import { MAX_HISTORY_ENTRIES } from "@/lib/constants";
-import type { ArticleSourceType } from "@/lib/types";
+import type { ArticleSource } from "@/lib/types";
 import {
 	articleSourceIdentity,
 	createHistoryStore,
@@ -11,7 +11,7 @@ import {
 
 /** Builds a deduped, localStorage-backed history hook under `key`, so each tool keeps its own separate run history (default: last 10). */
 export function createToolHistory<
-	Entry extends { id: string; source: ArticleSourceType },
+	Entry extends { id: string; source: ArticleSource },
 >(opts: {
 	key: string;
 	isEntry: (e: unknown) => e is Entry;

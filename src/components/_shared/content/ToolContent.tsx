@@ -4,13 +4,13 @@ import type { ComponentType } from "react";
 import { MoreTools } from "./MoreTools";
 import { Newsletter } from "./Newsletter";
 
-type ToolFaqType = { question: string; answer: string };
+type ToolFaq = { question: string; answer: string };
 
 /** The SEO content block below a tool — MDX article, FAQ (FAQPage JSON-LD), and a "more tools" grid; copy from `content/tools/<slug>.mdx`. */
 export async function ToolContent({ currentSlug }: { currentSlug: string }) {
 	const mod = await import(`@/content/tools/${currentSlug}.mdx`);
 	const Article = mod.default as ComponentType;
-	const faq = (mod as { faq: ToolFaqType[] }).faq;
+	const faq = (mod as { faq: ToolFaq[] }).faq;
 
 	const faqJsonLd = {
 		"@context": "https://schema.org",

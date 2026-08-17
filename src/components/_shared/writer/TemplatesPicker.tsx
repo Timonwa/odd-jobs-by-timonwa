@@ -17,21 +17,21 @@ import {
 	MAX_SOCIAL_POST_STYLE_TEMPLATE_NAME_CHARS,
 	MAX_SOCIAL_POST_STYLE_TEMPLATES,
 	SOCIAL_POST_TONES,
-	type SocialPostToneType,
+	type SocialPostTone,
 	SOCIAL_POST_VOICE_LABELS,
 } from "@/lib/constants";
-import type { SocialPostStyleTemplateType } from "@/lib/types";
+import type { SocialPostStyleTemplate } from "@/lib/types";
 import { Badge, Button, Input, Tooltip } from "@/components/ui";
 
 import { cn } from "@/lib/utils";
 
-const toneLabel = (tone: SocialPostToneType): string =>
+const toneLabel = (tone: SocialPostTone): string =>
 	SOCIAL_POST_TONES.find((t) => t.value === tone)?.label ?? tone;
 
 type TemplatesPickerProps = {
-	templates: SocialPostStyleTemplateType[];
+	templates: SocialPostStyleTemplate[];
 	activeTemplateId: string | null;
-	onApply: (t: SocialPostStyleTemplateType) => void;
+	onApply: (t: SocialPostStyleTemplate) => void;
 	onSave: (name: string) => void;
 	onDelete: (id: string) => void;
 	onUpdate: (id: string) => void;
@@ -260,7 +260,7 @@ function TemplateChip({
 	onEdit,
 	onDelete,
 }: {
-	template: SocialPostStyleTemplateType;
+	template: SocialPostStyleTemplate;
 	active: boolean;
 	disabled?: boolean;
 	editable: boolean;
@@ -363,7 +363,7 @@ function TemplateEditor({
 	onUpdate,
 	onDone,
 }: {
-	template: SocialPostStyleTemplateType;
+	template: SocialPostStyleTemplate;
 	disabled?: boolean;
 	onRename: (name: string) => void;
 	onUpdate: () => void;
@@ -450,11 +450,7 @@ function TemplateEditor({
 }
 
 /** Hover/focus tooltip showing a style template's summary. */
-function TemplatePreview({
-	template,
-}: {
-	template: SocialPostStyleTemplateType;
-}) {
+function TemplatePreview({ template }: { template: SocialPostStyleTemplate }) {
 	const p = template.style;
 	return (
 		<div

@@ -6,12 +6,12 @@ import { useFormStatus } from "react-dom";
 
 import { Button, Input } from "@/components/ui";
 import {
-	type NewsletterFormStateType,
+	type NewsletterFormState,
 	subscribeNewsletter,
 } from "@/lib/server/actions";
 import { cn } from "@/lib/utils";
 
-const INITIAL: NewsletterFormStateType = { status: "idle" };
+const INITIAL: NewsletterFormState = { status: "idle" };
 
 function SubmitButton() {
 	const { pending } = useFormStatus();

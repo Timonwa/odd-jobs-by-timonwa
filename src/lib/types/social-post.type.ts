@@ -1,19 +1,19 @@
 // Types for social-post generation — posts, writing style, style templates, and run history.
 
 import type {
-	SocialPostDensityLevelType,
-	SocialPostPlatformType,
-	LongformSocialPostLengthType,
-	SocialPostToneType,
-	SocialPostVoiceType,
+	SocialPostDensityLevel,
+	SocialPostPlatform,
+	LongformSocialPostLength,
+	SocialPostTone,
+	SocialPostVoice,
 } from "@/lib/constants";
-import type { ArticleMetaType } from "./article.type";
-import type { HistoryEntryType } from "./history.type";
-import type { TokenUsageType } from "./token-usage.type";
+import type { ArticleMeta } from "./article.type";
+import type { HistoryEntry } from "./history.type";
+import type { TokenUsage } from "./token-usage.type";
 
 /** One generated post for a platform — text (or a thread), hashtags, and its character budget. */
-export type SocialPostType = {
-	platform: SocialPostPlatformType;
+export type SocialPost = {
+	platform: SocialPostPlatform;
 	content: string;
 	thread?: string[];
 	hashtags: string[];
@@ -22,35 +22,35 @@ export type SocialPostType = {
 };
 
 /** A completed generation — parsed article meta, one post per platform, and token usage. */
-export type SocialPostsResultType = {
-	article: ArticleMetaType;
-	posts: SocialPostType[];
-	usage: TokenUsageType;
+export type SocialPostsResult = {
+	article: ArticleMeta;
+	posts: SocialPost[];
+	usage: TokenUsage;
 };
 
 /** How posts should sound — sticky, reusable voice. Saved and switched via style templates. */
-export type SocialPostStyleType = {
-	voice: SocialPostVoiceType;
-	tone: SocialPostToneType;
-	emojiLevel: SocialPostDensityLevelType;
-	hashtagLevel: SocialPostDensityLevelType;
+export type SocialPostStyle = {
+	voice: SocialPostVoice;
+	tone: SocialPostTone;
+	emojiLevel: SocialPostDensityLevel;
+	hashtagLevel: SocialPostDensityLevel;
 	alwaysIncludeHashtags: string[];
 	neverUseHashtags: string[];
-	postLength: LongformSocialPostLengthType;
+	postLength: LongformSocialPostLength;
 };
 
 /** A named, reusable writing style — e.g. one per blog or client. Stores style only; platforms and thread length are per-run workflow, never saved here. */
-export type SocialPostStyleTemplateType = {
+export type SocialPostStyleTemplate = {
 	id: string;
 	name: string;
 	createdAt: number;
-	style: SocialPostStyleType;
+	style: SocialPostStyle;
 };
 
 /** One saved social-post run — the shared history core (source, result, timestamp) plus this tool's per-run config. Each tool stores under its own key. */
-export type SocialPostHistoryType = HistoryEntryType<SocialPostsResultType> & {
-	style: SocialPostStyleType;
-	platforms: SocialPostPlatformType[];
+export type SocialPostHistory = HistoryEntry<SocialPostsResult> & {
+	style: SocialPostStyle;
+	platforms: SocialPostPlatform[];
 	xThreadLength: number;
 	styleTemplateName?: string;
 };

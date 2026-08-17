@@ -8,17 +8,17 @@ import { env, isProduction } from "@env";
 
 // Shared hosted-demo rate limiting: per-user (HMAC-SHA256 IP hash) + global pool, both resetting UTC midnight; BYOK users skip both; fails open so infra flakiness never blocks a real request.
 
-export type QuotaConfigType = {
+export type QuotaConfig = {
 	toolSlug: string;
 	perUserDaily: number;
 	dailyPool: number;
 };
 
-export type QuotaCheckResultType =
+export type QuotaCheckResult =
 	| { allowed: true; remaining: number | null }
 	| { allowed: false; reason: "user" | "pool" };
 
-export type RateLimitStatusType = { configured: boolean };
+export type RateLimitStatus = { configured: boolean };
 
 function getRedis(): Redis | null {
 	// Production only — never rate-limit locally or on preview, even if the
@@ -76,8 +76,8 @@ async function getClientIpHash(): Promise<string> {
 
 /** Increment both quota counters and return whether the request is allowed, plus the caller's per-user generations left today (null when untracked) — call once per billable request, before the LLM call; skip for BYOK. */
 export async function checkAndIncrementQuota(
-	config: QuotaConfigType,
-): Promise<QuotaCheckResultType> {
+	config: QuotaConfig,
+): Promise<QuotaCheckResult> {
 	const { toolSlug, perUserDaily, dailyPool } = config;
 	const redis = getRedis();
 	// Untracked (local/self-host/no Upstash) — allowed, but there's no counter to
@@ -108,6 +108,6 @@ export async function checkAndIncrementQuota(
 }
 
 /** Whether hosted rate-limiting is active — drives the navbar "free/day" pill. */
-export function getRateLimitStatus(): RateLimitStatusType {
+export function getRateLimitStatus(): RateLimitStatus {
 	return { configured: getRedis() !== null };
 }

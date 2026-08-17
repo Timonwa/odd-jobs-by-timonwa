@@ -12,22 +12,22 @@ import Link from "next/link";
 import { useId, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
-import { BYOK_MODELS, type ByokModelType } from "@/lib/config/byok";
+import { BYOK_MODELS, type ByokModel } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
 import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
 import { POST_SLUGS } from "@/lib/constants";
 
-type StatusType =
+type Status =
 	| { type: "success"; message: string }
 	| { type: "error"; message: string }
 	| null;
 
 type ByokSectionProps = {
 	savedKey: string | null;
-	byokModel: ByokModelType;
-	onSave: (key: string) => StatusType;
+	byokModel: ByokModel;
+	onSave: (key: string) => Status;
 	onClear: () => void;
-	onModelChange: (model: ByokModelType) => void;
+	onModelChange: (model: ByokModel) => void;
 };
 
 const mask = (k: string) =>
@@ -43,7 +43,7 @@ export function ByokSection({
 }: ByokSectionProps) {
 	const [input, setInput] = useState(savedKey ?? "");
 	const [reveal, setReveal] = useState(false);
-	const [status, setStatus] = useState<StatusType>(null);
+	const [status, setStatus] = useState<Status>(null);
 	const keyInputId = useId();
 	const modelLabelId = useId();
 

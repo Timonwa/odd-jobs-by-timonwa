@@ -6,12 +6,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type AiToolPageProps = {
 	slug: string;
 	name: string;
-	icon: IconComponentType;
+	icon: IconComponent;
 	usageNotice: ReactNode;
 	settings?: ReactNode;
 	menuSlot?: ReactNode;

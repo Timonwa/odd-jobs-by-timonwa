@@ -1,5 +1,5 @@
 // Barrel — blocks tier: composed components built from base.
-export { Breadcrumbs, type BreadcrumbItemType } from "./Breadcrumbs";
+export { Breadcrumbs, type BreadcrumbItem } from "./Breadcrumbs";
 export {
 	Card,
 	CardHeader,

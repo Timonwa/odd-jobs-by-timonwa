@@ -4,12 +4,12 @@ import { generateText, isStepCount, Output, type ToolSet } from "ai";
 import type { z } from "zod";
 
 import { createGeminiClient, toTokenUsage } from "../../clients/gemini.client";
-import type { TokenUsageType } from "@/lib/types";
+import type { TokenUsage } from "@/lib/types";
 
-type GeminiProviderType = ReturnType<typeof createGeminiClient>["provider"];
+type GeminiProvider = ReturnType<typeof createGeminiClient>["provider"];
 
 function prepareArticleSource(opts: {
-	provider: GeminiProviderType;
+	provider: GeminiProvider;
 	url?: string;
 	text?: string;
 }): {
@@ -36,7 +36,7 @@ function prepareArticleSource(opts: {
 	};
 }
 
-type UrlMetaType = { retrievedUrl?: string; urlRetrievalStatus?: string };
+type UrlMeta = { retrievedUrl?: string; urlRetrievalStatus?: string };
 
 function getUrlRetrievalStatus(
 	steps: readonly { providerMetadata?: unknown }[],
@@ -46,7 +46,7 @@ function getUrlRetrievalStatus(
 	for (const step of steps) {
 		const items = (
 			step.providerMetadata as {
-				google?: { urlContextMetadata?: { urlMetadata?: UrlMetaType[] } };
+				google?: { urlContextMetadata?: { urlMetadata?: UrlMeta[] } };
 			}
 		)?.google?.urlContextMetadata?.urlMetadata;
 		const entry = items?.find(
@@ -72,7 +72,7 @@ export async function generateSchemaOutputFromArticle<T>(opts: {
 	temperature?: number;
 	maxOutputTokens: number;
 	timeoutMs?: number;
-}): Promise<{ object: T; usage: TokenUsageType }> {
+}): Promise<{ object: T; usage: TokenUsage }> {
 	const { provider, model } = createGeminiClient({
 		serverKey: opts.serverKey,
 		byokApiKey: opts.byokApiKey,

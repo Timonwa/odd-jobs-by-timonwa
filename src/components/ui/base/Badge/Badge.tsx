@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { type TintType, TINT_SURFACE } from "@/lib/config/tints";
+import { type Tint, TINT_SURFACE } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
 type BadgeVariant = "default" | "primary" | "outline" | "soon";
@@ -9,7 +9,7 @@ type BadgeSize = "sm" | "md";
 type BadgeProps = React.ComponentProps<"span"> & {
 	variant?: BadgeVariant;
 	size?: BadgeSize;
-	tint?: TintType;
+	tint?: Tint;
 };
 
 const BASE =

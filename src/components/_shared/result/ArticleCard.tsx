@@ -9,11 +9,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui";
-import type { ArticleMetaType, TokenUsageType } from "@/lib/types";
+import type { ArticleMeta, TokenUsage } from "@/lib/types";
 
 type Props = {
-	article: ArticleMetaType;
-	usage: TokenUsageType | null;
+	article: ArticleMeta;
+	usage: TokenUsage | null;
 	copied: boolean;
 	onCopyAll: () => void;
 	copyLabel: string;
