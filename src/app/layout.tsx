@@ -10,6 +10,7 @@ import {
 	SITE_DESCRIPTION,
 	SITE_NAME,
 	SITE_TITLE,
+	UMAMI_WEBSITE_ID,
 	SITE_URL,
 } from "@/lib/config/site";
 import "@/styles/globals.css";
@@ -77,7 +78,7 @@ export default function RootLayout({
 					<Script
 						defer
 						src="https://cloud.umami.is/script.js"
-						data-website-id="4550710a-0c5e-462a-8012-5d3ee2f3769e"
+						data-website-id={UMAMI_WEBSITE_ID}
 						data-performance="true"
 						strategy="afterInteractive"
 					/>

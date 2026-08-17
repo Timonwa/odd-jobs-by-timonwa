@@ -28,15 +28,18 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          # `every` is essential: the default `some` marks a PR docs-only when
+          # ANY file matches, so one .md alongside 100 .ts files skipped every gate.
+          predicate-quantifier: every
           filters: |
             docs-only:
               - '**/*.md'
               - '**/*.mdx'
               - 'LICENSE'
+              - 'LICENSE-content'
               - '.github/labeler.yml'
+              - '.github/release-notes.yml'
               - '.github/workflows/label.yml'
-              - '.github/workflows/stale.yml'
-              - '.github/workflows/pr-title.yml'
               - '.github/pull_request_template.md'
               - '.github/ISSUE_TEMPLATE/**'
               - '.github/FUNDING.yml'
@@ -75,10 +78,9 @@ jobs:
     needs: [changes, lint-and-typecheck]
     if: needs.changes.outputs.should-skip != 'true'
     env:
-      # env.ts validates required vars at module load via Zod.
-      # Missing GOOGLE_API_KEY fails the build with a Zod error.
-      # Optional vars (Upstash, Cloudflare Analytics) are left unset — the
-      # app gracefully skips rate limiting / analytics when absent.
+      # Every env var is optional in env.ts, so the build passes with none set.
+      # A placeholder key is still supplied so the build exercises the same
+      # configured-key path production takes rather than the unset branch.
       GOOGLE_API_KEY: ci-placeholder-key
 
     steps:

@@ -1,28 +1,30 @@
 # Environment audit — The Productivity Bug
 
-**Date:** 2026-08-17 · **Phase:** production · **Mode:** Report-only · **Branch:** `feat/the-productivity-bug` · **Scope:** whole repo — `src/lib/config/env.ts`, `.env.example`, `.gitignore`, all `process.env` call sites, server actions/services/utils that consume secrets, CI config, and full git history (210 commits) · **Overall:** 7/10
+**Date:** 2026-08-17 (fix pass applied same day) · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** whole repo — `src/lib/config/env.ts`, `.env.example`, `.gitignore`, all `process.env` call sites, server actions/services/utils that consume secrets, CI config, and full git history (210 commits) · **Overall:** 9.5/10
 
 ## Score change (previous → current)
 
-| Metric  | Previous | Current | Δ   | Trend |
-| ------- | -------- | ------- | --- | ----- |
-| Overall | N/A      | 7/10    | N/A | N/A   |
+| Metric  | Previous | Current | Δ    | Trend |
+| ------- | -------- | ------- | ---- | ----- |
+| Overall | 7/10     | 9.5/10  | +2.5 | ▲     |
 
-First run — no prior `_reports/environment-audit.md`, so every finding is `NEW` and there is no "Resolved since last audit" section.
+All nine findings closed. F5 was **applied by the maintainer** rather than by this pass — permissions here deny reads and writes of `.env*`, so the corrected content was handed over and confirmed applied (not independently verifiable from this session). The maintainer also confirmed the live host has the Upstash credentials set, which the fail-closed change below makes load-bearing.
+
+**The headline change is behavioural, not cosmetic:** hosted AI generations now **fail closed**. Quota enforcement follows the Upstash credentials rather than `APP_ENV`, and a built app that cannot meter refuses hosted generations (directing the user to BYOK) instead of serving them unmetered. That removes the blast radius behind both F1 and F2 rather than only making their symptoms louder.
 
 ## Findings
 
-| ID  | Severity | Category           | Status | Issue                                                                                                                                        | Location                                                                  |
-| --- | -------- | ------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 1   | HIGH     | Tiering            | NEW    | `APP_ENV` defaults to the permissive tier, so an unset var silently disables every production cost control                                   | `src/lib/config/env.ts:9`                                                 |
-| 2   | HIGH     | Validation         | NEW    | Upstash vars are optional with no production assertion and a fail-open path — quota enforcement can be absent in production with no signal   | `src/lib/config/env.ts:17`                                                |
-| 3   | MEDIUM   | Validation         | NEW    | `UPSTASH_REDIS_REST_URL` is a bare `z.string()` where a URL is meant                                                                         | `src/lib/config/env.ts:17`                                                |
-| 4   | MEDIUM   | Tiering            | NEW    | `LLM_MODEL` is non-secret tier config living in env, duplicating committed model constants                                                   | `src/lib/config/env.ts:15`                                                |
-| 5   | MEDIUM   | Completeness       | NEW    | `.env.example` documents a contract the schema doesn't implement ("Required" vars that are optional) plus a wrong key-console URL and a typo | `.env.example:5-10`                                                       |
-| 6   | LOW      | Validation         | NEW    | No `.min(1)` on any secret — an empty string validates as "set"                                                                              | `src/lib/config/env.ts:11-24`                                             |
-| 7   | LOW      | Cross-app / parity | NEW    | CI `env` block asserts a Zod failure that cannot happen and names an integration that doesn't exist                                          | `.github/workflows/ci.yml:77-82`                                          |
-| 8   | LOW      | Tiering            | NEW    | Analytics website id and Sender group ids are inline literals rather than tier-keyed committed config                                        | `src/app/layout.tsx:80`, `src/lib/server/actions/newsletter.action.ts:12` |
-| 9   | LOW      | Secret leak        | NEW    | Full provider error objects are logged verbatim on paths that carry an API key — needs confirmation                                          | `src/lib/server/utils/ai/errors.utils.ts:16`                              |
+| ID  | Severity | Category           | Status    | Issue                                                                                                                                        | Location                                                                  |
+| --- | -------- | ------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 1   | HIGH     | Tiering            | **FIXED** | `APP_ENV` defaults to the permissive tier, so an unset var silently disables every production cost control                                   | `src/lib/config/env.ts:9`                                                 |
+| 2   | HIGH     | Validation         | **FIXED** | Upstash vars are optional with no production assertion and a fail-open path — quota enforcement can be absent in production with no signal   | `src/lib/config/env.ts:17`                                                |
+| 3   | MEDIUM   | Validation         | **FIXED** | `UPSTASH_REDIS_REST_URL` is a bare `z.string()` where a URL is meant                                                                         | `src/lib/config/env.ts:17`                                                |
+| 4   | MEDIUM   | Tiering            | **FIXED** | `LLM_MODEL` is non-secret tier config living in env, duplicating committed model constants                                                   | `src/lib/config/env.ts:15`                                                |
+| 5   | MEDIUM   | Completeness       | **FIXED** | `.env.example` documents a contract the schema doesn't implement ("Required" vars that are optional) plus a wrong key-console URL and a typo | `.env.example:5-10`                                                       |
+| 6   | LOW      | Validation         | **FIXED** | No `.min(1)` on any secret — an empty string validates as "set"                                                                              | `src/lib/config/env.ts:11-24`                                             |
+| 7   | LOW      | Cross-app / parity | **FIXED** | CI `env` block asserts a Zod failure that cannot happen and names an integration that doesn't exist                                          | `.github/workflows/ci.yml:77-82`                                          |
+| 8   | LOW      | Tiering            | **FIXED** | Analytics website id and Sender group ids are inline literals rather than tier-keyed committed config                                        | `src/app/layout.tsx:80`, `src/lib/server/actions/newsletter.action.ts:12` |
+| 9   | LOW      | Secret leak        | **FIXED** | Full provider error objects are logged verbatim on paths that carry an API key — needs confirmation                                          | `src/lib/server/utils/ai/errors.utils.ts:16`                              |
 
 ### F1 — `APP_ENV` defaults to `development`, the tier that turns cost controls off
 
@@ -84,44 +86,88 @@ First run — no prior `_reports/environment-audit.md`, so every finding is `NEW
 - **Why it matters:** If the key is in the captured URL, hosted-platform logs accumulate credentials, and BYOK keys — which the app promises never leave the user's browser session (`byok.utils.ts:2`, `30`) — would be retained server-side, breaking that promise. OWASP A09.
 - **Fix:** Confirm the provider's transport, then log a redacted projection (name, status, code, tool tag) instead of the whole error object, and add a redaction helper so future log sites inherit it.
 
+## What was applied
+
+### F1 — FIXED: quota enforcement no longer depends on `APP_ENV`
+
+`getRedis()` gated on `isProduction`, so an unset `APP_ENV` (the schema's own default) meant no metering. Rather than making the tier required — which would break `pnpm dev` for contributors and force `APP_ENV` into CI — the dependency was removed: metering now follows the **credentials**, exempting only the dev server (`NODE_ENV === "development"`). Consequences, all intended:
+
+- A deploy missing `APP_ENV` still meters, because the Upstash credentials are what matter.
+- **Preview deploys are now metered too**, closing the "public previews are uncapped" half of this finding.
+- Local development needs no Upstash account, exactly as before.
+
+`APP_ENV` keeps its default and remains the switch for analytics and the `IP_HASH_SECRET` warning — tier-shaped concerns where a permissive default is harmless.
+
+### F2 — FIXED: missing credentials now refuse hosted work instead of allowing it
+
+`enforceDailyQuota` throws `QUOTA_UNAVAILABLE` when metering isn't live, mapped in `errors.utils.ts` to a message that points the user at BYOK. A boot-time `console.error` also fires when a platform key is configured without Upstash credentials, since the per-request symptom is otherwise indistinguishable from working.
+
+The per-request `catch` still fails **open** on a Redis error, which is deliberate and unchanged: a transient Upstash blip shouldn't block a legitimate request. The distinction this finding asked for now exists — a _transient failure_ is tolerated, a _missing configuration_ is refused.
+
+### F3 — FIXED: `UPSTASH_REDIS_REST_URL` is `z.string().url()`
+
+A scheme-less or truncated paste fails once at boot instead of once per request inside the fail-open catch.
+
+### F4 — FIXED: `LLM_MODEL` removed from env
+
+The hosted model is now `HOSTED_LLM_MODEL` in `src/lib/config/byok.ts`, beside the BYOK model union and allowlist that already encoded the same value and the same "-latest alias" rationale. One source of truth, reviewed in git, and no longer able to drift per environment or reach Google as an unvalidated string. Deleted from the schema; the var can be removed from the host config at leisure (an unread env var is harmless).
+
+### F5 — FIXED (applied by the maintainer): `.env.example` corrected
+
+Permissions here deny both reading and writing `.env*`, so the corrected content was handed over and the maintainer confirmed applying it: `Googe` → `Google`, the key link repointed from `console.cloud.google.com/apis/credentials` to `aistudio.google.com/api-keys` (matching `AI_STUDIO_KEYS_URL`), the inaccurate `# Required` block replaced with per-var "what happens when unset" notes, `LLM_MODEL` removed per F4, `APP_ENV` uncommented as `development`, and a note that a deployed app now needs Upstash credentials for hosted AI.
+
+Recorded as applied on the maintainer's confirmation — this session cannot read the file back to verify it, which is worth knowing if a future audit finds drift here.
+
+Minor residual, folded into the backlog: `.env.local` was never readable, so "no local vars absent from the schema" stays unverified. It is now partly self-enforcing — an unknown var is ignored, and a malformed known one fails at boot.
+
+### F6 — FIXED: empty strings can no longer read as "configured"
+
+Each secret is `z.preprocess(emptyAsAbsent, z.string().min(1).optional())`.
+
+**Deviation from the recommendation, deliberately.** The report asked for a plain `.min(1)` so `""` becomes a boot error. Applied as written, that broke the build immediately — the local env, following `.env.example`'s own `KEY=""` placeholders, failed validation on three vars. Failing a live boot over a placeholder is worse than the bug: in practice `KEY=""` means "not configured". Normalizing empty to `undefined` first delivers the finding's actual goal — no consumer can ever observe `""`, so a future `!== undefined` check is safe — without making the universal env-file convention a deployment hazard.
+
+### F7 — FIXED: CI env comments corrected
+
+The block no longer claims `GOOGLE_API_KEY` is required or names a non-existent Cloudflare Analytics integration; it states why a placeholder key is supplied. (Applied alongside the `paths-filter` fix in the same file.)
+
+### F8 — FIXED: inline third-party ids moved to committed config
+
+`UMAMI_WEBSITE_ID` and `SENDER_GROUP_IDS` now live in `src/lib/config/site.ts` with a comment noting they point at the production property in every tier, and where to split them if a staging destination is ever wanted.
+
+### F9 — FIXED: provider errors are logged as a redacted projection
+
+`toUserMessage` logs `{ name, message, statusCode, url, responseBody, finishReason }` with anything key-shaped stripped (`AIza…` tokens and `key=` / `api_key=` query params), and `responseBody` truncated to 500 chars.
+
+The provider's key transport could not be confirmed (`node_modules` reads denied), so this was fixed **defensively rather than conditionally** — the redaction holds whichever transport the SDK uses, and matters most on the BYOK path, where the key is the user's and the app promises it never leaves their browser session.
+
 ## Scorecard
 
-| Category                       | Score | Notes                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Validation                     | 6/10  | Zod parses at module load in a leaf module importing only `zod` + `server-only`, and `process.env` appears at exactly nine sites, all inside `env.ts` — zero raw reads anywhere else in the repo. But every var is `.optional()` or `.default()`, with no `.url()` and no `.min(1)`, so almost nothing can actually fail fast (F2, F3, F6).                  |
-| Completeness                   | 8/10  | Example tracks the schema 1:1 with placeholder-only values and helpful generation hints; loses points for the "Required"-vs-optional contradiction, the wrong key-console URL, and a typo (F5). `.env.local` var names were unreadable in this sandbox.                                                                                                      |
-| Public vs server               | 10/10 | No `NEXT_PUBLIC_*` vars exist at all; `env.ts` carries `import "server-only"`; all seven `@env` importers are server-side (layout, actions, services, clients, server utils) and no `"use client"` module reaches it, so a leak is structurally prevented rather than merely avoided.                                                                        |
-| Secret leak                    | 9/10  | Across 210 commits, `.env.example` is the only env/key file ever added, no `AIza…` / `PRIVATE KEY` / JWT / `*.upstash.io` string appears in any tracked blob in history, `.gitignore` covers `.env*` with `!.env.example`, `next.config.ts` has no `env` block, and every user-facing error string is hand-written. Only gap is verbatim error logging (F9). |
-| Tiering                        | 6/10  | `APP_ENV` drives every tier decision and `NODE_ENV` appears nowhere in the repo — the house rule is followed exactly, and an invalid `APP_ENV` fails fast. Marked down because the tier defaults to the permissive value (F1) and two classes of tier config live outside tier-keyed config (F4, F8).                                                        |
-| Cross-app / parity consistency | 8/10  | Single app, so no cross-app name/shape drift is possible, and `site.ts` centralizes derived URLs well. The CI env block asserts a validation contract the schema doesn't implement (F7), and no deploy config is in-repo to spot-check `APP_ENV` against (F1).                                                                                               |
+| Category                       | Score | Δ   | Notes                                                                                                                                                                                                                                                               |
+| ------------------------------ | ----- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Validation                     | 9/10  | +3  | `.url()` on the Redis URL, `.min(1)` on every secret behind empty-as-absent normalization, and `process.env` still read at exactly one module. Short of 10 only because `APP_ENV` retains a default (deliberate — cost control no longer depends on it).            |
+| Completeness                   | 9/10  | +1  | The example now states what each var does when unset instead of mislabelling optional vars "Required", points at the correct AI Studio console, and no longer lists the removed `LLM_MODEL` (F5). Short of 10 only because `.env.local` contents remain unverified. |
+| Public vs server               | 10/10 | —   | No `NEXT_PUBLIC_*` vars; `env.ts` is `server-only`; no client module reaches it.                                                                                                                                                                                    |
+| Secret leak                    | 10/10 | +1  | History still clean, and the last gap — verbatim provider-error logging — is closed by redacted projections (F9).                                                                                                                                                   |
+| Tiering                        | 9/10  | +3  | Cost control no longer hinges on the tier at all (F1), and both classes of inline tier config moved into reviewed config (F4, F8). `APP_ENV` still defaults permissive, which is now low-consequence rather than load-bearing.                                      |
+| Cross-app / parity consistency | 9/10  | +1  | CI comments now describe the real contract (F7). Still no in-repo deploy config to spot-check host values against.                                                                                                                                                  |
 
-## Action items
+## Remaining action items
 
-### Fix Now
+### Completed hand-offs
 
-| #   | Priority | Task (finding ID)                                                                                                                        | Effort |
-| --- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | P0       | Confirm `APP_ENV=production` is set in the live host config; make the tier explicit in the schema so it can't default to permissive (F1) | S      |
-| 2   | P0       | Add a production boot assertion that fails when a platform Gemini key is set but Upstash credentials are absent (F2)                     | S      |
-| 3   | P1       | Type `UPSTASH_REDIS_REST_URL` as `z.string().url()` (F3)                                                                                 | XS     |
-
-### Next Release
-
-| #   | Priority | Task (finding ID)                                                                                     | Effort |
-| --- | -------- | ----------------------------------------------------------------------------------------------------- | ------ |
-| 4   | P1       | Fix `.env.example` — real optional/required labels, AI Studio key URL, typo, uncomment `APP_ENV` (F5) | XS     |
-| 5   | P2       | Move `LLM_MODEL` into committed config (or allowlist-validate it) and drop the duplicate default (F4) | S      |
-| 6   | P2       | Add `.min(1)` to every secret so `""` is a boot error (F6)                                            | XS     |
-| 7   | P2       | Confirm the Gemini provider's key transport, then log redacted error projections (F9)                 | S      |
-| 8   | P3       | Correct the CI env comments; consider a CI boot check under `APP_ENV=production` (F7)                 | XS     |
+| #   | Task                                                      | Outcome                                          |
+| --- | --------------------------------------------------------- | ------------------------------------------------ |
+| 1   | Apply the corrected `.env.example` (F5)                   | Applied by the maintainer                        |
+| 2   | Confirm Upstash credentials are set on the live host (F2) | Confirmed set — hosted AI will meter, not refuse |
 
 ### Backlog
 
-| #   | Priority | Task (finding ID)                                                                                          | Effort |
-| --- | -------- | ---------------------------------------------------------------------------------------------------------- | ------ |
-| 9   | P3       | Move the umami website id and Sender group ids into tier-keyed committed config (F8)                       | S      |
-| 10  | P3       | Verify `.env.local` holds no vars absent from the schema/example — unreadable in this audit's sandbox (F5) | XS     |
+| #   | Priority | Task                                                                                                                                    | Effort |
+| --- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 4   | P3       | Add a CI step that boots with `APP_ENV=production` and asserts the fail-closed path fires, so the contract is tested not described (F7) | S      |
+| 5   | P3       | Split `UMAMI_WEBSITE_ID` / `SENDER_GROUP_IDS` per tier if a staging analytics property and test subscriber group are ever wanted (F8)   | S      |
+| 6   | P3       | Drop the now-unused `LLM_MODEL` from the Vercel env, and check `.env.local` for vars absent from the schema (F4, F5)                    | XS     |
 
 ## Resolved since last audit
 
-First run — nothing to compare against.
+First run of the fix pass. All nine findings closed — eight in code, F5 applied by the maintainer. The two HIGH findings are closed structurally — hosted generations can no longer run unmetered regardless of how `APP_ENV` is configured — which also closes the fail-open half of `redis-audit` F1/F2 and part of `security-audit`'s rate-limiting MEDIUM. Those will be marked in their own passes.

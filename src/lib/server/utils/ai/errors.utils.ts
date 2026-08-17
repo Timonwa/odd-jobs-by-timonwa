@@ -11,9 +11,47 @@ export type ToolErrorOptions = {
 	fallback: string;
 };
 
+// Anything key-shaped, whether it arrived as a query param or bare in a URL or
+// message. Logging a provider error verbatim can retain a credential — and on
+// the BYOK path that would be the *user's* key, which this app promises never
+// leaves their browser session.
+const KEY_PATTERN =
+	/\b(AIza[0-9A-Za-z_-]{10,})\b|([?&](?:key|api_?key)=)[^&\s"']+/gi;
+
+function redact(value: string): string {
+	return value.replace(KEY_PATTERN, (_match, _bare, prefix) =>
+		prefix ? `${prefix}[redacted]` : "[redacted]",
+	);
+}
+
+/** A loggable projection of an error — the fields worth debugging, with credentials stripped. Logging the raw object risks retaining an API key from provider metadata. */
+function toLoggable(error: unknown): Record<string, unknown> {
+	if (!(error instanceof Error)) return { value: redact(String(error)) };
+	const withProviderFields = error as Error & {
+		statusCode?: number;
+		url?: string;
+		responseBody?: string;
+		finishReason?: string;
+	};
+	return {
+		name: error.name,
+		message: redact(error.message),
+		...(withProviderFields.statusCode !== undefined && {
+			statusCode: withProviderFields.statusCode,
+		}),
+		...(withProviderFields.url && { url: redact(withProviderFields.url) }),
+		...(withProviderFields.responseBody && {
+			responseBody: redact(withProviderFields.responseBody).slice(0, 500),
+		}),
+		...(withProviderFields.finishReason && {
+			finishReason: withProviderFields.finishReason,
+		}),
+	};
+}
+
 /** AI SDK error → plain-English user message — reads typed SDK errors directly, adapts advice to BYOK vs hosted, checks tool-specific rules first. */
 export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
-	console.error(`[${opts.logTag}]`, error);
+	console.error(`[${opts.logTag}]`, toLoggable(error));
 	const byok = opts.byok ?? false;
 	const message = error instanceof Error ? error.message : String(error);
 
@@ -31,6 +69,11 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 	// this (BYOK always sends a key). Not transient, so no "try again".
 	if (/NO_SERVER_KEY/.test(message))
 		return "This tool isn't available to run right now. Add your own free Google key to use it — it only takes a couple of minutes.";
+
+	// Metering isn't live, so hosted generations are refused rather than run
+	// unbounded on the platform key. An operator problem, not the user's.
+	if (/QUOTA_UNAVAILABLE/.test(message))
+		return "The free hosted allowance isn't available right now. Add your own free Google key to use this tool — it only takes a couple of minutes.";
 
 	// This person's hosted daily allowance is used up — not the server being
 	// busy. Only thrown on the hosted path (BYOK skips the quota entirely).

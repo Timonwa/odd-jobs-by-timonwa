@@ -7,6 +7,11 @@ export type ByokModel =
 /** Default model used when the user hasn't picked one. */
 export const DEFAULT_BYOK_MODEL: ByokModel = "gemini-flash-lite-latest";
 
+/** Model the hosted (platform-key) path runs. Committed rather than env-held:
+ * a model id isn't a secret, and holding it in env let staging and production
+ * drift onto different models with no review and no allowlist check. */
+export const HOSTED_LLM_MODEL: ByokModel = DEFAULT_BYOK_MODEL;
+
 export const BYOK_MODELS: {
 	value: ByokModel;
 	label: string;

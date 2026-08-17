@@ -49,6 +49,14 @@ export const PRIVACY_URL = `${CREATOR_SITE_URL}/privacy`;
  * www.timonwa.com/shop/<slug> as its canonical (the authoritative listing). */
 export const SHOP_CANONICAL_BASE = `${CREATOR_SITE_URL}/shop`;
 
+/** Third-party destination ids. Committed, not env-held — none is a secret, and
+ * a value that differs per tier belongs in reviewed config rather than a
+ * dashboard. Both currently point at the production property in every tier;
+ * split them here if a separate staging destination is ever wanted. */
+export const UMAMI_WEBSITE_ID = "4550710a-0c5e-462a-8012-5d3ee2f3769e";
+/** Sender.net groups a new subscriber joins: "All customers" (account-wide) and "The Productivity Bug" (this site's list). */
+export const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
+
 /** Google AI Studio — where users create a free Gemini API key for BYOK. */
 export const AI_STUDIO_URL = "https://aistudio.google.com";
 export const AI_STUDIO_KEYS_URL = `${AI_STUDIO_URL}/api-keys`;

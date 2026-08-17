@@ -1,9 +1,12 @@
 // Gemini provider/model setup and token-usage mapping for server-side AI calls.
 
 import { createGoogle } from "@ai-sdk/google";
-import { env } from "@env";
 
-import { BYOK_MODELS, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
+import {
+	BYOK_MODELS,
+	DEFAULT_BYOK_MODEL,
+	HOSTED_LLM_MODEL,
+} from "@/lib/config/byok";
 import type { TokenUsage } from "@/lib/types";
 
 const ALLOWED_BYOK_MODELS = new Set<string>(BYOK_MODELS.map((m) => m.value));
@@ -26,7 +29,7 @@ export function createGeminiClient(opts: {
 		opts.byokModel && ALLOWED_BYOK_MODELS.has(opts.byokModel)
 			? opts.byokModel
 			: DEFAULT_BYOK_MODEL;
-	const modelId = opts.byokApiKey ? resolvedByokModel : env.LLM_MODEL;
+	const modelId = opts.byokApiKey ? resolvedByokModel : HOSTED_LLM_MODEL;
 	const provider = createGoogle({ apiKey: key });
 	return { provider, model: provider(modelId) };
 }

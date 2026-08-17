@@ -4,12 +4,10 @@
 import { z } from "zod";
 import { env } from "@env";
 
+import { SENDER_GROUP_IDS } from "@/lib/config/site";
+
 // Sender.net REST endpoint — requires SENDER_API_TOKEN; missing token surfaces an error to the user rather than silently dropping the address.
 const SENDER_API_BASE_URL = "https://api.sender.net/v2/subscribers";
-
-// Groups a new subscriber joins: "All customers" (account-wide) and
-// "The Productivity Bug" (this site's list).
-const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
 
 const EmailSchema = z.email();
 
