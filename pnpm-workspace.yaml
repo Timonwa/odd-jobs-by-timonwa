@@ -1,11 +1,31 @@
+# Install scripts are blocked by default in pnpm 11; only packages that
+# genuinely need one are allow-listed. Keep this list to packages actually in
+# the tree — a stale entry silently pre-approves install-time code if the
+# package is ever pulled back in.
 allowBuilds:
-  "@google/genai": true
-  cpu-features: true
-  protobufjs: true
   sharp: true
-  ssh2: true
   unrs-resolver: true
 overrides:
-  # Force the patched PostCSS everywhere (Next pins a vulnerable 8.4.31
-  # transitively) — GHSA-qx2v-qp2m-jg93, XSS via unescaped </style>.
-  postcss: ">=8.5.10"
+  # Each floor is a security control, so it carries the advisories it encodes —
+  # raise the number when a new advisory lands above it, or the override keeps
+  # resolving a vulnerable version while looking like protection.
+
+  # Next pins postcss 8.4.31 exactly, so without this the tree gets that.
+  # GHSA-qx2v-qp2m-jg93 (XSS via unescaped </style>), GHSA-r28c-9q8g-f849
+  # (path traversal via source-map auto-loading, 8.5.18), GHSA-fxqj-rqcc-2cmp
+  # (8.5.23). Also lifts nanoid, which only reaches the tree via postcss.
+  postcss: ">=8.5.23"
+  # gray-matter depends on js-yaml ^3.13.1, which resolves 3.15.0 —
+  # GHSA-5p4m-2wfm-xmqj (quadratic CPU in !!omap), patched in both 3.15.1 and
+  # 4.3.1. The `<4` ceiling is required, not tidiness: js-yaml 4 dropped
+  # `safeLoad`, which gray-matter calls, so forcing 4.x breaks frontmatter
+  # parsing at build time (verified).
+  js-yaml: ">=3.15.1 <4"
+  # Next ranges sharp ^0.34.5 as an optional dep; <0.35.0 bundles a libvips
+  # with CVE-2026-33327/33328/35590/35591 (GHSA-f88m-g3jw-g9cj).
+  sharp: ">=0.35.0"
+# Deliberately NOT overridden: brace-expansion. Its two advisories are dev-only
+# (ESLint's minimatch chain, no production exposure), and pinning the patched
+# 1.1.18/5.0.9 breaks `pnpm lint` — minimatch@3 needs brace-expansion 1.x's
+# CommonJS default export and gets a 5.x named export ("expand is not a
+# function"). Revisit when ESLint's own chain moves off minimatch 3.

@@ -12,21 +12,21 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 | conventions-audit        | 7/10   | 0        | 4      | 14     | 7      | —     | [conventions-audit.md](conventions-audit.md)     |
 | security-audit           | 7/10   | 0        | 3      | 4      | 4      | —     | [security-audit.md](security-audit.md)           |
 | environment-audit        | 7/10   | 0        | 2      | 3      | 4      | —     | [environment-audit.md](environment-audit.md)     |
-| dependency-audit         | 7/10   | 0        | 2      | 3      | 5      | —     | [dependency-audit.md](dependency-audit.md)       |
+| dependency-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2  | [dependency-audit.md](dependency-audit.md)       |
 | frontend-audit           | 7/10   | 0        | 1      | 8      | 5      | —     | [frontend-audit.md](frontend-audit.md)           |
 | docs-audit               | 7/10   | 0        | 5      | 7      | 11     | —     | [docs-audit.md](docs-audit.md)                   |
 | performance-audit        | 6.5/10 | 0        | 2      | 8      | 4      | —     | [performance-audit.md](performance-audit.md)     |
 | seo-code-audit           | 6/10   | 0        | 4      | 9      | 12     | —     | [seo-code-audit.md](seo-code-audit.md)           |
 | accessibility-audit      | 6/10   | 0        | 8      | 11     | 7      | —     | [accessibility-audit.md](accessibility-audit.md) |
 | redis-audit              | 5/10   | 0        | 3      | 5      | 4      | —     | [redis-audit.md](redis-audit.md)                 |
-| **Raw total**            |        | **1**    | **37** | **80** | **72** |       |                                                  |
+| **Raw total (open)**     |        | **1**    | **35** | **77** | **67** |       |                                                  |
 | **After de-duplication** |        | **1**    | **20** | —      | —      |       |                                                  |
 
 First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storybook configured), `api-audit` (no route-handler layer; Server Action concerns covered by security + frontend), `rbac-audit` (no auth, roles, or protected objects exist), `firestore-audit` (no Firebase). `redis-audit` was added beyond the orchestrator's table because Upstash Redis is a real integration here.
 
 ## Top priorities (cross-cutting, worst-first)
 
-1. **CRITICAL — `next@16.2.10` carries 3 reachable advisories, and the patch is already sitting unmerged.** Server Action DoS and unauthenticated disclosure of internal Server Function endpoints both hit this app's only dynamic surface; all are fixed in 16.2.11 (latest 16.3.1, non-major). Dependabot's branch `origin/dependabot/npm_and_yarn/npm_and_yarn-1c4f37dfd6` has held the fix since 2026-07-28. → codebase F1, security F1, dependency F1.
+1. ~~**CRITICAL — `next@16.2.10` carries 3 reachable advisories.**~~ **FIXED** in the dependency pass — bumped to 16.2.11 with `eslint-config-next` and `@next/mdx` in lockstep; `pnpm audit` is now clean. Original detail: Server Action DoS and unauthenticated disclosure of internal Server Function endpoints both hit this app's only dynamic surface; all are fixed in 16.2.11 (latest 16.3.1, non-major). Dependabot's branch `origin/dependabot/npm_and_yarn/npm_and_yarn-1c4f37dfd6` has held the fix since 2026-07-28. → codebase F1, security F1, dependency F1.
 2. **HIGH — Server Action inputs are never validated.** `existing`, `primaryKeyword`, and `style` are interpolated straight into the Gemini prompt, bypassing the 15 000-char cap that only guards `source.text`; `style` is `JSON.stringify`-ed unbounded, `existing[]` and `xThreadLength` are uncapped, and `LONGFORM_SOCIAL_POST_LENGTH_LIMITS[style.postLength]` can return `undefined` while typed `number`. One allowed request can carry megabytes on the platform key. → security F2, codebase F4, frontend F4.
 3. **HIGH — every cost control fails open or silently no-ops.** `APP_ENV` defaults to `development`, the Upstash vars are `.optional()`, and the limiter catches all Redis errors and allows the request. A missing, typo'd, or rotated credential on deploy is indistinguishable from working rate limiting, leaving the hosted Gemini key uncapped with no boot error or alert. Public preview deploys are uncapped by the same mechanism. → environment F1 + F2, redis F1 + F2, security MEDIUM.
 4. **HIGH — `subscribeNewsletter` is unauthenticated, unthrottled, and leaks membership.** No rate limit, captcha, or honeypot on a Server Action that writes to Sender.net with the server token, and its "already subscribed" branch is a membership oracle. → security F3, redis F3, frontend F5.
@@ -35,7 +35,7 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 7. **HIGH ×4 — focus management and async announcement.** `Drawer` declares `aria-modal="true"` with no Tab trap; opening the BYOK/settings drawer from the nav menu drops focus to `<body>`; no skip link anywhere, with 8+ header tab stops before content on every page (WCAG 2.4.1, Level A); AI generation start/finish is never announced and the focused submit button self-disables mid-run. → accessibility F1–F4.
 8. **HIGH — a paid product page canonicalizes to a 404.** `/shop/content-script-generator` points at `https://www.timonwa.com/shop/content-script-generator`, verified 404 over the network (the other five product canonicals are 200). Combined with the deliberate sitemap exclusion, the only page for a $10 product self-excludes with no valid target. → seo F1.
 9. **HIGH ×3 — the structure docs contradict the code and each other.** Both AGENTS.md and CONTRIBUTING.md still show `app/`, `components/`, `lib/` at the repo root after the move under `src/`; AGENTS.md says feature PRs target `dev` while CONTRIBUTING.md says branch from and PR against `main`. Introduced during this refactor. → docs F1–F3.
-10. **HIGH — the `postcss` override has gone stale.** It is still necessary (Next pins postcss 8.4.31 exactly), but its `>=8.5.10` floor no longer patches: the lockfile resolved 8.5.17, carrying a high advisory fixed in 8.5.18, and drags `nanoid` 3.3.15 with two high advisories. Build-time-only reachability; one-line fix to `>=8.5.23`. → dependency F2, codebase F1.
+10. ~~**HIGH — the `postcss` override has gone stale.**~~ **FIXED** — floor raised to `>=8.5.23`, resolving postcss 8.5.26 and nanoid 3.3.18. Original detail: It is still necessary (Next pins postcss 8.4.31 exactly), but its `>=8.5.10` floor no longer patches: the lockfile resolved 8.5.17, carrying a high advisory fixed in 8.5.18, and drags `nanoid` 3.3.15 with two high advisories. Build-time-only reachability; one-line fix to `>=8.5.23`. → dependency F2, codebase F1.
 11. **HIGH ×2 — the nine tool layouts duplicate and hardcode.** Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
 12. **HIGH — no test infrastructure at all,** and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
 13. **HIGH — 26 OG/Twitter image routes opt into `runtime = "edge"`,** which the build explicitly warns disables static generation; every image route is `ƒ Dynamic` while every page is `○ Static`. → frontend F1, performance F3. Whether `edge` is needed at all on Next 16 is **unconfirmed** (docs read was denied in-session).
@@ -53,8 +53,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 
 ### Fix Now
 
-1. Merge the pending Dependabot branch (or bump directly) to `next@16.2.11`+, then re-run `pnpm audit`. [P1]
-2. Raise the `pnpm-workspace.yaml` postcss override to `>=8.5.23`. [P10]
+1. ~~Bump `next` to 16.2.11+ and re-run `pnpm audit`.~~ **DONE** (dependency pass) [P1]
+2. ~~Raise the `pnpm-workspace.yaml` postcss override to `>=8.5.23`.~~ **DONE** (dependency pass) [P10]
 3. Zod-validate every Server Action input at the boundary — cap `existing[]`, `primaryKeyword`, `style`, and `xThreadLength`, and make `LONGFORM_SOCIAL_POST_LENGTH_LIMITS` lookups total. [P2]
 4. Make cost control fail loudly: assert Upstash credentials when `APP_ENV=production`, and either fail closed or alert when Redis errors. Confirm the host actually sets `APP_ENV=production`. [P3]
 5. Rate-limit `subscribeNewsletter`, add a honeypot, and return an identical response whether or not the address already exists. [P4]
@@ -93,7 +93,9 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 
 ## Resolved since last run
 
-First run — nothing to compare. Subsequent runs should diff against this file.
+**dependency-audit — complete (7/10 → 9/10).** All 8 actionable findings fixed, 1 accepted (no provenance available), 1 deferred by project policy (version drift with no advisory). `pnpm audit` went from 21 advisories (14 high / 7 moderate) to **zero**. This also closed the suite's only CRITICAL and two HIGH items carried by `codebase-audit` (F1) and `security-audit` (F1) — those will be marked FIXED when their own passes run, not re-examined.
+
+Overall suite score is unchanged at 6.5/10 pending the remaining passes; it is recalculated only when every audit has had its pass.
 
 ## What held up under red-teaming
 
