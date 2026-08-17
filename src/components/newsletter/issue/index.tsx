@@ -5,13 +5,13 @@ import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
-import type { IssueMeta } from "@/lib/issues/issues";
-import { getAllIssues } from "@/lib/issues/loader";
+import type { IssueMetaType } from "@/lib/schemas";
+import { getAllIssues } from "@/lib/server";
 
 import { IssueHero } from "./IssueHero";
 import { IssuePageFooter } from "./IssuePageFooter";
 
-export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
+export async function IssuePageContent({ issue }: { issue: IssueMetaType }) {
 	const { default: IssueBody } = await import(
 		`@/content/issues/${issue.slug}.mdx`
 	);

@@ -2,7 +2,7 @@ import { JsonLdScript } from "@/components/_shared/content/JsonLdScript";
 import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
-import { getAllPosts } from "@/lib/blog/loader";
+import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
 

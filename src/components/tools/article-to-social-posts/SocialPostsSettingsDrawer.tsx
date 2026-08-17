@@ -1,6 +1,6 @@
 "use client";
 
-import { socialPostsRuntime } from "@/lib/utils";
+import { socialPostsRuntime } from "@/lib/config/social-posts-writer";
 import {
 	SettingsDrawer,
 	type SettingsPresentationType,

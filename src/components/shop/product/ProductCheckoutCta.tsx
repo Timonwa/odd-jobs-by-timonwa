@@ -1,9 +1,9 @@
 import { ArrowUpRightIcon } from "lucide-react";
 
 import { buttonClasses } from "@/components/ui";
-import type { ProductMeta } from "@/lib/shop/products";
+import type { ProductMetaType } from "@/lib/schemas";
 
-export function ProductCheckoutCta({ product }: { product: ProductMeta }) {
+export function ProductCheckoutCta({ product }: { product: ProductMetaType }) {
 	return (
 		<div
 			id="buy"

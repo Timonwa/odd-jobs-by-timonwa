@@ -15,7 +15,7 @@ import { Button, Input } from "@/components/ui";
 import { BYOK_MODELS, type ByokModelType } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
 import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
-import { POST_SLUGS } from "@/lib/blog/blog";
+import { POST_SLUGS } from "@/lib/constants";
 
 type StatusType =
 	| { type: "success"; message: string }

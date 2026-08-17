@@ -1,10 +1,10 @@
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
-import type { PostMeta } from "@/lib/blog/blog";
+import type { PostMetaType } from "@/lib/schemas";
 import { ROUTES } from "@/lib/config/routes";
 
-export function PostGrid({ posts }: { posts: PostMeta[] }) {
+export function PostGrid({ posts }: { posts: PostMetaType[] }) {
 	return (
 		<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{posts.map((post) => (

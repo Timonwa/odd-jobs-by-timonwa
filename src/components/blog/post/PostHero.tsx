@@ -1,10 +1,10 @@
 import { KeyRoundIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
-import type { PostMeta } from "@/lib/blog/blog";
-import { splitTitle } from "@/lib/content/split-title";
+import type { PostMetaType } from "@/lib/schemas";
+import { splitTitle } from "@/lib/utils";
 
-export function PostHero({ post }: { post: PostMeta }) {
+export function PostHero({ post }: { post: PostMetaType }) {
 	const { lead, accent } = splitTitle(post);
 	return (
 		<PageHero

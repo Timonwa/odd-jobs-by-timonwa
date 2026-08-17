@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ProductPageContent } from "@/components/shop/product";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
-import { getProduct, getProductSlugs } from "@/lib/shop/loader";
+import { getProduct, getProductSlugs } from "@/lib/server";
 
 // Known product slugs are prerendered; an unknown slug falls through to the
 // notFound() below. (`dynamicParams` can't be set alongside cacheComponents.)

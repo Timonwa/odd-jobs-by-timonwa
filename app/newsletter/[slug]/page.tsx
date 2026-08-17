@@ -9,7 +9,7 @@ import {
 	SITE_NAME,
 	SITE_URL,
 } from "@/lib/config/site";
-import { getIssue, getIssueSlugs } from "@/lib/issues/loader";
+import { getIssue, getIssueSlugs } from "@/lib/server";
 
 // Known issue slugs are prerendered; an unknown slug falls through to the
 // notFound() below. (`dynamicParams` can't be set alongside cacheComponents.)

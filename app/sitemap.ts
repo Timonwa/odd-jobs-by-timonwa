@@ -4,8 +4,8 @@ import { TOOL_CATEGORIES } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_URL } from "@/lib/config/site";
 import { getToolsInCategory, TOOLS } from "@/lib/config/tools";
-import { getAllPosts } from "@/lib/blog/loader";
-import { getAllIssues } from "@/lib/issues/loader";
+import { getAllPosts } from "@/lib/server";
+import { getAllIssues } from "@/lib/server";
 
 /**
  * Served at /sitemap.xml. The hub home, the tool directory, the categories index

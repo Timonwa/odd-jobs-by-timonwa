@@ -21,7 +21,7 @@ import type {
 import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
 import { Button, Input, SegmentedControl } from "@/components/ui";
 
-import { generateSeoMeta } from "@/lib/actions";
+import { generateSeoMeta } from "@/lib/server/actions";
 import { byokModelStorage, byokStorage } from "@/lib/utils";
 import { emitHostedUsage } from "@/lib/utils";
 

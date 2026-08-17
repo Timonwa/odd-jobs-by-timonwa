@@ -3,15 +3,15 @@ import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { RelatedGrid } from "@/components/_shared/content/RelatedGrid";
 import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
-import type { PostMeta } from "@/lib/blog/blog";
-import { getAllPosts } from "@/lib/blog/loader";
+import type { PostMetaType } from "@/lib/schemas";
+import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 
 import { PostHero } from "./PostHero";
 import { PostPageFooter } from "./PostPageFooter";
 
-export async function PostPageContent({ post }: { post: PostMeta }) {
+export async function PostPageContent({ post }: { post: PostMetaType }) {
 	const { default: PostBody } = await import(`@/content/blog/${post.slug}.mdx`);
 
 	const related = getAllPosts()

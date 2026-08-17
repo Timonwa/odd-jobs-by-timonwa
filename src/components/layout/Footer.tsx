@@ -19,8 +19,8 @@ import {
 } from "@/lib/config/site";
 import { TOOLS } from "@/lib/config/tools";
 import { ROUTES } from "@/lib/config/routes";
-import { getAllPosts } from "@/lib/blog/loader";
-import { getAllProducts } from "@/lib/shop/loader";
+import { getAllPosts } from "@/lib/server";
+import { getAllProducts } from "@/lib/server";
 
 // Creator cross-links — a single compact row in the bottom bar (rather than
 // their own column) so the nav grid stays roomy.

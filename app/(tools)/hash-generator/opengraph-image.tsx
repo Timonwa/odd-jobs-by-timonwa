@@ -1,4 +1,8 @@
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og/og-image";
+import {
+	OG_CONTENT_TYPE,
+	OG_SIZE,
+	renderOgImage,
+} from "@/lib/server/utils/og-image.utils";
 
 export const runtime = "edge";
 export const alt = "Hash Generator — SHA-1, SHA-256, SHA-384, and SHA-512";

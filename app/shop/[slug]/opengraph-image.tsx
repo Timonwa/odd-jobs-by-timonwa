@@ -1,6 +1,10 @@
-import { splitTitle } from "@/lib/content/split-title";
-import { getProduct, getProductSlugs } from "@/lib/shop/loader";
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og/og-image";
+import { splitTitle } from "@/lib/utils";
+import { getProduct, getProductSlugs } from "@/lib/server";
+import {
+	OG_CONTENT_TYPE,
+	OG_SIZE,
+	renderOgImage,
+} from "@/lib/server/utils/og-image.utils";
 
 export const alt = "Product — The Productivity Bug";
 export const size = OG_SIZE;

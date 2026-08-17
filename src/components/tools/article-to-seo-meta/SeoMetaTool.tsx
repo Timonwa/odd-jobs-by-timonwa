@@ -29,7 +29,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui";
-import { generateSeoMeta, regenerateSeoMetaVariation } from "@/lib/actions";
+import {
+	generateSeoMeta,
+	regenerateSeoMetaVariation,
+} from "@/lib/server/actions";
 import { byokModelStorage, byokStorage } from "@/lib/utils";
 import { emitHostedUsage } from "@/lib/utils";
 

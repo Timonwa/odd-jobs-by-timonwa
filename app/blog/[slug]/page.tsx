@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostPageContent } from "@/components/blog/post";
-import { getPost, getPostSlugs } from "@/lib/blog/loader";
+import { getPost, getPostSlugs } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
 import {
 	CREATOR_TWITTER,

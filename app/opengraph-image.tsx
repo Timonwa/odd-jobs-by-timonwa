@@ -1,5 +1,9 @@
 import { SITE_NAME } from "@/lib/config/site";
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og/og-image";
+import {
+	OG_CONTENT_TYPE,
+	OG_SIZE,
+	renderOgImage,
+} from "@/lib/server/utils/og-image.utils";
 
 export const runtime = "edge";
 export const alt = `${SITE_NAME} — Free, focused tools for writers, developers, and creators`;

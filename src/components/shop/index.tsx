@@ -4,7 +4,7 @@ import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
-import { getAllProducts } from "@/lib/shop/loader";
+import { getAllProducts } from "@/lib/server";
 
 import { ProductGrid } from "./ProductGrid";
 import { ShopHero } from "./ShopHero";

@@ -2,7 +2,7 @@ import { ArrowRightIcon, ClockIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import type { IssueMeta } from "@/lib/issues/issues";
+import type { IssueMetaType } from "@/lib/schemas";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",
@@ -10,7 +10,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 	day: "numeric",
 });
 
-export function IssueGrid({ issues }: { issues: IssueMeta[] }) {
+export function IssueGrid({ issues }: { issues: IssueMetaType[] }) {
 	if (issues.length === 0) return null;
 	return (
 		<>

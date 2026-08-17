@@ -4,8 +4,8 @@ import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
-import { getAllProducts } from "@/lib/shop/loader";
-import type { ProductMeta } from "@/lib/shop/products";
+import { getAllProducts } from "@/lib/server";
+import type { ProductMetaType } from "@/lib/schemas";
 
 import { MoreProducts } from "./MoreProducts";
 import { ProductCheckoutCta } from "./ProductCheckoutCta";
@@ -16,7 +16,7 @@ import { StickyCheckout } from "./StickyCheckout";
 export async function ProductPageContent({
 	product,
 }: {
-	product: ProductMeta;
+	product: ProductMetaType;
 }) {
 	const { default: ProductBody } = await import(
 		`@/content/shop/${product.slug}.mdx`

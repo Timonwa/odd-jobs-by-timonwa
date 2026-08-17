@@ -8,7 +8,7 @@ import { Button, Input } from "@/components/ui";
 import {
 	type NewsletterFormStateType,
 	subscribeNewsletter,
-} from "@/lib/actions";
+} from "@/lib/server/actions";
 import { cn } from "@/lib/utils";
 
 const INITIAL: NewsletterFormStateType = { status: "idle" };

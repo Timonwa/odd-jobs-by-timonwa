@@ -4,7 +4,7 @@ import { HubNavbar } from "@/components/layout/HubNavbar";
 import { PageMain } from "@/components/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_NAME, SITE_URL } from "@/lib/config/site";
-import { getAllIssues } from "@/lib/issues/loader";
+import { getAllIssues } from "@/lib/server";
 
 import { IssueGrid } from "./IssueGrid";
 import { NewsletterHero } from "./NewsletterHero";

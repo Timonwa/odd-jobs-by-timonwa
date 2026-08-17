@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { buttonClasses, LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import { getAllProducts } from "@/lib/shop/loader";
+import { getAllProducts } from "@/lib/server";
 
 export function ShopPreview() {
 	const products = getAllProducts().slice(0, 3);
