@@ -41,6 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# unpublished content drafts (keep out of the public repo until published)
+src/content/**/_drafts/
+
 # private
 docs
 docs/todo.md
