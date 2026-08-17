@@ -4,19 +4,9 @@
   <br/><br/>
 
 <a href="https://tools.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Ftools.timonwa.com&style=flat-square&label=tools.timonwa.com&up_message=online&down_message=offline" /></a>
-<a href="https://github.com/Timonwa/tools-by-timonwa/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Timonwa/tools-by-timonwa?style=flat-square&logo=github&label=stars&color=f5c518" /></a>
 <a href="./LICENSE"><img alt="License: AGPL v3.0" src="https://img.shields.io/badge/License-AGPL%20v3.0-blue?style=flat-square" /></a>
 <a href="./CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" /></a>
-<a href="https://www.timonwa.com/coc"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.1-7c3aed?style=flat-square" /></a>
 <a href="https://www.timonwa.com/support"><img alt="Support" src="https://img.shields.io/badge/Support-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white" /></a>
-
-<br/>
-
-<a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000?style=flat-square&logo=nextdotjs&logoColor=white" /></a>
-<a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?style=flat-square&logo=react&logoColor=white" /></a>
-<a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" /></a>
-<a href="https://tailwindcss.com"><img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white" /></a>
-<a href="https://ai-sdk.dev"><img alt="Vercel AI SDK" src="https://img.shields.io/badge/Vercel_AI_SDK-000?style=flat-square&logo=vercel&logoColor=white" /></a>
 </div>
 
 ---
@@ -78,6 +68,20 @@ Open [http://localhost:3000](http://localhost:3000).
 | `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —        | Optional per-tool key                                  |
 | `LLM_MODEL`                             | —        | Server model (default `gemini-flash-lite-latest`)      |
 | `UPSTASH_REDIS_REST_URL` / `..._TOKEN`  | —        | Enables hosted daily rate limiting                     |
+| `IP_HASH_SECRET`                        | —        | Pepper for hashed IPs in rate-limit keys (production)  |
+| `SENDER_API_TOKEN`                      | —        | Sender.net token for newsletter signups                |
+
+The app builds and the instant tools work with nothing set; the AI tools need `GOOGLE_API_KEY` (or a user's own key). [`.env.example`](./.env.example) is the source of truth.
+
+### Scripts
+
+| Command          | What it does           |
+| ---------------- | ---------------------- |
+| `pnpm dev`       | Dev server (Turbopack) |
+| `pnpm build`     | Production build       |
+| `pnpm typecheck` | Type check             |
+| `pnpm lint`      | ESLint                 |
+| `pnpm format`    | Prettier — write       |
 
 Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK](https://ai-sdk.dev/) + Gemini, and Upstash Redis.
 
