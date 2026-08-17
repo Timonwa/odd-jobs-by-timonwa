@@ -7,7 +7,7 @@ import type { WriterRuntime } from "@/lib/types";
 import { OPEN_SOCIAL_POST_SETTINGS_EVENT } from "@/lib/constants";
 import type { SocialPostStyle } from "@/lib/types";
 import { TemplatesPicker } from "@/components/_shared/writer/TemplatesPicker";
-import { NavIconButton } from "@/components/layout/NavIconButton";
+import { NavIconButton } from "@/components/_shared/layout/NavIconButton";
 import { Button, Drawer } from "@/components/ui";
 
 import { HashtagsSection } from "./HashtagsSection";

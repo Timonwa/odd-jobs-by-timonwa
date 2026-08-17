@@ -1,8 +1,8 @@
 import { JsonLdScript } from "@/components/_shared/content/JsonLdScript";
 import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { RelatedGrid } from "@/components/_shared/content/RelatedGrid";
-import { HubNavbar } from "@/components/layout/HubNavbar";
-import { PageMain } from "@/components/layout/PageMain";
+import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
+import { PageMain } from "@/components/_shared/layout/PageMain";
 import type { PostMeta } from "@/lib/schemas";
 import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";

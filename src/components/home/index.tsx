@@ -1,4 +1,4 @@
-import { HubNavbar } from "@/components/layout/HubNavbar";
+import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
 import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { BrowseByCategory } from "./BrowseByCategory";
 import { HomeHero } from "./HomeHero";

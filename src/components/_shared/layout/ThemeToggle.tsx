@@ -2,7 +2,7 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import { NavIconButton } from "@/components/layout/NavIconButton";
+import { NavIconButton } from "@/components/_shared/layout/NavIconButton";
 import { Button } from "@/components/ui";
 import { type Theme, useTheme } from "@/lib/hooks";
 

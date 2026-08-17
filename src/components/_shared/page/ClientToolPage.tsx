@@ -2,8 +2,8 @@ import type { ComponentType, ReactNode, SVGProps } from "react";
 
 import { ToolContent } from "../content/ToolContent";
 import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
-import { Navbar } from "@/components/layout/Navbar";
-import { PageMain } from "@/components/layout/PageMain";
+import { Navbar } from "@/components/_shared/layout/Navbar";
+import { PageMain } from "@/components/_shared/layout/PageMain";
 import { PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 

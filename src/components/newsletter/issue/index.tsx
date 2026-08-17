@@ -1,8 +1,8 @@
 import { JsonLdScript } from "@/components/_shared/content/JsonLdScript";
 import { IssuePrevNext } from "@/components/_shared/content/IssuePrevNext";
 import { Newsletter } from "@/components/_shared/content/Newsletter";
-import { HubNavbar } from "@/components/layout/HubNavbar";
-import { PageMain } from "@/components/layout/PageMain";
+import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
+import { PageMain } from "@/components/_shared/layout/PageMain";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 import type { IssueMeta } from "@/lib/schemas";

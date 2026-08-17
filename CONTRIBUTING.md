@@ -85,8 +85,9 @@ components/
     blocks/    # composed: Card, Drawer, Section, ...
     patterns/  # page regions: PageHero
   _shared/     # cross-feature: writer/ (the shared engine), category/, result/,
-               #   source/, page/, byok/, content/, tool/
-  layout/      # navbar, footer, page shell, ThemeToggle
+               #   source/, page/, byok/, content/, tool/, layout/ (navbar, footer,
+               #   page shell, ThemeToggle)
+  errors/      # framework boundaries: ErrorContent, NotFoundContent, GlobalErrorContent
   home/  categories/                           # hub page compositions
   tools/       # index.tsx = /tools directory; <slug>/ = each tool's UI
   blog/        # blog index sections + post/ + _shared/ (MDX widgets)
@@ -97,7 +98,7 @@ lib/                                           # kind-first, flat inside each ki
   constants/   # <domain>.constant.ts — frozen values + their inferred types
   data/        # <domain>.data.ts — static page copy records
   hooks/       # use-<subject>.ts (+ writer/ concern group)
-  schemas/     # <domain>.schema.ts — Zod schemas + inferred ...MetaType types
+  schemas/     # <domain>.schema.ts — Zod schemas + their inferred meta types
   types/       # <domain>.type.ts — shapes with no const or schema behind them
   utils/       # <domain>.utils.ts + text/ svg/ storage/ writer/ groups (client-safe)
   server/      # server-only boundary (barrel exports services; marked server-only)
@@ -118,7 +119,7 @@ When building or extending a tool, reuse the shared layer rather than re-impleme
 3. **Server** _(AI tools only — client-only tools like the counters and converters stop at step 2)_ — `lib/server/actions/<slug>.action.ts` (a `"use server"` action) + `lib/server/services/<name>.service.ts` (the agent). Reuse from `@/lib/server/utils/ai`, `@/lib/server/clients`, and `@/lib/utils` (client-safe):
    - `generateSchemaOutputFromArticle` — runs the agent over a URL/text article source
    - `createGeminiClient` / `toTokenUsage` (`clients/gemini.client.ts`) — Gemini provider + usage mapping
-   - `enforceDailyQuota` / `readUsage` — hosted daily quota · `resolvePlatformApiKey` — server key
+   - `enforceDailyQuota` / `getHostedQuotaStatus` — hosted daily quota · `resolvePlatformApiKey` — server key
    - `resolveArticleSource` / `articleSourceErrorRules` / `toUserMessage` — validate the source, map errors
    - `createHistoryStore` (`@/lib/utils`) — local run history
 4. **Register** — add an entry to `TOOLS` in `lib/config/tools.ts`. It then appears in the home grid, navbar menu, and sitemap automatically.

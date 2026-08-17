@@ -3,8 +3,8 @@ import { Suspense } from "react";
 
 import { Newsletter } from "@/components/_shared/content/Newsletter";
 import { ToolGrid } from "@/components/_shared/tool/ToolGrid";
-import { HubNavbar } from "@/components/layout/HubNavbar";
-import { PageMain } from "@/components/layout/PageMain";
+import { HubNavbar } from "@/components/_shared/layout/HubNavbar";
+import { PageMain } from "@/components/_shared/layout/PageMain";
 import { Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
