@@ -3,6 +3,8 @@ import Newsletter from "@/components/_shared/content/Newsletter";
 import BrowseByCategory from "./BrowseByCategory";
 import Hero from "./Hero";
 import HowItWorks from "./HowItWorks";
+import LatestPosts from "./LatestPosts";
+import ShopPreview from "./ShopPreview";
 import ToolsPreview from "./ToolsPreview";
 import WhatItIs from "./WhatItIs";
 import WhyUseIt from "./WhyUseIt";
@@ -18,6 +20,8 @@ export default function HubHomePageContent() {
 				<BrowseByCategory />
 				<HowItWorks />
 				<WhyUseIt />
+				<LatestPosts />
+				<ShopPreview />
 				<Newsletter className="mt-20 sm:mt-24" />
 			</main>
 		</>

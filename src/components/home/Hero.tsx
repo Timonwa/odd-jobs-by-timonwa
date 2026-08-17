@@ -1,8 +1,6 @@
 import { WrenchIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
-import { TINT_TEXT } from "@/lib/config/tints";
-import { cn } from "@/lib/utils";
 
 export default function Hero() {
 	return (
@@ -17,28 +15,18 @@ export default function Hero() {
 
 			<PageHero
 				className="mb-12 sm:mb-16"
-				eyebrow={{ icon: WrenchIcon, label: "Open source" }}
+				eyebrow={{ icon: WrenchIcon, label: "Open source · no sign-up" }}
 				title={
 					<>
-						Small tools that{" "}
-						<span className="hero-gradient-text">do one thing well</span>
+						Free tools that{" "}
+						<span className="hero-gradient-text">get it done</span>
 					</>
 				}
 				subtitle={
 					<>
-						A growing collection of focused, open-source tools for{" "}
-						<span className={cn("font-mono font-semibold", TINT_TEXT[1])}>
-							writers
-						</span>
-						,{" "}
-						<span className={cn("font-mono font-semibold", TINT_TEXT[2])}>
-							developers
-						</span>
-						, and{" "}
-						<span className={cn("font-mono font-semibold", TINT_TEXT[3])}>
-							creators
-						</span>
-						. Pick one to get started.
+						Free, focused tools that knock out the tedious parts of writing and
+						code — turn an article into social posts, convert an SVG to JSX,
+						size up SEO titles, generate a slug. No sign-up, nothing to install.
 					</>
 				}
 			/>

@@ -35,15 +35,14 @@ export default function WhatItIs() {
 						id="about-heading"
 						className="text-3xl font-semibold tracking-tight sm:text-4xl"
 					>
-						The small tools you reach for,{" "}
-						<span className="hero-gradient-text">all in one place</span>
+						Built to save you <span className="hero-gradient-text">time</span>
 					</h2>
 					<p className="mt-4 max-w-md text-muted-foreground">
-						A growing, open-source collection of focused tools — each does one
-						job well, with no signup and nothing to install. AI helpers draft
-						and reshape your content; instant tools handle the everyday text
-						work, right in your browser. Free to use, and you can bring your own
-						key for unlimited AI runs.
+						Every tool does one job well — no signup, nothing to install. AI
+						helpers draft and reshape your content; instant tools handle the
+						everyday text work, right in your browser. The blog and newsletter
+						cover productivity and workflow more broadly — practical ideas to
+						help you get more done.
 					</p>
 					<ul className="mt-6 flex flex-wrap gap-2">
 						{AUDIENCES.map((audience) => (
