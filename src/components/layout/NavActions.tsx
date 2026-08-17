@@ -15,11 +15,11 @@ import Link from "next/link";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 
 import { buttonClasses, Tooltip } from "@/components/ui";
-import { GithubMark } from "@/components/ui/logos";
-import ByokDrawer from "@/components/_shared/byok/ByokDrawer";
-import NavIconButton from "./NavIconButton";
-import ToolsMenu from "./ToolsMenu";
-import ThemeToggle from "@/components/layout/ThemeToggle";
+import { GithubMark } from "@/components/ui";
+import { ByokDrawer } from "@/components/_shared/byok/ByokDrawer";
+import { NavIconButton } from "./NavIconButton";
+import { ToolsMenu } from "./ToolsMenu";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { ROUTES } from "@/lib/config/routes";
 import { REPO_URL, SUPPORT_URL } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ type NavActionsProps = {
 };
 
 /** The right side of the Navbar, identical at every breakpoint — Tools switcher, the tool `actionsSlot`, a GitHub link, and a menu button whose dropdown holds nav links plus BYOK/theme/support. The dropdown stays mounted (hidden when closed) so its drawers survive. `menuSlot` renders inside it. */
-export default function NavActions({
+export function NavActions({
 	actionsSlot,
 	menuSlot,
 	repoUrl = REPO_URL,

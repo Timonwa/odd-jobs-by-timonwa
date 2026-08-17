@@ -19,11 +19,11 @@ import {
 	ThreadsLogo,
 	WhatsAppLogo,
 	XLogo,
-} from "@/components/ui/logos";
+} from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { SITE_URL } from "@/lib/config/site";
 import { getToolBySlug } from "@/lib/config/tools";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 
 type ShareLinkType = {
 	key: string;
@@ -47,13 +47,7 @@ const itemClass =
 	"flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:outline-none";
 
 /** Share control — an inline button on the breadcrumb row at `sm+`, and a floating button pinned bottom-right below `sm`; both open the same menu (native Web Share, platform links, email, copy). */
-export default function ShareBar({
-	slug,
-	name,
-}: {
-	slug: string;
-	name: string;
-}) {
+export function ShareBar({ slug, name }: { slug: string; name: string }) {
 	const inlineMenuId = useId();
 	const fabMenuId = useId();
 	const [open, setOpen] = useState(false);

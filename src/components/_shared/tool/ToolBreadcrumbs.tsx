@@ -1,12 +1,12 @@
-import ShareBar from "./ShareBar";
+import { ShareBar } from "./ShareBar";
 import { Breadcrumbs } from "@/components/ui";
-import type { BreadcrumbItemType } from "@/components/ui/Breadcrumbs";
+import type { BreadcrumbItemType } from "@/components/ui";
 import { getCategory } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { getPrimaryCategoryId, getToolBySlug } from "@/lib/config/tools";
 
 /** Tool breadcrumb (Home › Tools › category › tool) with the share control on the opposite edge of the same row; the category deep-links the filtered /tools. */
-export default function ToolBreadcrumbs({
+export function ToolBreadcrumbs({
 	slug,
 	name,
 }: {

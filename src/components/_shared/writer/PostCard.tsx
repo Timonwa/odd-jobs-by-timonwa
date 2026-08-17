@@ -11,7 +11,7 @@ import {
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
 import type { SocialPostType } from "@/lib/types";
-import { PLATFORM_ICONS } from "@/components/ui/logos";
+import { PLATFORM_ICONS } from "@/components/ui";
 import {
 	Badge,
 	Button,
@@ -43,7 +43,7 @@ type Props = {
 	onRegenerate: () => void;
 };
 
-export default function PostCard({
+export function PostCard({
 	post,
 	isRegenerating,
 	busy,

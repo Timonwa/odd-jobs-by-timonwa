@@ -1,7 +1,7 @@
 import { HeartIcon, WrenchIcon } from "lucide-react";
 import Link from "next/link";
 
-import { GithubMark, LinkedInLogo, XLogo } from "@/components/ui/logos";
+import { GithubMark, LinkedInLogo, XLogo } from "@/components/ui";
 import { Tooltip } from "@/components/ui";
 import {
 	CREATOR_NAME,
@@ -63,7 +63,7 @@ function FooterColumn({
 	);
 }
 
-export default function Footer() {
+export function Footer() {
 	// Cap each list so no column runs long; the "All …" link covers the rest.
 	const tools = TOOLS.filter((tool) => tool.status !== "soon").slice(0, 5);
 	const posts = getAllPosts().slice(0, 4);

@@ -8,7 +8,7 @@ import {
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
 import type { SocialPostPlatformType } from "@/lib/constants";
-import { PLATFORM_ICONS } from "@/components/ui/logos";
+import { PLATFORM_ICONS } from "@/components/ui";
 
 type PlatformPickerProps = {
 	value: SocialPostPlatformType[];
@@ -16,7 +16,7 @@ type PlatformPickerProps = {
 	disabled?: boolean;
 };
 
-export default function PlatformPicker({
+export function PlatformPicker({
 	value,
 	onToggle,
 	disabled,
