@@ -7,7 +7,7 @@ import {
 } from "@/lib/constants";
 import type { SocialPostStyleTemplate } from "@/lib/types";
 import { styleStorage, styleTemplatesStorage } from "@/lib/utils";
-import { createSocialPostsStyleTemplates } from "@/lib/hooks/writer/create-social-posts-style-templates";
+import { createSocialPostsStyleTemplates } from "@/lib/utils/writer/create-social-posts-style-templates.utils";
 
 /** Starter writing styles seeded on first run — style only (no platforms or thread length), spanning distinct voices so new users have varied examples. */
 const STARTER_STYLE_TEMPLATES: Omit<

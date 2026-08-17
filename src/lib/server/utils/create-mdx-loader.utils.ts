@@ -11,8 +11,11 @@ import path from "node:path";
 import matter from "gray-matter";
 import type { ZodType } from "zod";
 
-import { countWords } from "@/lib/utils/text/counts";
-import { READING_WPM, readingMinutes } from "@/lib/utils/text/reading-time";
+import { countWords } from "@/lib/utils/text/counts.utils";
+import {
+	READING_WPM,
+	readingMinutes,
+} from "@/lib/utils/text/reading-time.utils";
 
 // A slug is a filename minus `.mdx`; restrict it to a URL-safe allowlist so a
 // stray file can never flow into an href as anything but a clean segment.

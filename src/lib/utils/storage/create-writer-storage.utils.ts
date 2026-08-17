@@ -7,7 +7,7 @@ import type {
 	SocialPostTone,
 } from "@/lib/constants";
 import type { SocialPostStyleTemplate, SocialPostStyle } from "@/lib/types";
-import { createLocalStore } from "@/lib/utils/storage/local-store";
+import { createLocalStore } from "@/lib/utils/storage/local-store.utils";
 
 /** Per-run workflow shared by article-generator tools — targets and structure, remembered as last-used (never part of a style template). */
 export type WorkflowState = {

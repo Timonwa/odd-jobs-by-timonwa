@@ -8,7 +8,7 @@ import {
 	quoteValue,
 	stripXmlPreamble,
 	tokenizeMarkup,
-} from "./format-svg";
+} from "./format.utils";
 
 /** Options controlling SVG-to-JSX conversion. */
 export type SvgToJsxOptions = {

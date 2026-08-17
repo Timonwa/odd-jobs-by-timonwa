@@ -105,7 +105,7 @@ lib/                                           # kind-first, flat inside each ki
     actions/   # <domain>.action.ts — "use server" actions (AI tools + newsletter)
     services/  # <domain>.service.ts — content loaders + AI agents
     clients/   # <service>.client.ts — configured SDK singletons (gemini)
-    utils/     # ai/, rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.ts
+    utils/     # ai/, rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.utils.ts
 ```
 
 Every kind barrel lists one explicit export line per file — no `export *` from a directory.

@@ -2,7 +2,7 @@
 // Hook for the Article to Social Posts tool's run history — persisted in its own localStorage namespace.
 
 import { STORAGE_KEYS } from "@/lib/constants";
-import { createToolHistory } from "@/lib/hooks/writer/create-tool-history";
+import { createToolHistory } from "@/lib/utils/writer/create-tool-history.utils";
 import type { SocialPostHistory } from "@/lib/types";
 import { isArticleSource } from "@/lib/utils";
 

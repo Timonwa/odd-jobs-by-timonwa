@@ -3,7 +3,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-import { createLocalStore } from "./local-store";
+import { createLocalStore } from "./local-store.utils";
 
 /** Factory for a localStorage-backed history hook; each tool provides read/write and an applyUpsert reducer for its dedup rule. */
 export function createHistoryStore<

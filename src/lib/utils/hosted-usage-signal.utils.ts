@@ -3,7 +3,7 @@
 /** Cross-component signal for the hosted daily-usage pill — an AI tool broadcasts how many free generations the user has left after a hosted run, and the navbar pill listens and updates in place. */
 
 import { HOSTED_USAGE_EVENT } from "@/lib/constants";
-import { isBrowser } from "@/lib/utils/is-browser";
+import { isBrowser } from "@/lib/utils/is-browser.utils";
 
 type HostedUsageDetail = { remaining: number };
 

@@ -3,7 +3,7 @@
 import "server-only";
 
 import { ProductFrontmatterSchema, type ProductMeta } from "@/lib/schemas";
-import { createMdxLoader } from "../utils/create-mdx-loader";
+import { createMdxLoader } from "../utils/create-mdx-loader.utils";
 
 const loader = createMdxLoader({
 	dir: "shop",

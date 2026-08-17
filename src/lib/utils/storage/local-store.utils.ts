@@ -1,6 +1,6 @@
 "use client";
 
-import { isBrowser } from "@/lib/utils/is-browser";
+import { isBrowser } from "@/lib/utils/is-browser.utils";
 
 /** localStorage-backed external store for useSyncExternalStore; avoids setState-in-effect by modeling persisted state as a subscribable cache. */
 export function createLocalStore<T>(opts: {

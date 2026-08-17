@@ -10,7 +10,7 @@ import {
 import {
 	createWriterStorage,
 	type WorkflowState,
-} from "./create-writer-storage";
+} from "./create-writer-storage.utils";
 
 /** First-run workflow for this tool — LinkedIn + X, single posts. */
 export const SOCIAL_POST_DEFAULT_WORKFLOW: WorkflowState = {

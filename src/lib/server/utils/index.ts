@@ -1,5 +1,5 @@
 // Barrel — server-only helpers, one line per file.
-export { createMdxLoader } from "./create-mdx-loader";
+export { createMdxLoader } from "./create-mdx-loader.utils";
 export {
 	OG_SIZE,
 	OG_CONTENT_TYPE,

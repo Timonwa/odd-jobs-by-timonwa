@@ -7,7 +7,7 @@ import {
 	DEFAULT_BYOK_MODEL,
 } from "@/lib/config/byok";
 import { BYOK_CHANGE_EVENT, STORAGE_KEYS } from "@/lib/constants";
-import { isBrowser } from "@/lib/utils/is-browser";
+import { isBrowser } from "@/lib/utils/is-browser.utils";
 
 const BYOK_API_KEY = STORAGE_KEYS.byokApiKey;
 const BYOK_MODEL_KEY = STORAGE_KEYS.byokModel;

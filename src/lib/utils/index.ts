@@ -6,8 +6,8 @@ export {
 	emitHostedUsage,
 	subscribeHostedUsage,
 } from "./hosted-usage-signal.utils";
-export { isBrowser } from "./is-browser";
-export { splitTitle } from "./text/split-title";
+export { isBrowser } from "./is-browser.utils";
+export { splitTitle } from "./text/split-title.utils";
 export { timeAgo } from "./time.utils";
 export {
 	CASE_GROUPS,
@@ -15,9 +15,17 @@ export {
 	type CaseId,
 	type CaseOption,
 	type CaseGroup,
-} from "./text/case";
-export { countWords, getTextCounts, type TextCounts } from "./text/counts";
-export { generateLorem, type LoremUnit, type LoremOptions } from "./text/lorem";
+} from "./text/case.utils";
+export {
+	countWords,
+	getTextCounts,
+	type TextCounts,
+} from "./text/counts.utils";
+export {
+	generateLorem,
+	type LoremUnit,
+	type LoremOptions,
+} from "./text/lorem.utils";
 export {
 	READING_WPM,
 	SPEAKING_WPM,
@@ -25,8 +33,12 @@ export {
 	durationSeconds,
 	formatDuration,
 	type ReadingSpeed,
-} from "./text/reading-time";
-export { slugify, type SlugSeparator, type SlugOptions } from "./text/slugify";
+} from "./text/reading-time.utils";
+export {
+	slugify,
+	type SlugSeparator,
+	type SlugOptions,
+} from "./text/slugify.utils";
 export {
 	stripXmlPreamble,
 	tokenizeMarkup,
@@ -37,22 +49,22 @@ export {
 	type IndentUnit,
 	type ParsedAttr,
 	type AttrFormatter,
-} from "./svg/format-svg";
-export { svgToJsx, type SvgToJsxOptions } from "./svg/svg-to-jsx";
+} from "./svg/format.utils";
+export { svgToJsx, type SvgToJsxOptions } from "./svg/svg-to-jsx.utils";
 export {
 	subscribeByok,
 	byokStorage,
 	byokModelStorage,
-} from "./storage/byok-storage";
-export { createHistoryStore } from "./storage/create-history-store";
-export { createLocalStorageJson } from "./storage/local-storage-json";
-export { createLocalStore } from "./storage/local-store";
-export { normalizeHashtag } from "./writer/hashtag";
-export { buildPostCopyText, buildAllPostsCopyText } from "./writer/post";
+} from "./storage/byok.utils";
+export { createHistoryStore } from "./storage/create-history-store.utils";
+export { createLocalStorageJson } from "./storage/local-storage-json.utils";
+export { createLocalStore } from "./storage/local-store.utils";
+export { normalizeHashtag } from "./writer/hashtag.utils";
+export { buildPostCopyText, buildAllPostsCopyText } from "./writer/post.utils";
 export {
 	createWriterStorage,
 	type WorkflowState,
-} from "./storage/create-writer-storage";
+} from "./storage/create-writer-storage.utils";
 export {
 	SOCIAL_POST_DEFAULT_WORKFLOW,
 	styleStorage,
@@ -61,4 +73,6 @@ export {
 	setTone,
 	togglePlatform,
 	setXThreadLength,
-} from "./storage/social-posts";
+} from "./storage/social-posts.utils";
+export { createToolHistory } from "./writer/create-tool-history.utils";
+export { createSocialPostsStyleTemplates } from "./writer/create-social-posts-style-templates.utils";
