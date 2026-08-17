@@ -5,6 +5,7 @@ import { useActionState, useId } from "react";
 import { useFormStatus } from "react-dom";
 
 import { Button, Input } from "@/components/ui";
+import { NEWSLETTER_HONEYPOT_FIELD } from "@/lib/constants";
 import {
 	type NewsletterFormState,
 	subscribeNewsletter,
@@ -28,6 +29,7 @@ export function Newsletter({ className }: { className?: string }) {
 	const headingId = useId();
 	const emailId = useId();
 	const errorId = useId();
+	const honeypotId = useId();
 
 	return (
 		<section
@@ -87,6 +89,19 @@ export function Newsletter({ className }: { className?: string }) {
 								className="flex-1"
 							/>
 							<SubmitButton />
+						</div>
+
+						{/* Honeypot — hidden from people and from assistive tech, so anything
+						    filled in here is automation. Not `type="hidden"`, which bots skip. */}
+						<div aria-hidden className="hidden">
+							<label htmlFor={honeypotId}>Company website</label>
+							<input
+								id={honeypotId}
+								type="text"
+								name={NEWSLETTER_HONEYPOT_FIELD}
+								tabIndex={-1}
+								autoComplete="off"
+							/>
 						</div>
 						{state.status === "error" && (
 							<p

@@ -5,9 +5,22 @@ import { z } from "zod";
 import { env } from "@env";
 
 import { SENDER_GROUP_IDS } from "@/lib/config/site";
+import {
+	NEWSLETTER_BURST_CAP,
+	NEWSLETTER_DAILY_SHARED_POOL,
+	NEWSLETTER_DAILY_USER_CAP,
+	NEWSLETTER_HONEYPOT_FIELD,
+} from "@/lib/constants";
+import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
 
 // Sender.net REST endpoint — requires SENDER_API_TOKEN; missing token surfaces an error to the user rather than silently dropping the address.
 const SENDER_API_BASE_URL = "https://api.sender.net/v2/subscribers";
+
+// One message for "subscribed" and "already subscribed". Distinguishing them
+// turned the form into a membership oracle: anyone could test whether an address
+// was on the list by submitting it.
+const SIGNUP_CONFIRMATION =
+	"You're on the list — expect new tools, posts, and the occasional issue.";
 
 const EmailSchema = z.email();
 
@@ -22,12 +35,39 @@ export async function subscribeNewsletter(
 	_prevState: NewsletterFormState,
 	formData: FormData,
 ): Promise<NewsletterFormState> {
+	// Honeypot: hidden from humans, so anything in it is automation. Answer with
+	// the success message rather than an error — a bot that learns it was blocked
+	// adapts, and a real user can never reach this branch.
+	const honeypot = formData.get(NEWSLETTER_HONEYPOT_FIELD);
+	if (typeof honeypot === "string" && honeypot.trim() !== "") {
+		return { status: "success", message: SIGNUP_CONFIRMATION };
+	}
+
 	const raw = formData.get("email");
 	const email = typeof raw === "string" ? raw.trim() : "";
 
 	const parsed = EmailSchema.safeParse(email);
 	if (!parsed.success) {
 		return { status: "error", message: "Enter a valid email address." };
+	}
+
+	// Unauthenticated write to a third-party list, so it gets the same metering
+	// as the AI tools: without it, one loop could poison the subscriber list,
+	// subscribe-bomb an arbitrary address, or burn the Sender.net plan's budget.
+	const quota = await checkAndIncrementQuota({
+		toolSlug: "newsletter",
+		perUserDaily: NEWSLETTER_DAILY_USER_CAP,
+		perUserBurst: NEWSLETTER_BURST_CAP,
+		dailyPool: NEWSLETTER_DAILY_SHARED_POOL,
+	});
+	if (!quota.allowed) {
+		return {
+			status: "error",
+			message:
+				quota.reason === "unavailable"
+					? "Sign-up isn't available right now. Please try again later."
+					: "That's a few too many attempts. Please try again later.",
+		};
 	}
 
 	const token = env.SENDER_API_TOKEN;
@@ -58,21 +98,15 @@ export async function subscribeNewsletter(
 		});
 
 		if (response.ok) {
-			return {
-				status: "success",
-				message:
-					"You're on the list — expect new tools, posts, and the occasional issue.",
-			};
+			return { status: "success", message: SIGNUP_CONFIRMATION };
 		}
 
 		const detail = await response.text().catch(() => "");
 		// Sender returns a validation error when the address is already subscribed
-		// — that's a success from the visitor's point of view.
+		// — that's a success from the visitor's point of view, and it must be
+		// indistinguishable from a fresh signup (see SIGNUP_CONFIRMATION).
 		if (/already|taken|exists|subscribed/i.test(detail)) {
-			return {
-				status: "success",
-				message: "You're already on the list — thanks for being here!",
-			};
+			return { status: "success", message: SIGNUP_CONFIRMATION };
 		}
 
 		console.error(`[newsletter] Sender responded ${response.status}`, detail);

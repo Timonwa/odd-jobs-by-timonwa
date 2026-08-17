@@ -75,6 +75,11 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 	if (/QUOTA_UNAVAILABLE/.test(message))
 		return "The free hosted allowance isn't available right now. Add your own free Google key to use this tool — it only takes a couple of minutes.";
 
+	// Too many requests in a short window — unlike the daily caps this clears in
+	// under a minute, so the advice is to wait rather than to bring a key.
+	if (/RATE_LIMIT_BURST/.test(message))
+		return "That's a lot of requests in a row. Wait a minute and try again.";
+
 	// This person's hosted daily allowance is used up — not the server being
 	// busy. Only thrown on the hosted path (BYOK skips the quota entirely).
 	if (/RATE_LIMIT_USER/.test(message))

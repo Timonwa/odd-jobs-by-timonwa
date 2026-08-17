@@ -31,9 +31,13 @@ export async function enforceDailyQuota(
 	if (!canServeHostedAi()) throw new Error("QUOTA_UNAVAILABLE");
 	const check = await checkAndIncrementQuota(config);
 	if (!check.allowed) {
-		throw new Error(
-			check.reason === "user" ? "RATE_LIMIT_USER" : "RATE_LIMIT_POOL",
-		);
+		const CODES = {
+			user: "RATE_LIMIT_USER",
+			pool: "RATE_LIMIT_POOL",
+			burst: "RATE_LIMIT_BURST",
+			unavailable: "QUOTA_UNAVAILABLE",
+		} as const;
+		throw new Error(CODES[check.reason]);
 	}
 	return check.remaining;
 }

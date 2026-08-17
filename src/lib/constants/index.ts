@@ -18,6 +18,12 @@ export { HASH_ALGORITHMS, type HashAlgorithm } from "./hash.constant";
 export { MAX_HISTORY_ENTRIES } from "./history.constant";
 export { APP_NAMESPACE, namespaced } from "./namespace.constant";
 export {
+	NEWSLETTER_DAILY_USER_CAP,
+	NEWSLETTER_DAILY_SHARED_POOL,
+	NEWSLETTER_BURST_CAP,
+	NEWSLETTER_HONEYPOT_FIELD,
+} from "./newsletter.constant";
+export {
 	SEO_META_DAILY_USER_CAP,
 	SEO_META_DAILY_SHARED_POOL,
 	SEO_META_TITLE_MIN,
