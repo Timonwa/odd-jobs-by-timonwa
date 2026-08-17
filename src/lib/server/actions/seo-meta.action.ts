@@ -11,10 +11,15 @@ import type {
 	SeoMetaVariation,
 	TokenUsage,
 } from "@/lib/types";
+import {
+	GenerateSeoMetaInputSchema,
+	RegenerateSeoMetaInputSchema,
+} from "@/lib/schemas";
 import { generateSeoMetaVariations } from "@/lib/server/services";
 import {
 	articleSourceErrorRules,
 	enforceDailyQuota,
+	parseActionInput,
 	type QuotaConfig,
 	getHostedQuotaStatus,
 	resolveArticleSource,
@@ -100,22 +105,24 @@ export async function generateSeoMeta(params: {
 	byokModel?: string;
 }): Promise<GenerateSeoMetaResult> {
 	try {
-		const { url, text } = resolveArticleSource(params.source);
+		// Parse before anything else: every field below is client-supplied.
+		const input = parseActionInput(GenerateSeoMetaInputSchema, params);
+		const { url, text } = resolveArticleSource(input.source);
 
 		const remaining = await enforceDailyQuota(
 			SEO_META_QUOTA_CONFIG,
-			params.byokApiKey,
+			input.byokApiKey,
 		);
 
-		const count = Math.min(3, Math.max(1, params.variationCount ?? 3));
-		const keyword = params.primaryKeyword?.trim() || undefined;
+		const count = input.variationCount ?? 3;
+		const keyword = input.primaryKeyword?.trim() || undefined;
 
 		const { object, usage } = await generateSeoMetaVariations({
 			instructions: buildSeoMetaInstructions(keyword, count),
 			url,
 			text,
-			byokApiKey: params.byokApiKey,
-			byokModel: params.byokModel,
+			byokApiKey: input.byokApiKey,
+			byokModel: input.byokModel,
 		});
 		const result: SeoMetaResult = {
 			...object,
@@ -139,23 +146,21 @@ export async function regenerateSeoMetaVariation(params: {
 	byokModel?: string;
 }): Promise<RegenerateSeoMetaVariationResult> {
 	try {
-		const { url, text } = resolveArticleSource(params.source);
+		const input = parseActionInput(RegenerateSeoMetaInputSchema, params);
+		const { url, text } = resolveArticleSource(input.source);
 
 		const remaining = await enforceDailyQuota(
 			SEO_META_QUOTA_CONFIG,
-			params.byokApiKey,
+			input.byokApiKey,
 		);
 
-		const keyword = params.primaryKeyword?.trim() || undefined;
+		const keyword = input.primaryKeyword?.trim() || undefined;
 		const { object, usage } = await generateSeoMetaVariations({
-			instructions: buildSeoMetaRegenerateInstructions(
-				keyword,
-				params.existing,
-			),
+			instructions: buildSeoMetaRegenerateInstructions(keyword, input.existing),
 			url,
 			text,
-			byokApiKey: params.byokApiKey,
-			byokModel: params.byokModel,
+			byokApiKey: input.byokApiKey,
+			byokModel: input.byokModel,
 		});
 		const variation = object.variations[0];
 		if (!variation) throw new Error("EMPTY_RESULT");

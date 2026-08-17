@@ -20,10 +20,15 @@ import type {
 	TokenUsage,
 	SocialPostStyle,
 } from "@/lib/types";
+import {
+	GenerateSocialPostsInputSchema,
+	RegenerateSocialPostInputSchema,
+} from "@/lib/schemas";
 import { generateSocialPostDrafts } from "@/lib/server/services";
 import {
 	articleSourceErrorRules,
 	enforceDailyQuota,
+	parseActionInput,
 	type QuotaConfig,
 	getHostedQuotaStatus,
 	resolveArticleSource,
@@ -151,9 +156,13 @@ export async function generateSocialPosts(params: {
 	byokApiKey?: string;
 	byokModel?: string;
 }): Promise<GenerateSocialPostsResult> {
-	const { source, platforms, xThreadLength, style, byokApiKey, byokModel } =
-		params;
+	// Destructured after parsing, not before: these are POST-body values, so the
+	// signature above is a compiler hint rather than a runtime guarantee.
+	let byokApiKey: string | undefined;
 	try {
+		const input = parseActionInput(GenerateSocialPostsInputSchema, params);
+		const { source, platforms, xThreadLength, style, byokModel } = input;
+		byokApiKey = input.byokApiKey;
 		const { url, text } = resolveArticleSource(source);
 		const remaining = await enforceDailyQuota(
 			SOCIAL_POST_QUOTA_CONFIG,
@@ -204,10 +213,11 @@ export async function regenerateSocialPost(params: {
 	byokApiKey?: string;
 	byokModel?: string;
 }): Promise<RegenerateSocialPostResult> {
-	const { source, platform, xThreadLength, style, byokApiKey, byokModel } =
-		params;
-
+	let byokApiKey: string | undefined;
 	try {
+		const input = parseActionInput(RegenerateSocialPostInputSchema, params);
+		const { source, platform, xThreadLength, style, byokModel } = input;
+		byokApiKey = input.byokApiKey;
 		const { url, text } = resolveArticleSource(source);
 		const remaining = await enforceDailyQuota(
 			SOCIAL_POST_QUOTA_CONFIG,

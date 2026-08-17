@@ -46,9 +46,14 @@ export function canServeHostedAi(): boolean {
 	return isDevServer || hasRedisCredentials();
 }
 
+// Required in production, not merely warned about: an unkeyed SHA-256 of an IP
+// is reversible by brute force (there are only ~4 billion IPv4 addresses), so
+// the fallback turns rate-limit keys into recoverable personal data. Local and
+// self-host builds keep the unkeyed fallback, where the keyspace never leaves
+// the machine.
 if (isProduction && !env.IP_HASH_SECRET) {
-	console.warn(
-		"[rate-limit] IP_HASH_SECRET is not set in production — IP hashes fall back to unkeyed SHA-256 and are brute-force reversible. Set IP_HASH_SECRET.",
+	throw new Error(
+		"IP_HASH_SECRET is required when APP_ENV=production — without it, rate-limit IP hashes are brute-force reversible. Generate one with `openssl rand -hex 32`.",
 	);
 }
 

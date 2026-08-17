@@ -27,7 +27,7 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 ## Top priorities (cross-cutting, worst-first)
 
 1. ~~**CRITICAL — `next@16.2.10` carries 3 reachable advisories.**~~ **FIXED** in the dependency pass — bumped to 16.2.11 with `eslint-config-next` and `@next/mdx` in lockstep; `pnpm audit` is now clean. Original detail: Server Action DoS and unauthenticated disclosure of internal Server Function endpoints both hit this app's only dynamic surface; all are fixed in 16.2.11 (latest 16.3.1, non-major). Dependabot's branch `origin/dependabot/npm_and_yarn/npm_and_yarn-1c4f37dfd6` has held the fix since 2026-07-28. → codebase F1, security F1, dependency F1.
-2. **HIGH — Server Action inputs are never validated.** `existing`, `primaryKeyword`, and `style` are interpolated straight into the Gemini prompt, bypassing the 15 000-char cap that only guards `source.text`; `style` is `JSON.stringify`-ed unbounded, `existing[]` and `xThreadLength` are uncapped, and `LONGFORM_SOCIAL_POST_LENGTH_LIMITS[style.postLength]` can return `undefined` while typed `number`. One allowed request can carry megabytes on the platform key. → security F2, codebase F4, frontend F4.
+2. ~~**HIGH — Server Action inputs are never validated.**~~ **FIXED** in the security pass — every action parses a bounded Zod schema before any other work, with `style` a closed object rather than a stringified passthrough. Original detail: `existing`, `primaryKeyword`, and `style` are interpolated straight into the Gemini prompt, bypassing the 15 000-char cap that only guards `source.text`; `style` is `JSON.stringify`-ed unbounded, `existing[]` and `xThreadLength` are uncapped, and `LONGFORM_SOCIAL_POST_LENGTH_LIMITS[style.postLength]` can return `undefined` while typed `number`. One allowed request can carry megabytes on the platform key. → security F2, codebase F4, frontend F4.
 3. ~~**HIGH — every cost control fails open or silently no-ops.**~~ **FIXED** in the environment pass — metering now follows the Upstash credentials instead of `APP_ENV`, and a built app that cannot meter refuses hosted generations rather than serving them unmetered. Original detail: `APP_ENV` defaults to `development`, the Upstash vars are `.optional()`, and the limiter catches all Redis errors and allows the request. A missing, typo'd, or rotated credential on deploy is indistinguishable from working rate limiting, leaving the hosted Gemini key uncapped with no boot error or alert. Public preview deploys are uncapped by the same mechanism. → environment F1 + F2, redis F1 + F2, security MEDIUM.
 4. ~~**HIGH — `subscribeNewsletter` is unauthenticated, unthrottled, and leaks membership.**~~ **FIXED** in the redis pass — metered under its own namespace, honeypot added, and one confirmation message for both subscribed and already-subscribed. Also closes `security-audit` F3. Original detail: No rate limit, captcha, or honeypot on a Server Action that writes to Sender.net with the server token, and its "already subscribed" branch is a membership oracle. → security F3, redis F3, frontend F5.
 5. ~~**HIGH — CI is bypassable.**~~ **FIXED** — `predicate-quantifier: every`, so a docs-only skip requires _every_ changed file to be docs. Closes `codebase F2` and `docs F5`; both will be marked in their own passes. Original detail: `dorny/paths-filter` defaults to `predicate-quantifier: some`, so any PR touching one `.md`/`.mdx` file skips lint, format, typecheck, and build while reporting green — verified against commit `26407b5` (2 md + 117 ts files). → codebase F2, docs F5.
@@ -55,7 +55,7 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 
 1. ~~Bump `next` to 16.2.11+ and re-run `pnpm audit`.~~ **DONE** (dependency pass) [P1]
 2. ~~Raise the `pnpm-workspace.yaml` postcss override to `>=8.5.23`.~~ **DONE** (dependency pass) [P10]
-3. Zod-validate every Server Action input at the boundary — cap `existing[]`, `primaryKeyword`, `style`, and `xThreadLength`, and make `LONGFORM_SOCIAL_POST_LENGTH_LIMITS` lookups total. [P2]
+3. ~~Zod-validate every Server Action input at the boundary.~~ **DONE** (security pass) [P2]
 4. ~~Make cost control fail loudly.~~ **DONE** (environment pass — fails closed, with a boot error; transient Redis errors still fail open by design) [P3]
 5. ~~Rate-limit `subscribeNewsletter`, add a honeypot, and return an identical response.~~ **DONE** (redis pass) [P4]
 6. ~~Fix `ci.yml`'s `paths-filter` to `predicate-quantifier: every`.~~ **DONE** (shipped with the environment pass, which touched the same file) [P5]
@@ -79,7 +79,7 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 18. Stand up test infrastructure and enable the CI test job (planned as its own branch). [P12]
 19. Confirm whether OG routes need `runtime = "edge"` on Next 16; drop it if not, to restore static generation. [P13]
 20. Expand the four thin content files or de-index them until they earn inclusion. [P17]
-21. Add a CSP and security headers (none exist today — no middleware, no `headers()`). [security MEDIUM]
+21. ~~Add a CSP and security headers.~~ **DONE** (security pass — enforcing CSP plus HSTS, Permissions-Policy, frame/nosniff/referrer headers in `next.config.ts`) [security MEDIUM]
 22. Redis hygiene: central key builders, atomic `incr`+`expire`, a burst window, and a single reused client. [redis MEDIUM set]
 23. Set up Storybook and stories for `components/ui` (planned as its own branch). [storybook-audit skipped]
 
@@ -94,6 +94,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 ## Resolved since last run
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
+
+**security-audit — complete (7/10 → 9/10).** All eleven findings closed — five were already resolved by the dependency, environment, and redis passes; this pass added Zod validation at every Server Action boundary, an enforcing CSP and full security-header set, two SSRF denylist gaps, and made `IP_HASH_SECRET` required in production. Note the CSP is enforcing and only observable in a real browser, so it is worth a console check after deploy.
 
 **redis-audit — complete (5/10 → 9/10).** Eleven of twelve findings fixed. The limiter was restructured: one atomic Lua script charges the per-user, burst, and pool tiers together (so a denied request is never charged and no counter can lose its TTL), keys and TTLs moved into a `clients/redis/` module, one pooled client replaced per-call construction, and the failure direction flipped to closed — with a fallback to the previous command path so a scripting defect degrades instead of causing an outage. Newsletter signup is now metered and honeypotted, which also closes `security-audit` F3. One database serves every environment, so every key is tier-scoped to stop previews spending production's pool.
 
