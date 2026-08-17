@@ -16,7 +16,12 @@ export const ROUTES = {
 	toolsCategory: (category: string): Route =>
 		`/tools?category=${encodeURIComponent(category)}` as Route,
 	tool: (slug: string): Route => `/${encodeURIComponent(slug)}` as Route,
-	guides: "/guides" as Route,
-	guide: (slug: string): Route =>
-		`/guides/${encodeURIComponent(slug)}` as Route,
+	blog: "/blog" as Route,
+	post: (slug: string): Route => `/blog/${encodeURIComponent(slug)}` as Route,
+	newsletter: "/newsletter" as Route,
+	issue: (slug: string): Route =>
+		`/newsletter/${encodeURIComponent(slug)}` as Route,
+	shop: "/shop" as Route,
+	product: (slug: string): Route =>
+		`/shop/${encodeURIComponent(slug)}` as Route,
 };
