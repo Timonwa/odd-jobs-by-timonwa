@@ -1,0 +1,37 @@
+import { JsonLdScript } from "@/components/_shared/content/JsonLdScript";
+import { Newsletter } from "@/components/_shared/content/Newsletter";
+import { HubNavbar } from "@/components/layout/HubNavbar";
+import { PageMain } from "@/components/layout/PageMain";
+import { ROUTES } from "@/lib/config/routes";
+import { SITE_NAME, SITE_URL } from "@/lib/config/site";
+import { getAllIssues } from "@/lib/issues/loader";
+
+import { IssueGrid } from "./IssueGrid";
+import { NewsletterHero } from "./NewsletterHero";
+
+export function NewsletterPageContent() {
+	const issues = getAllIssues();
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "ItemList",
+		name: `Newsletter — ${SITE_NAME}`,
+		itemListElement: issues.map((issue, i) => ({
+			"@type": "ListItem",
+			position: i + 1,
+			url: `${SITE_URL}${ROUTES.issue(issue.slug)}`,
+			name: issue.title,
+		})),
+	};
+
+	return (
+		<>
+			<HubNavbar />
+			<PageMain>
+				<NewsletterHero />
+				<Newsletter className="mb-16" />
+				<IssueGrid issues={issues} />
+				<JsonLdScript data={jsonLd} />
+			</PageMain>
+		</>
+	);
+}

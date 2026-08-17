@@ -3,15 +3,15 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 
-import { GuideFigure } from "@/components/guides/GuideFigure";
-import { OpenKeyPanelButton } from "@/components/guides/OpenKeyPanelButton";
-import { YouTubeEmbed } from "@/components/guides/YouTubeEmbed";
+import { PostFigure } from "@/components/blog/_shared/PostFigure";
+import { OpenKeyPanelButton } from "@/components/blog/_shared/OpenKeyPanelButton";
+import { YouTubeEmbed } from "@/components/blog/_shared/YouTubeEmbed";
 
 /**
- * Global MDX element styling for every guide, plus the custom components guides
+ * Global MDX element styling for every post, plus the custom components posts
  * can use without importing them. Required by `@next/mdx` in the App Router.
  * Headings/lists/links mirror the tool article styles (see ToolContent) so
- * guides and tool pages read as one system.
+ * posts and tool pages read as one system.
  */
 const elements: MDXComponents = {
 	h2: ({ children, ...props }: ComponentPropsWithoutRef<"h2">) => (
@@ -105,7 +105,7 @@ const elements: MDXComponents = {
 		/>
 	),
 	img: ({ alt = "", ...props }: ComponentPropsWithoutRef<"img">) => (
-		// Screenshots should use <GuideFigure>; this is a fallback for raw markdown images.
+		// Screenshots should use <PostFigure>; this is a fallback for raw markdown images.
 		// eslint-disable-next-line @next/next/no-img-element
 		<img
 			className="mt-4 rounded-xl border border-border"
@@ -135,7 +135,7 @@ const elements: MDXComponents = {
 export function useMDXComponents(components?: MDXComponents): MDXComponents {
 	return {
 		...elements,
-		GuideFigure,
+		PostFigure,
 		OpenKeyPanelButton,
 		YouTubeEmbed,
 		...components,

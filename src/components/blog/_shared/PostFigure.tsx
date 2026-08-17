@@ -1,14 +1,14 @@
 import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-type GuideFigureProps = {
+type PostFigureProps = {
 	src?: string;
 	alt?: string;
 	caption: string;
 };
 
 /** A screenshot slot for guide pages — renders the image when `src` is provided, or a labeled placeholder so the layout stays intact during authoring. */
-export function GuideFigure({ src, alt, caption }: GuideFigureProps) {
+export function PostFigure({ src, alt, caption }: PostFigureProps) {
 	return (
 		<figure className="mt-6">
 			{src ? (
