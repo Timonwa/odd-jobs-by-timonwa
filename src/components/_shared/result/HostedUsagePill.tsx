@@ -65,7 +65,9 @@ export function HostedUsagePill({
 				className={cn(
 					"inline-flex items-center gap-1.5 rounded-full border transition-colors px-2.5 py-1 text-[10px] leading-tight sm:text-xs whitespace-nowrap cursor-pointer",
 					low
-						? "border-tint-2/40 bg-tint-2/10 text-tint-2 hover:bg-tint-2/20"
+						? // Amber carries the emphasis via border and fill; the label itself uses
+							// `foreground` because text-tint-2 is 2.51:1 on its own tint at this size.
+							"border-tint-2/50 bg-tint-2/10 text-foreground hover:bg-tint-2/20"
 						: "border-border/50 bg-muted/20 text-muted-foreground hover:bg-muted/50 hover:border-primary/40",
 				)}
 			>
@@ -80,7 +82,9 @@ export function HostedUsagePill({
 				</span>
 			</button>
 			<span
-				role="tooltip"
+				// Presentation only: the button's aria-label already carries this text, and a
+				// role="tooltip" referenced by no aria-describedby is unreachable anyway.
+				aria-hidden
 				className="text-center pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(16rem,calc(100vw-1rem))] -translate-x-1/2 rounded-md border border-border/60 bg-popover/75 backdrop-blur-md px-2.5 py-1.5 text-[11px] leading-snug text-popover-foreground shadow-md opacity-0 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
 			>
 				{summary}

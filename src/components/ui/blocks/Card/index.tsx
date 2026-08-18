@@ -24,15 +24,17 @@ export function CardHeader({
 	);
 }
 
+/** Card heading. `as` exists because a fixed level made pages skip from h1 to h3 — the caller knows where the card sits in the outline. */
 export function CardTitle({
+	as: Heading = "h3",
 	className,
 	children,
 	...props
-}: React.ComponentProps<"h3">) {
+}: React.ComponentProps<"h3"> & { as?: "h2" | "h3" | "h4" }) {
 	return (
-		<h3 className={cn("leading-none font-semibold", className)} {...props}>
+		<Heading className={cn("leading-none font-semibold", className)} {...props}>
 			{children}
-		</h3>
+		</Heading>
 	);
 }
 

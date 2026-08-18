@@ -17,6 +17,7 @@ import {
 import {
 	ArticleCard,
 	ErrorNotice,
+	GenerationStatus,
 	HistorySidebar,
 } from "@/components/_shared/result";
 import { SeoMetaForm, type SeoMetaFormParams } from "./SeoMetaForm";
@@ -259,6 +260,12 @@ export function SeoMetaTool() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
+						<GenerationStatus
+							isGenerating={busy}
+							error={regenError}
+							hasResult={Boolean(result)}
+							subject="SEO details"
+						/>
 						<SeoMetaForm
 							key={restoreNonce}
 							onResult={handleResult}

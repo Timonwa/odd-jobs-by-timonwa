@@ -2,7 +2,11 @@
 
 import { FilePlus2Icon, Loader2Icon, RefreshCwIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { ArticleCard, HistorySidebar } from "@/components/_shared/result";
+import {
+	ArticleCard,
+	GenerationStatus,
+	HistorySidebar,
+} from "@/components/_shared/result";
 import type { SocialPostHistory, WriterRuntime } from "@/lib/types";
 import { useWriter } from "@/lib/hooks";
 import { Button } from "@/components/ui";
@@ -33,6 +37,11 @@ export function Writer({ runtime }: { runtime: WriterRuntime }) {
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
 			<div className="flex flex-col gap-6 min-w-0">
+				<GenerationStatus
+					isGenerating={w.isGenerating}
+					error={w.error}
+					hasResult={Boolean(w.result)}
+				/>
 				<GenerateForm
 					sourceKind={w.sourceKind}
 					onSourceKindChange={w.setSourceKind}

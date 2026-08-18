@@ -42,7 +42,7 @@ export function ToggleButton({
 				SHAPE_CLASSES[shape],
 				active
 					? "border-primary bg-primary/10 text-primary"
-					: "border-border bg-background hover:bg-accent hover:text-accent-foreground",
+					: "border-input-border bg-background hover:bg-accent hover:text-accent-foreground",
 				className,
 			)}
 			{...props}

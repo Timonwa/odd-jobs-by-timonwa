@@ -94,9 +94,12 @@ export function ArticleSourceInput({
 						<label htmlFor={textId} className="text-sm font-medium">
 							Your text
 						</label>
+						{/* No aria-live: this updated on every keystroke, so a screen reader
+						    announced the character count instead of the user's typing. The
+						    textarea's aria-describedby points here, so it is read on focus
+						    and on demand. */}
 						<span
 							id={counterId}
-							aria-live="polite"
 							className={cn(
 								"text-xs tabular-nums",
 								over ? "text-destructive font-medium" : "text-muted-foreground",

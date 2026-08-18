@@ -162,11 +162,17 @@ export function GenerateForm({
 					)}
 
 					<div className="flex flex-col gap-2 sm:flex-row">
+						{/* aria-disabled rather than disabled: a focused button that becomes
+						    `disabled` mid-run is removed from the a11y tree and drops focus
+						    to <body>. The click guard does the blocking instead. */}
 						<Button
 							type="submit"
 							size="lg"
 							className="w-full sm:flex-1"
-							disabled={disabled}
+							aria-disabled={disabled || undefined}
+							onClick={(event) => {
+								if (disabled) event.preventDefault();
+							}}
 						>
 							{isGenerating ? (
 								<>

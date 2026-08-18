@@ -12,6 +12,7 @@ import {
 	XIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
 	type ComponentType,
 	type ReactNode,
@@ -59,6 +60,7 @@ export function NavActions({
 	repoUrl = REPO_URL,
 	showByok = true,
 }: NavActionsProps) {
+	const pathname = usePathname();
 	const [openMenu, setOpenMenu] = useState<"tools" | "nav" | null>(null);
 	const ref = useRef<HTMLDivElement>(null);
 	const menuId = useId();
@@ -164,6 +166,9 @@ export function NavActions({
 							key={navLink.label}
 							href={navLink.href}
 							onClick={close}
+							// Tells assistive tech which link is the current page; the visual
+							// state alone doesn't convey it.
+							aria-current={pathname === navLink.href ? "page" : undefined}
 							className={menuRow}
 						>
 							<NavLinkIcon aria-hidden className="w-4 h-4" />

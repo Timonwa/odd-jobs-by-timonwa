@@ -22,6 +22,8 @@ export function ThemeToggle({
 	const Icon =
 		theme === "system" ? Monitor : resolvedTheme === "dark" ? Moon : Sun;
 
+	// Label-in-name (WCAG 2.5.3): where this renders visible text, the accessible
+	// name has to contain it, so voice control ("click Theme") can target it.
 	const label = `Theme: ${theme}`;
 
 	if (presentation === "menuItem") {

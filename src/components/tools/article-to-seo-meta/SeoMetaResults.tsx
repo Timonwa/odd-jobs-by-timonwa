@@ -195,6 +195,8 @@ function Field({
 				aria-label={label}
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
+				// Not colour alone: aria-invalid states it for assistive tech (WCAG 1.4.1).
+				aria-invalid={over || under || undefined}
 				className={cn(
 					"resize-none text-sm min-h-0",
 					(over || under) && "border-destructive focus:ring-destructive",

@@ -56,7 +56,9 @@ export function SettingsDrawer({
 					variant="ghost"
 					size="sm"
 					onClick={() => setOpen(true)}
-					aria-expanded={open}
+					// A drawer is a modal dialog, not an expandable region: `aria-expanded`
+					// describes in-place disclosure, so a dialog trigger uses haspopup instead.
+					aria-haspopup="dialog"
 					className="w-full justify-start"
 				>
 					<PenLineIcon aria-hidden className="w-4 h-4" />

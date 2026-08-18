@@ -38,10 +38,45 @@ export function Drawer({
 		const prevOverflow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 
+		const FOCUSABLE =
+			'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+		const focusableInPanel = (): HTMLElement[] =>
+			Array.from(
+				panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [],
+			).filter((el) => el.offsetParent !== null || el === panelRef.current);
+
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				e.stopPropagation();
 				onOpenChange(false);
+				return;
+			}
+			// Trap Tab. Without this the drawer claims `aria-modal="true"` while
+			// focus walks out into the page behind it — which assistive tech is
+			// being told to ignore, so the user lands somewhere they can't perceive.
+			if (e.key !== "Tab") return;
+			const focusable = focusableInPanel();
+			if (focusable.length === 0) {
+				e.preventDefault();
+				panelRef.current?.focus();
+				return;
+			}
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			const active = document.activeElement;
+			if (
+				!e.shiftKey &&
+				(active === last || !panelRef.current?.contains(active))
+			) {
+				e.preventDefault();
+				first?.focus();
+			} else if (
+				e.shiftKey &&
+				(active === first || !panelRef.current?.contains(active))
+			) {
+				e.preventDefault();
+				last?.focus();
 			}
 		};
 		document.addEventListener("keydown", handleKeyDown);
@@ -55,7 +90,14 @@ export function Drawer({
 		return () => {
 			document.removeEventListener("keydown", handleKeyDown);
 			document.body.style.overflow = prevOverflow;
-			previouslyFocused.current?.focus?.();
+			// Only restore focus to a trigger that is still visible: opening a drawer
+			// from the nav menu closes that menu, so the original trigger can be
+			// `display:none` by now, and focusing it would silently drop focus to
+			// <body> (F2). Fall back to the document body's first heading region.
+			const trigger = previouslyFocused.current;
+			if (trigger?.isConnected && trigger.offsetParent !== null)
+				trigger.focus();
+			else document.querySelector<HTMLElement>("main")?.focus();
 		};
 	}, [open, onOpenChange]);
 
@@ -69,9 +111,12 @@ export function Drawer({
 			aria-labelledby={title ? titleId : undefined}
 			aria-describedby={description ? descriptionId : undefined}
 		>
-			<button
-				type="button"
-				aria-label="Close drawer"
+			{/* Click-outside-to-close, kept out of the tab order: as a focusable
+			    button it was a second "Close drawer" stop inside the dialog, on top
+			    of Escape and the visible close button. Not a keyboard path anyone
+			    needs, so the div carries the click and nothing else. */}
+			<div
+				aria-hidden
 				onClick={() => onOpenChange(false)}
 				className="absolute inset-0 bg-black/50 animate-in fade-in-0 cursor-default"
 			/>

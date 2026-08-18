@@ -63,7 +63,12 @@ export function Newsletter({ className }: { className?: string }) {
 				</p>
 
 				{state.status === "success" ? (
+					// Focused on mount: swapping the form out means this region is created
+					// with its text already in it, which most screen readers never announce
+					// — and the submit button it replaced no longer exists to hold focus.
 					<p
+						ref={(node) => node?.focus()}
+						tabIndex={-1}
 						role="status"
 						className="mx-auto mt-6 max-w-md rounded-lg bg-primary/10 px-4 py-3 text-sm font-medium text-primary"
 					>
