@@ -59,6 +59,9 @@ export {
 	type ParsedAttr,
 	type AttrFormatter,
 } from "./svg/format.utils";
+export { sanitizeComponentName } from "./svg/component-name.utils";
+export { svgPreviewBackgroundStyle } from "./svg/preview-background.utils";
+export { readSvgRootAttr, writeSvgRootAttr } from "./svg/root-attr.utils";
 export { svgToJsx, type SvgToJsxOptions } from "./svg/svg-to-jsx.utils";
 export {
 	subscribeByok,

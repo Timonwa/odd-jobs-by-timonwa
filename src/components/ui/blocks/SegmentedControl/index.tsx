@@ -7,7 +7,9 @@ type SegmentedOption<T> = { value: T; label: ReactNode };
 type SegmentedControlProps<T extends string | number> = {
 	value: T;
 	onChange: (value: T) => void;
-	options: SegmentedOption<T>[];
+	// `readonly` so callers can pass an `as const` option list — the array is only
+	// mapped over, never mutated.
+	options: readonly SegmentedOption<T>[];
 	disabled?: boolean;
 	ariaLabel?: string;
 	className?: string;
