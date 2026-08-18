@@ -10,6 +10,8 @@ import { SITE_NAME } from "@/lib/config/site";
 import { getAllProducts } from "@/lib/server";
 import type { ProductMeta } from "@/lib/schemas";
 
+import { ShareBar } from "@/components/_shared/tool";
+
 import { MoreProducts } from "./MoreProducts";
 import { ProductCheckoutCta } from "./ProductCheckoutCta";
 import { ProductHeader } from "./ProductHeader";
@@ -72,7 +74,18 @@ export async function ProductPageContent({
 	return (
 		<>
 			<PageMain>
-				<ContentBreadcrumbs section="shop" title={product.title} />
+				<ContentBreadcrumbs
+					section="shop"
+					title={product.title}
+					action={
+						<ShareBar
+							url={product.canonicalUrl}
+							title={product.title}
+							shareText={product.description}
+							subject="product"
+						/>
+					}
+				/>
 				<div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
 					<div className="flex flex-col lg:col-span-2">
 						<ProductHeader product={product} />

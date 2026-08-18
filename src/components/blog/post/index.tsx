@@ -11,6 +11,8 @@ import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
 import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 
+import { ShareBar } from "@/components/_shared/tool";
+
 import { PostHero } from "./PostHero";
 import { PostPageFooter } from "./PostPageFooter";
 
@@ -48,7 +50,18 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 		<>
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
-					<ContentBreadcrumbs section="blog" title={post.title} />
+					<ContentBreadcrumbs
+						section="blog"
+						title={post.title}
+						action={
+							<ShareBar
+								url={`${SITE_URL}${ROUTES.post(post.slug)}`}
+								title={post.title}
+								shareText={post.description}
+								subject="post"
+							/>
+						}
+					/>
 					<PostHero post={post} />
 					<article>
 						<PostBody />

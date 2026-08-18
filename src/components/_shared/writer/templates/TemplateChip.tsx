@@ -66,7 +66,7 @@ export function TemplateChip({
 								}}
 								aria-label={`Confirm delete style template ${template.name}`}
 								disabled={disabled}
-								className="rounded-md p-1 text-destructive hover:bg-destructive/10 transition-colors disabled:cursor-not-allowed"
+								className="tap-target rounded-md p-1 text-destructive hover:bg-destructive/10 transition-colors disabled:cursor-not-allowed"
 							>
 								<Trash2Icon aria-hidden className="w-3.5 h-3.5" />
 							</button>
@@ -76,7 +76,7 @@ export function TemplateChip({
 								type="button"
 								onClick={() => setConfirmingDelete(false)}
 								aria-label="Cancel delete"
-								className="rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+								className="tap-target rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
 							>
 								<XIcon aria-hidden className="w-3.5 h-3.5" />
 							</button>
@@ -90,7 +90,7 @@ export function TemplateChip({
 								onClick={onEdit}
 								aria-label={`Edit style template ${template.name}`}
 								disabled={disabled}
-								className="rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors disabled:cursor-not-allowed"
+								className="tap-target rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors disabled:cursor-not-allowed"
 							>
 								<PencilIcon aria-hidden className="w-3.5 h-3.5" />
 							</button>
@@ -101,7 +101,7 @@ export function TemplateChip({
 								onClick={() => setConfirmingDelete(true)}
 								aria-label={`Delete style template ${template.name}`}
 								disabled={disabled}
-								className="rounded-md p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:cursor-not-allowed"
+								className="tap-target rounded-md p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:cursor-not-allowed"
 							>
 								<Trash2Icon aria-hidden className="w-3.5 h-3.5" />
 							</button>

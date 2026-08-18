@@ -11,6 +11,8 @@ import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 import type { IssueMeta } from "@/lib/schemas";
 import { getAllIssues } from "@/lib/server";
 
+import { ShareBar } from "@/components/_shared/tool";
+
 import { IssueHero } from "./IssueHero";
 import { IssuePageFooter } from "./IssuePageFooter";
 
@@ -51,7 +53,18 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 		<>
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
-					<ContentBreadcrumbs section="newsletter" title={issue.title} />
+					<ContentBreadcrumbs
+						section="newsletter"
+						title={issue.title}
+						action={
+							<ShareBar
+								url={`${SITE_URL}${ROUTES.issue(issue.slug)}`}
+								title={issue.title}
+								shareText={issue.description}
+								subject="issue"
+							/>
+						}
+					/>
 					<IssueHero issue={issue} />
 					<article>
 						<IssueBody />

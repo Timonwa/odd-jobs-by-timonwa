@@ -1,6 +1,6 @@
 # Performance audit — The Productivity Bug (tools.timonwa.com)
 
-**Date:** 2026-08-17 · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** whole repo — all `src/app` frontend routes and `src/components`, `src/lib` (OG image routes excluded from the route inventory, but their runtime/caching config is in scope) · **Overall:** 8.5/10
+**Date:** 2026-08-17 · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** whole repo — all `src/app` frontend routes and `src/components`, `src/lib` (OG image routes excluded from the route inventory, but their runtime/caching config is in scope) · **Overall:** 9/10
 
 > **This is a static-code audit.** No Lighthouse, no WebPageTest, no CrUX/field data was collected — every number below comes from reading the source, the `pnpm build` output, and the emitted artefacts in `.next/`. Where a real measurement is required (notably INP), that is stated rather than guessed.
 
@@ -20,7 +20,7 @@ Eleven of fourteen findings fixed. One is **corrected rather than fixed** — it
 | 2   | HIGH     | INP             | **FIXED**     | Full article text written to `localStorage` synchronously on every keystroke                     | `src/lib/hooks/use-article-source.ts:150`              |
 | 3   | MEDIUM   | Caching         | **CORRECTED** | Zero of the 40+ OG/Twitter image routes prerender; 26 opt into `runtime = "edge"`                | `src/app/opengraph-image.tsx:8` (+25 more)             |
 | 4   | MEDIUM   | Images          | **FIXED**     | AVIF not enabled; `images` block absent from `next.config.ts` entirely                           | `next.config.ts:4`                                     |
-| 5   | MEDIUM   | Rendering       | **DEFERRED**  | Navbar lives in 15 page components, not a layout — remounts on every navigation                  | `src/components/home/index.tsx:12`                     |
+| 5   | MEDIUM   | Rendering       | **FIXED**     | Navbar lived in 15 page components, not a layout — remounted on every navigation                 | `src/app/(hub)/layout.tsx:17`                          |
 | 6   | MEDIUM   | INP             | **FIXED**     | `DOMPurify.sanitize` runs per keystroke even when the Preview tab is closed                      | `src/components/tools/svg-to-jsx/SvgToJsxTool.tsx:141` |
 | 7   | MEDIUM   | Dynamic imports | **FIXED**     | `dompurify` eagerly imported into the `/svg-to-jsx` client bundle; no `next/dynamic` in the repo | `src/components/tools/svg-to-jsx/SvgToJsxTool.tsx:3`   |
 | 8   | MEDIUM   | Bundle          | **FIXED**     | No byte budget, analyzer, or Lighthouse CI — and Next 16 no longer prints First Load JS          | `.github/workflows/ci.yml`, `package.json:8`           |
@@ -91,9 +91,13 @@ The finding says 26 routes opting into `runtime = "edge"` is why no OG route pre
 
 So there is no static-generation win available here, and the actual defect was three contradictory comments claiming edge was mandatory. Fixed during the codebase pass: all 26 now carry one accurate note, and the six content-backed image routes explain why they must stay on Node (`node:fs` via `createMdxLoader`). Same correction applies to `frontend-audit` F1.
 
-### F5 — DEFERRED: the navbar belongs in a layout
+### F5 — FIXED (by the frontend pass): the navbar is in a layout
 
-Real, and unaddressed. Moving it requires a route group — the tool routes need `AppNavbar` with per-tool branding while the hub pages need `HubNavbar`, so this means introducing something like `(hub)/` and moving several route folders into it. That is a structural change with its own review, and `frontend-audit` owns structure; doing it here as a side effect of a perf pass would be the wrong place.
+Deferred here on purpose — moving it needed a route group, and `frontend-audit` owns structure, so doing it as a side effect of a perf pass would have been the wrong place. The frontend pass then did it: `src/app/(hub)/layout.tsx` renders `HubNavbar` once for home, `/tools`, `/categories`, and the three content sections, so it no longer remounts per navigation.
+
+The tool routes keep rendering `AppNavbar` themselves, which is not the same defect: each carries per-tool branding, and they sit in a grouping-only route group with no shared layout to hoist it into.
+
+Marked DEFERRED in the first write-up of this report and left stale after the frontend pass closed it — corrected on the docs-pass re-read.
 
 ### F12 — OPEN: 1.7 MB of source PNGs
 
@@ -113,13 +117,12 @@ Genuine: six screenshots at 2704×1458, up to 388 KB each. Two reasons it is lef
 | INP       | 8/10  | +3  | Coalesced storage writes with a hide-flush, and sanitizing gated on visibility. Unmeasurable without RUM (F13).               |
 | Caching   | 7/10  | +3  | Content parsed once per request rather than per call. No `use cache` tiers, which is correct while everything is prerendered. |
 | Bundle    | 8/10  | +3  | A budget in CI with a stated baseline. One eager 118 KB dependency, deliberately.                                             |
-| Rendering | 7/10  | —   | Navbar still in page components (F5), deferred to a structural pass.                                                          |
+| Rendering | 9/10  | +2  | The hub navbar renders once from `(hub)/layout.tsx` instead of remounting per page (F5, via the frontend pass).               |
 | CLS       | 10/10 | +5  | The one shifting element on the site now reserves its box.                                                                    |
 
 ## Remaining action items
 
 | #   | Priority | Task                                                                                                                  | Effort |
 | --- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | P2       | Move the navbar into a layout via a `(hub)` route group (F5) — owned by `frontend-audit`                              | M      |
 | 2   | P2       | Compress `public/blog/` PNGs locally with `oxipng`/`sharp` (F12) — delivery is already optimized, this is repo weight | S      |
 | 3   | P3       | Add Core Web Vitals RUM so INP is observable, then re-measure F2 (F13)                                                | S      |

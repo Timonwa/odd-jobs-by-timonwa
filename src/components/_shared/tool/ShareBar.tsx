@@ -21,10 +21,8 @@ import {
 	XLogo,
 	Button,
 } from "@/components/ui";
-import { ROUTES } from "@/lib/config/routes";
-import { SITE_URL } from "@/lib/config/site";
-import { getToolBySlug } from "@/lib/config/tools";
 import { COPY_FEEDBACK_MS } from "@/lib/constants";
+
 type ShareLink = {
 	key: string;
 	label: string;
@@ -46,20 +44,32 @@ const canShareData = (data: ShareData) => {
 const itemClass =
 	"flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:outline-none";
 
-/** Share control — an inline button on the breadcrumb row at `sm+`, and a floating button pinned bottom-right below `sm`; both open the same menu (native Web Share, platform links, email, copy). */
-export function ShareBar({ slug, name }: { slug: string; name: string }) {
+export type ShareBarProps = {
+	/** Absolute URL to share. */
+	url: string;
+	/** Page title — the share sheet's title and the email subject. */
+	title: string;
+	/** Sentence shared alongside the URL; falls back to the title alone. */
+	shareText?: string;
+	/** Noun for the trigger copy, e.g. "tool" → "Share tool" / "Share this tool". */
+	subject: string;
+};
+
+/** Share control — an inline button on the breadcrumb row at `sm+`, plus a floating button pinned bottom-right at every width. Each trigger owns its own menu (native Web Share, platform links, email, copy); opening one closes the other. */
+export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 	const inlineMenuId = useId();
 	const fabMenuId = useId();
-	const [open, setOpen] = useState(false);
+	// Which trigger's menu is open, not a boolean: both triggers are visible at
+	// `sm+`, and a shared boolean rendered BOTH menus from a single click.
+	const [openMenu, setOpenMenu] = useState<"inline" | "fab" | null>(null);
 	const [copied, setCopied] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inlineTriggerRef = useRef<HTMLButtonElement>(null);
 	const fabTriggerRef = useRef<HTMLButtonElement>(null);
 
-	const url = `${SITE_URL}${ROUTES.tool(slug)}`;
-	const tagline = getToolBySlug(slug)?.tagline ?? "";
-	const shareText = tagline ? `${name} — ${tagline}` : name;
-	const shareData: ShareData = { title: name, text: shareText, url };
+	const closeMenu = () => setOpenMenu(null);
+	const text = shareText ?? title;
+	const shareData: ShareData = { title, text, url };
 
 	// Web Share is client-only; report false through hydration, then whether this payload is shareable.
 	const canNativeShare = useSyncExternalStore(
@@ -69,8 +79,8 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 	);
 
 	const forUrl = encodeURIComponent(url);
-	const forText = encodeURIComponent(shareText);
-	const forTextWithUrl = encodeURIComponent(`${shareText} ${url}`);
+	const forText = encodeURIComponent(text);
+	const forTextWithUrl = encodeURIComponent(`${text} ${url}`);
 
 	const links: ShareLink[] = [
 		{
@@ -123,17 +133,17 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 		},
 	];
 
-	const mailtoHref = `mailto:?subject=${encodeURIComponent(name)}&body=${encodeURIComponent(`${shareText}\n\n${url}`)}`;
+	const mailtoHref = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`;
 
 	// Close on outside click or Escape; Escape returns focus to the trigger.
 	useEffect(() => {
-		if (!open) return;
+		if (openMenu === null) return;
 		function onPointerDown(event: PointerEvent) {
-			if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
+			if (!containerRef.current?.contains(event.target as Node)) closeMenu();
 		}
 		function onKeyDown(event: KeyboardEvent) {
 			if (event.key === "Escape") {
-				setOpen(false);
+				closeMenu();
 				// Return focus to whichever trigger is currently visible.
 				const trigger = [inlineTriggerRef.current, fabTriggerRef.current].find(
 					(el) => el && el.offsetParent !== null,
@@ -147,10 +157,10 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 			document.removeEventListener("pointerdown", onPointerDown);
 			document.removeEventListener("keydown", onKeyDown);
 		};
-	}, [open]);
+	}, [openMenu]);
 
 	async function handleNativeShare() {
-		setOpen(false);
+		closeMenu();
 		try {
 			await navigator.share(shareData);
 		} catch {
@@ -191,7 +201,7 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 						href={href}
 						target="_blank"
 						rel="noopener noreferrer"
-						onClick={() => setOpen(false)}
+						onClick={closeMenu}
 						className={itemClass}
 					>
 						<Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
@@ -200,11 +210,7 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 				</li>
 			))}
 			<li>
-				<a
-					href={mailtoHref}
-					onClick={() => setOpen(false)}
-					className={itemClass}
-				>
+				<a href={mailtoHref} onClick={closeMenu} className={itemClass}>
 					<MailIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
 					Share via email
 				</a>
@@ -228,15 +234,17 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 			<div className="relative hidden sm:block">
 				<Button
 					ref={inlineTriggerRef}
-					onClick={() => setOpen((prev) => !prev)}
-					aria-expanded={open}
+					onClick={() =>
+						setOpenMenu((prev) => (prev === "inline" ? null : "inline"))
+					}
+					aria-expanded={openMenu === "inline"}
 					aria-controls={inlineMenuId}
 					variant="outline"
 				>
-					<span>Share tool</span>
+					<span>Share {subject}</span>
 					<Share2Icon aria-hidden className="h-4 w-4" />
 				</Button>
-				{open && (
+				{openMenu === "inline" && (
 					<ul
 						id={inlineMenuId}
 						aria-label="Share options"
@@ -247,20 +255,20 @@ export function ShareBar({ slug, name }: { slug: string; name: string }) {
 				)}
 			</div>
 
-			{/* Below sm: floating action button pinned bottom-right; menu drops up. */}
+			{/* Floating action button, pinned bottom-right at every width; menu drops up. */}
 			<div className="fixed bottom-4 right-4 md:right-6 lg:right-8 z-40">
 				<Button
 					ref={fabTriggerRef}
-					onClick={() => setOpen((prev) => !prev)}
-					aria-expanded={open}
+					onClick={() => setOpenMenu((prev) => (prev === "fab" ? null : "fab"))}
+					aria-expanded={openMenu === "fab"}
 					aria-controls={fabMenuId}
-					aria-label="Share this tool"
+					aria-label={`Share this ${subject}`}
 					size="icon-lg"
 					className="rounded-full shadow-lg"
 				>
 					<Share2Icon aria-hidden className="h-5 w-5" />
 				</Button>
-				{open && (
+				{openMenu === "fab" && (
 					<ul
 						id={fabMenuId}
 						aria-label="Share options"

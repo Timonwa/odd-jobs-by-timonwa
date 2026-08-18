@@ -116,7 +116,7 @@ export function HistorySidebar({
 											<button
 												type="button"
 												onClick={() => setConfirmingId(item.id)}
-												className="mt-1 text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+												className="tap-target mt-1 justify-start text-[10px] text-muted-foreground hover:text-destructive gap-1 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
 											>
 												<Trash2Icon className="w-3 h-3" />
 												Remove

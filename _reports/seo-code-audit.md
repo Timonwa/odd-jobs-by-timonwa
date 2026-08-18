@@ -197,5 +197,4 @@ The rule this earns: a status column is a claim about the code, so each row gets
 | 1   | P1       | After deploy: confirm the `/guides/*` redirects resolve and run the rendered JSON-LD through Google's Rich Results Test | S      |
 | 2   | P2       | Confirm Search Console verification is in place (may be DNS TXT, not observable here) (F17)                             | XS     |
 | 3   | P3       | Section OG images for `/categories`, `/categories/[category]`, `/tools` (F23)                                           | S      |
-| 4   | P3       | Pick a Word & Character Counter title that doesn't compete with Reading Time Estimator (F24)                            | XS     |
 | 5   | P3       | Future-date gating in the loader, if writing ahead becomes a habit (F21)                                                | S      |

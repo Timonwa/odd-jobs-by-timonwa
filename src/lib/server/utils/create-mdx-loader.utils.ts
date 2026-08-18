@@ -33,6 +33,28 @@ const SLUG_PATTERN = /^[a-z0-9-]+$/;
 const DRAFTS_DIR_NAME = "_drafts";
 const areDraftsVisible = process.env.NODE_ENV === "development";
 
+// A future `publishedAt` means "not yet published", so the entry is withheld
+// from listings and the sitemap. Gated the same way drafts are: visible on the
+// dev server so scheduled work can be previewed, hidden in any build.
+//
+// Resolution is a deploy, not a clock: an entry dated tomorrow appears on the
+// next build after that date, not the moment it passes. Scheduling a post to go
+// live unattended would need ISR or a cron redeploy; this only guarantees a
+// future-dated file can't ship early.
+//
+// Read at module load, not per call, because `cacheComponents` rejects
+// `Date.now()` inside a prerendered Server Component — the current time is
+// request data there. Module scope is evaluated once, outside any render, which
+// is also exactly the semantic above: the cutoff is when the build started.
+const CUTOFF_MS = Date.now();
+
+function isPublished(publishedAt: string): boolean {
+	if (areDraftsVisible) return true;
+	const date = new Date(publishedAt);
+	if (Number.isNaN(date.getTime())) return true; // schema-validated; don't hide on a parse quirk
+	return date.getTime() <= CUTOFF_MS;
+}
+
 type Loaded<T> = T & {
 	slug: string;
 	readingMinutes: number;
@@ -101,7 +123,7 @@ export function createMdxLoader<T extends { publishedAt: string }>(
 		};
 	}
 
-	function getSlugs(): string[] {
+	function discoverSlugs(): string[] {
 		const published = slugsIn(CONTENT_DIR);
 		if (!areDraftsVisible) return published;
 		// A published file wins over a same-named draft.
@@ -115,12 +137,38 @@ export function createMdxLoader<T extends { publishedAt: string }>(
 	// route, and each call re-read and re-parsed every MDX file in the directory.
 	// `cache` dedupes within one render pass; the files are build-time content, so
 	// there is nothing to invalidate inside a request.
-	const getAll = cache((): Loaded<T>[] => getSlugs().map(read).sort(sort));
+	const getAll = cache((): Loaded<T>[] => {
+		const all = discoverSlugs().map(read);
+		const live = all.filter((entry) => isPublished(entry.publishedAt));
+
+		// Next's Cache Components require `generateStaticParams` to return at
+		// least one param, so withholding every entry in a section fails the
+		// build with an opaque EmptyGenerateStaticParamsError. Say what actually
+		// happened instead — the cause (a date) is nowhere near the symptom.
+		if (all.length > 0 && live.length === 0) {
+			throw new Error(
+				`Every entry in content/${dir}/ has a future publishedAt, so the section would build empty and Next requires at least one static param. Backdate one of: ${all
+					.map((entry) => `${entry.slug} (${entry.publishedAt})`)
+					.join(", ")}.`,
+			);
+		}
+
+		return live.sort(sort);
+	});
+
+	// Derived from getAll rather than the filesystem, so `generateStaticParams`
+	// and the sitemap can't disagree with what the listings show.
+	const getSlugs = cache((): string[] => getAll().map((entry) => entry.slug));
 
 	const getOne = cache((slug: string): Loaded<T> | undefined => {
 		if (!SLUG_PATTERN.test(slug)) return undefined;
 		if (!resolveFile(slug)) return undefined;
-		return read(slug);
+		const entry = read(slug);
+		// 404 rather than serving it: a future-dated entry is excluded from the
+		// listings and the sitemap, so a reachable detail page would be an
+		// orphan Google could still index from an external link.
+		if (!isPublished(entry.publishedAt)) return undefined;
+		return entry;
 	});
 
 	return { getSlugs, getAll, getOne };

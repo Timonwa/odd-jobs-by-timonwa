@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Breadcrumbs } from "@/components/ui";
 import type { BreadcrumbItem } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
@@ -10,13 +12,15 @@ const SECTIONS = {
 
 export type ContentSection = keyof typeof SECTIONS;
 
-/** Breadcrumb trail for the content sections (Home › Blog › post) — pass `title` on an entry page and omit it on the section index, where the section itself is the current page. */
+/** Breadcrumb trail for the content sections (Home › Blog › post) — pass `title` on an entry page and omit it on the section index, where the section itself is the current page. `action` sits on the opposite edge of the same row, as the share control does on tool pages. */
 export function ContentBreadcrumbs({
 	section,
 	title,
+	action,
 }: {
 	section: ContentSection;
 	title?: string;
+	action?: ReactNode;
 }) {
 	const { label, href } = SECTIONS[section];
 
@@ -28,5 +32,12 @@ export function ContentBreadcrumbs({
 		...(title ? [{ label: title }] : []),
 	];
 
-	return <Breadcrumbs items={items} />;
+	if (!action) return <Breadcrumbs items={items} />;
+
+	return (
+		<div className="mb-6 flex items-center justify-between gap-3 [&>nav]:mb-0">
+			<Breadcrumbs items={items} />
+			{action}
+		</div>
+	);
 }

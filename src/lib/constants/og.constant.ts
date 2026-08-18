@@ -6,6 +6,8 @@
 // render in an isolated `ImageResponse` document with no access to the site's
 // stylesheet, so a token reference would resolve to nothing.
 
+import type { Tint } from "@/lib/config/tints";
+
 export type OgPalette = {
 	/** Foreground accent — the highlighted half of the title, pills, and rules. */
 	accent: string;
@@ -27,3 +29,17 @@ export const OG_PALETTES = {
 } as const satisfies Record<string, OgPalette>;
 
 export type OgPaletteName = keyof typeof OG_PALETTES;
+
+/**
+ * Tint → OG palette. The tint scale already names these five colours in
+ * `tokens.css` (sky, amber, violet, emerald, rose) and the palettes above carry
+ * the same names, so a category's card matches the colour it wears on the site
+ * without either side restating a hex.
+ */
+export const OG_PALETTE_BY_TINT: Record<Tint, OgPalette> = {
+	1: OG_PALETTES.sky,
+	2: OG_PALETTES.amber,
+	3: OG_PALETTES.violet,
+	4: OG_PALETTES.emerald,
+	5: OG_PALETTES.rose,
+};

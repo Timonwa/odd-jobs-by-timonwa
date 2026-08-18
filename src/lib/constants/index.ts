@@ -17,7 +17,12 @@ export {
 export { HASH_ALGORITHMS, type HashAlgorithm } from "./hash.constant";
 export { MAX_HISTORY_ENTRIES } from "./history.constant";
 export { APP_NAMESPACE, namespaced } from "./namespace.constant";
-export { OG_PALETTES, type OgPalette, type OgPaletteName } from "./og.constant";
+export {
+	OG_PALETTES,
+	OG_PALETTE_BY_TINT,
+	type OgPalette,
+	type OgPaletteName,
+} from "./og.constant";
 export {
 	NEWSLETTER_DAILY_USER_CAP,
 	NEWSLETTER_DAILY_SHARED_POOL,

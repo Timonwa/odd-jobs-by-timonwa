@@ -137,7 +137,7 @@ App Router, with two route groups that differ in kind. `(hub)` is **layout-beari
 
 ## Data Fetching
 
-Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. Article-URL input is fetched server-side inside actions (SSRF-guarded by `assertSafeArticleUrl`; 1-hour in-memory cache).
+Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. **Article URLs are never fetched by this app** — `resolveArticleSource` validates the URL with `assertSafeArticleUrl` and hands it to Gemini's provider-executed `url_context` tool, which does the reading. So the SSRF guard constrains what we _ask Gemini to fetch_, not our own egress, and there is no response body or cache on our side. The only outbound `fetch` in `lib/server/` is the Sender.net call in `newsletter.action.ts`.
 
 ## Mutations
 
@@ -170,7 +170,7 @@ None — no accounts. The only gating is the hosted daily quota (see Backend / A
 ## Security
 
 - **BYOK keys** live in `sessionStorage` (browser only), sent per-request, never logged or stored server-side. Only allowlisted BYOK models are honored (`BYOK_MODELS`).
-- **SSRF**: article URLs pass `assertSafeArticleUrl` (blocks loopback, link-local/metadata endpoint, RFC 1918, IPv6 local ranges).
+- **SSRF**: article URLs pass `assertSafeArticleUrl` (blocks loopback, link-local/metadata endpoint, RFC 1918, IPv6 local ranges) before being handed to Gemini's `url_context` — the app never fetches them itself, so this bounds what the provider is asked to read.
 - **Rate limiting**: three tiers in Upstash Redis — per-user daily, per-user burst, and a shared daily pool — charged atomically by one Lua script, keyed on an HMAC-SHA256 IP hash peppered by `IP_HASH_SECRET`. **Metering follows the Upstash credentials, not the tier**: only the dev server is exempt, so every built deploy meters (previews included). An unreachable Redis **fails closed** — `canServeHostedAi()` returns false and hosted generations are refused rather than spending the platform key unmetered. BYOK requests skip all of it.
 - **Security headers**: a `Content-Security-Policy` plus five others, served on every path from `headers()` in `next.config.ts` (no middleware — there's no other dynamic surface). A new external script, font, or frame source needs a CSP edit in the same PR, or it is blocked in the browser.
 - **JSON-LD** is escaped via `JsonLdScript`: `<` becomes `\u003c`, so a `</script>` inside content can't break out of the tag.
