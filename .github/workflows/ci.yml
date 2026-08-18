@@ -92,3 +92,20 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      # Next 16 no longer prints First Load JS, so a regression in client bundle
+      # size is otherwise invisible in review. Measured, not analyzed: no extra
+      # dependency, and the number is the one users actually download.
+      #
+      # Baseline at the time of writing: ~1330 KB. The budget carries ~12%
+      # headroom, so it catches a newly-eager dependency rather than normal
+      # growth. Raise it deliberately, with a note saying what grew.
+      - name: Client bundle budget
+        run: |
+          BUDGET_KB=1500
+          SIZE_KB=$(du -sk .next/static/chunks | cut -f1)
+          echo "Client chunks: ${SIZE_KB} KB (budget ${BUDGET_KB} KB)"
+          if [ "$SIZE_KB" -gt "$BUDGET_KB" ]; then
+            echo "::error::Client chunks grew to ${SIZE_KB} KB, over the ${BUDGET_KB} KB budget. Check for a newly-eager dependency, or raise the budget deliberately."
+            exit 1
+          fi

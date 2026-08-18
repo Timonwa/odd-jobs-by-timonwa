@@ -35,6 +35,10 @@ const stringStore = (key: string) =>
 			} catch {}
 		},
 		serverValue: "",
+		// These hold the article text and URL, so they are written on every
+		// keystroke — coalesce them rather than serializing a whole article per
+		// keypress. Flushed on tab hide, so nothing is lost.
+		writeDelayMs: 300,
 	});
 
 const flagStore = (key: string) =>

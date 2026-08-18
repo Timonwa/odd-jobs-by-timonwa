@@ -138,14 +138,18 @@ export function SvgToJsxTool() {
 
 	// Pasted markup is injected via dangerouslySetInnerHTML; sanitize first.
 	// DOMPurify needs a real DOM, so it's a no-op during prerender.
+	//
+	// Gated on the Preview tab being open: sanitizing ran on every keystroke even
+	// while the JSX tab was showing, so the cost was paid for output nobody could
+	// see. The gate is on `tab`, not a ref, so switching tabs recomputes.
 	const safePreview = useMemo(
 		() =>
-			typeof window === "undefined"
+			typeof window === "undefined" || tab !== "preview"
 				? ""
 				: DOMPurify.sanitize(trimmed, {
 						USE_PROFILES: { svg: true, svgFilters: true },
 					}),
-		[trimmed],
+		[trimmed, tab],
 	);
 
 	const generated = useMemo(() => {

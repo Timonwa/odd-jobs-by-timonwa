@@ -15,7 +15,7 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 | dependency-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [dependency-audit.md](dependency-audit.md)       |
 | frontend-audit           | 7/10   | 0        | 1      | 8      | 5      | —      | [frontend-audit.md](frontend-audit.md)           |
 | docs-audit               | 7/10   | 0        | 5      | 7      | 11     | —      | [docs-audit.md](docs-audit.md)                   |
-| performance-audit        | 6.5/10 | 0        | 2      | 8      | 4      | —      | [performance-audit.md](performance-audit.md)     |
+| performance-audit ✅     | 8.5/10 | 0        | 0      | 2      | 1      | ▲ +2   | [performance-audit.md](performance-audit.md)     |
 | seo-code-audit           | 6/10   | 0        | 4      | 9      | 12     | —      | [seo-code-audit.md](seo-code-audit.md)           |
 | accessibility-audit ✅   | 9/10   | 0        | 0      | 2      | 0      | ▲ +3   | [accessibility-audit.md](accessibility-audit.md) |
 | redis-audit              | 5/10   | 0        | 3      | 5      | 4      | —      | [redis-audit.md](redis-audit.md)                 |
@@ -39,8 +39,8 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 11. ~~**HIGH ×2 — the nine tool layouts duplicate and hardcode.**~~ **FIXED** in the conventions pass — 99 lines each became 18, with SEO copy in one registry and metadata/JSON-LD built from it; built HTML verified identical. Original detail: Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
 12. **HIGH — no test infrastructure at all** (DEFERRED by decision — tests are a separate branch; the dead CI job that claimed otherwise was removed), and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
 13. ~~**HIGH — 26 OG/Twitter image routes opt into `runtime = "edge"`.**~~ **CORRECTED, then fixed** — testing showed removing `edge` does _not_ restore static generation (non-parameterized image routes are dynamic either way), so the premise was wrong; the real defect was three contradictory comments, now one accurate note per route. Original detail: which the build explicitly warns disables static generation; every image route is `ƒ Dynamic` while every page is `○ Static`. → frontend F1, performance F3. Whether `edge` is needed at all on Next 16 is **unconfirmed** (docs read was denied in-session).
-14. **HIGH — layout shift on every blog post.** `next/image` is called with `width={0} height={0}`, reserving no space for all six lazy screenshots — confirmed in the prerendered HTML. → performance F1.
-15. **HIGH — a synchronous `localStorage` write per keystroke.** With source-reuse on, `setText` serialises the entire article on every keypress in the AI tools and word counter. → performance F2.
+14. ~~**HIGH — layout shift on every blog post.**~~ **FIXED** — `PostFigure` uses the screenshots' real 2704×1458 dimensions (measured, not assumed), and the placeholder's aspect box matches. Original detail: `next/image` is called with `width={0} height={0}`, reserving no space for all six lazy screenshots — confirmed in the prerendered HTML. → performance F1.
+15. ~~**HIGH — a synchronous `localStorage` write per keystroke.**~~ **FIXED** — coalesced writes with a `visibilitychange` flush. Original detail: With source-reuse on, `setText` serialises the entire article on every keypress in the AI tools and word counter. → performance F2.
 16. **HIGH — the structured-data graph is disconnected.** No `Organization`/`WebSite` node and no `@id` anywhere; the home page renders zero JSON-LD, so every block is an island — and no `alternateName` teaches Google about the rebrand from "Tools by Timonwa". → seo F2.
 17. **HIGH — thin content marked up as articles.** Four of the five new content files are 120–170 words yet are sitemapped and typed `BlogPosting`/`Article`. → seo F3.
 18. **HIGH — invisible authorship.** Post and issue pages render no byline and no date (no `<time>` element on any detail page) while their JSON-LD asserts `author`, `datePublished`, and `dateModified`. → seo F4.
@@ -66,9 +66,9 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 
 9. ~~Re-tune the contrast-failing tokens.~~ **DONE** (accessibility pass) [P6]
 10. ~~Add a Tab focus trap, fix the focus handoff, add a skip link, announce generation.~~ **DONE** (accessibility pass) [P7]
-11. Give `PostFigure` real intrinsic dimensions. [P14]
-12. Debounce or idle-defer the article `localStorage` write. [P15]
-13. Stop the root-layout footer re-parsing all content on every route, and declare cache tiers now that `cacheComponents` is on. [frontend caching 4/10, performance]
+11. ~~Give `PostFigure` real intrinsic dimensions.~~ **DONE** (performance pass) [P14]
+12. ~~Debounce the article `localStorage` write.~~ **DONE** (performance pass) [P15]
+13. ~~Stop the root-layout footer re-parsing all content on every route.~~ **DONE** (performance pass — React `cache()` per request; `use cache` tiers deliberately deferred while everything prerenders) [frontend caching, performance]
 14. ~~Point the nine tool layouts at `ROUTES.tool()` and extract the shared builder.~~ **DONE** (conventions pass) [P11]
 15. ~~Collapse the character cap to one constant; replace `useSeoMetaHistory`'s hand-rolled store.~~ **DONE** (conventions + codebase passes) [P19, P20]
 16. Add `Organization` + `WebSite` JSON-LD with `@id` wiring and `alternateName`, and render visible author/date on posts and issues. [P16, P18]
@@ -94,6 +94,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 ## Resolved since last run
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
+
+**performance-audit — complete (6.5/10 → 8.5/10).** Eleven of fourteen findings fixed. CLS closed with the screenshots' real dimensions; storage writes coalesced with a hide-flush; sanitizing gated on tab visibility; AVIF enabled; content parsed once per request instead of per call (a regression the restructure's footer introduced); and a dependency-free bundle budget in CI. **One finding was corrected rather than fixed** — the OG-route static-generation claim is false, proven by test. Deferred: the navbar-in-a-layout move (structural, owned by `frontend-audit`) and local PNG compression.
 
 **accessibility-audit — complete (6/10 → 9/10).** All eight HIGH findings fixed plus fifteen of eighteen MEDIUM/LOW. The contrast fixes were computed (OKLCH→luminance solver) rather than estimated, finding the minimum lightness change per token that clears 4.5:1 against the real foreground, white, and a 10% self-tint — hue and chroma untouched. Focus work: Tab trap, visibility-checked restore, skip link, live regions, `aria-disabled` instead of `disabled` mid-run. **Nothing was browser-verified**, so a screen-reader pass is the recommended follow-up; target sizes (F11) and the share FAB (F19) are left as design decisions.
 

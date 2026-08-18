@@ -51,6 +51,13 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 	reactCompiler: true,
 	pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+	images: {
+		// AVIF first, WebP second: Next negotiates per request, so older browsers
+		// still get WebP. Screenshots are the heaviest thing the blog serves.
+		formats: ["image/avif", "image/webp"],
+		// No `remotePatterns` on purpose — every image ships with the repo, so the
+		// optimizer can never be pointed at an attacker-chosen origin.
+	},
 	// The Guides section was renamed to Blog; keep old URLs alive (308).
 	async redirects() {
 		return [

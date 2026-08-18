@@ -67,6 +67,9 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
+				{/* The analytics script loads after hydration, so warming the
+				    connection early saves its DNS + TLS round-trips. */}
+				<link rel="preconnect" href="https://cloud.umami.is" crossOrigin="" />
 				{/* Tailwind-recommended pre-hydration snippet to avoid theme FOUC */}
 				<script dangerouslySetInnerHTML={{ __html: themeInit }} />
 			</head>
@@ -76,7 +79,6 @@ export default function RootLayout({
 				<SiteLayout footer={<HubFooter />}>{children}</SiteLayout>
 				{isProduction && (
 					<Script
-						defer
 						src="https://cloud.umami.is/script.js"
 						data-website-id={UMAMI_WEBSITE_ID}
 						data-performance="true"
