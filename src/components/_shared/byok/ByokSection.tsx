@@ -41,13 +41,20 @@ export function ByokSection({
 	onClear,
 	onModelChange,
 }: ByokSectionProps) {
-	const [input, setInput] = useState(savedKey ?? "");
+	// Starts empty and clears after a successful save — never seeded from the
+	// saved key, so the full key doesn't linger in the DOM as an input value.
+	// The masked "Using your key" panel is the confirmation that one is set.
+	const [input, setInput] = useState("");
 	const [reveal, setReveal] = useState(false);
 	const [status, setStatus] = useState<Status>(null);
 	const keyInputId = useId();
 	const modelLabelId = useId();
 
-	const handleSave = () => setStatus(onSave(input.trim()));
+	const handleSave = () => {
+		const result = onSave(input.trim());
+		if (result?.type === "success") setInput("");
+		setStatus(result);
+	};
 	const handleClear = () => {
 		const result = onClear();
 		setInput("");
