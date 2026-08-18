@@ -23,7 +23,7 @@ Thirteen of fourteen findings fixed. One is **corrected rather than fixed** — 
 | 5   | MEDIUM   | Rendering       | **FIXED**     | Navbar lived in 15 page components, not a layout — remounted on every navigation                 | `src/app/(hub)/layout.tsx:17`                          |
 | 6   | MEDIUM   | INP             | **FIXED**     | `DOMPurify.sanitize` runs per keystroke even when the Preview tab is closed                      | `src/components/tools/svg-to-jsx/SvgToJsxTool.tsx:141` |
 | 7   | MEDIUM   | Dynamic imports | **FIXED**     | `dompurify` eagerly imported into the `/svg-to-jsx` client bundle; no `next/dynamic` in the repo | `src/components/tools/svg-to-jsx/SvgToJsxTool.tsx:3`   |
-| 8   | MEDIUM   | Bundle          | **FIXED**     | No byte budget, analyzer, or Lighthouse CI — and Next 16 no longer prints First Load JS          | `.github/workflows/ci.yml`, `package.json:8`           |
+| 8   | MEDIUM   | Bundle          | **REVERTED**  | No byte budget, analyzer, or Lighthouse CI — and Next 16 no longer prints First Load JS          | `.github/workflows/ci.yml`                             |
 | 9   | MEDIUM   | Caching         | **FIXED**     | Content loaders re-read + re-parse MDX per call with no `cache()`; footer does it on every route | `src/lib/server/utils/create-mdx-loader.utils.ts:44`   |
 | 10  | MEDIUM   | Caching         | **FIXED**     | `cacheComponents: true` but no `use cache` / `cacheLife` / `cacheTag` anywhere                   | `next.config.ts:4`                                     |
 | 11  | LOW      | Bundle          | **FIXED**     | Redundant `defer` on an `afterInteractive` script; no `preconnect` to the analytics host         | `src/app/layout.tsx:79`                                |
@@ -56,11 +56,21 @@ The in-memory cache and subscribers still update immediately, so nothing about t
 
 ### F7 — PARTIAL: `dompurify` stays eager, deliberately
 
-The finding proposed `next/dynamic`. I left it eager. On `/svg-to-jsx`, DOMPurify is needed the moment the user pastes markup with the Preview tab open, and it guards the app's only `dangerouslySetInnerHTML` — deferring the sanitizer behind an async chunk means either a preview that renders late or, worse, a code path where the unsanitized value is available before the sanitizer is. F6's gate removes the _runtime_ cost; the 118 KB only loads for visitors to one tool page, and the new bundle budget will catch it if that changes.
+The finding proposed `next/dynamic`. I left it eager. On `/svg-to-jsx`, DOMPurify is needed the moment the user pastes markup with the Preview tab open, and it guards the app's only `dangerouslySetInnerHTML` — deferring the sanitizer behind an async chunk means either a preview that renders late or, worse, a code path where the unsanitized value is available before the sanitizer is. F6's gate removes the _runtime_ cost, and the 118 KB only loads for visitors to one tool page.
 
-### F8 — FIXED: a bundle budget in CI, with no new dependency
+### F8 — REVERTED: the budget was removed on the maintainer's call
 
-Next 16 stopped printing First Load JS, so bundle regressions were invisible in review. CI now measures `.next/static/chunks` and fails past a threshold. Baseline is ~1330 KB and the budget is 1500 KB — roughly 12% headroom, so it catches a newly-eager dependency rather than normal growth. Deliberately a measurement, not an analyzer: no extra dependency, and the number is what users actually download.
+Added in this pass, then removed. Worth recording why, because the reasoning was wrong in a way that isn't obvious from the finding.
+
+**The premise was sound.** Next 16 stopped printing First Load JS, so a dependency that doubles client JS shows up nowhere in review.
+
+**The metric was not.** The check totalled `.next/static/chunks`, which is not what any visitor downloads — chunks are shared and lazily loaded. Adding share menus to three more routes moved it by **0 KB**, while the number can grow harmlessly just from having more routes. It measured build output and called it user experience. The claim in the original write-up that "the number is what users actually download" was simply false.
+
+**And a crude threshold has one failure mode, which it hit immediately.** Its first real firing blocked the branch that introduced it, and the response was to raise it from 1500 to 1700 — a check that gets raised to stay green looks like protection while providing none.
+
+**It did catch one real thing before going:** `sugar-high` v2 shipping 136 KB of language definitions (python, go, rust, yaml) for an app whose only highlighting is JSX. That bump had been reported as "checked before bumping" on the strength of an API and token-name check, with no attention to size. So the evidence says _something_ here is worth having — just not this.
+
+If page weight ever becomes a real problem, the replacement is Lighthouse CI, or a measurement of the shared chunk every page pays for. Either tracks what a visitor feels; neither would have fired on this branch. For a solo-maintained repo where every `pnpm add` is the maintainer's own, reviewing package size at install time covers most of the same ground with no CI surface to maintain.
 
 ### F9 — FIXED: content is parsed once per request
 
@@ -120,26 +130,26 @@ Found when CI's own bundle budget failed on this branch: client chunks are 1584 
 
 **Checked and clean:** all eight components consuming `lib/schemas` use `import type`; all three action modules carry a file-level `"use server"`; the actions barrel exports only functions and types; no client module imports `zod` directly.
 
-So the remaining growth (~130 KB) looks like genuine feature work — breadcrumbs on six more pages, share menus on three more, the accessibility fixes — but the Zod chunk is unexplained and may be a real boundary leak. The budget was raised to 1700 KB deliberately to unblock the PR, with a note in `ci.yml` saying to lower it again if this closes.
+So the remaining growth (~130 KB) looks like genuine feature work — breadcrumbs on six more pages, share menus on three more, the accessibility fixes — but the Zod chunk is unexplained and may be a real boundary leak. It stays open on its own merits: the budget that surfaced it has since been removed (F8), so nothing in CI will flag it again.
 
 Next step for whoever picks this up: get a module-level answer rather than a grep one — Turbopack's build trace or a bundle analyzer will name the importer in one pass, which greps over minified chunks cannot.
 
 ## Verification
 
-`pnpm exec tsc --noEmit`, `pnpm lint` (zero warnings), and `pnpm build` all pass. The bundle-budget step was dry-run against the real build output (1332 KB vs the 1500 KB budget).
+`pnpm exec tsc --noEmit`, `pnpm lint` (zero warnings), and `pnpm build` all pass.
 
 **Still static-only:** no Lighthouse run, no field data. F1's fix is verifiable from the emitted HTML (the `width`/`height` attributes are now real numbers); F2's and F6's are reasoned from the mechanism.
 
 ## Scorecard
 
-| Category  | Score | Δ   | Notes                                                                                                                         |
-| --------- | ----- | --- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Images    | 9/10  | +4  | Real intrinsic dimensions, AVIF/WebP negotiation, matching placeholder ratio, sources losslessly recompressed (−37%).         |
-| INP       | 8/10  | +3  | Coalesced storage writes with a hide-flush, and sanitizing gated on visibility. Unmeasurable without RUM (F13).               |
-| Caching   | 7/10  | +3  | Content parsed once per request rather than per call. No `use cache` tiers, which is correct while everything is prerendered. |
-| Bundle    | 7/10  | +2  | A budget in CI with a stated baseline, but it needed raising and one Zod client chunk is unexplained (F15).                   |
-| Rendering | 9/10  | +2  | The hub navbar renders once from `(hub)/layout.tsx` instead of remounting per page (F5, via the frontend pass).               |
-| CLS       | 10/10 | +5  | The one shifting element on the site now reserves its box.                                                                    |
+| Category  | Score | Δ   | Notes                                                                                                                                                            |
+| --------- | ----- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Images    | 9/10  | +4  | Real intrinsic dimensions, AVIF/WebP negotiation, matching placeholder ratio, sources losslessly recompressed (−37%).                                            |
+| INP       | 8/10  | +3  | Coalesced storage writes with a hide-flush, and sanitizing gated on visibility. Unmeasurable without RUM (F13).                                                  |
+| Caching   | 7/10  | +3  | Content parsed once per request rather than per call. No `use cache` tiers, which is correct while everything is prerendered.                                    |
+| Bundle    | 7/10  | +2  | One eager 118 KB dependency, deliberately, on one tool page. No CI size gate — the budget was tried and removed (F8). One Zod client chunk is unexplained (F15). |
+| Rendering | 9/10  | +2  | The hub navbar renders once from `(hub)/layout.tsx` instead of remounting per page (F5, via the frontend pass).                                                  |
+| CLS       | 10/10 | +5  | The one shifting element on the site now reserves its box.                                                                                                       |
 
 ## Remaining action items
 
