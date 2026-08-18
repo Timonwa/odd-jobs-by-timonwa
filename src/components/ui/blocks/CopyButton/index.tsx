@@ -1,11 +1,10 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState } from "react";
 
 import { Button } from "../../base/Button";
+import { useCopyFeedback } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
-import { COPY_FEEDBACK_MS } from "@/lib/constants";
 
 type CopyButtonProps = {
 	value: string;
@@ -27,17 +26,12 @@ export function CopyButton({
 	className,
 	disabled,
 }: CopyButtonProps) {
-	const [copied, setCopied] = useState(false);
+	const { isCopied, copy } = useCopyFeedback();
+	const copied = isCopied();
 
-	async function handleCopy() {
-		try {
-			await navigator.clipboard.writeText(value);
-			setCopied(true);
-			setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
-		} catch {
-			// Clipboard blocked (insecure context / permissions) — no-op.
-		}
-	}
+	// A blocked clipboard (insecure context / permissions) simply shows no
+	// confirmation — there is no room for an error message on an icon button.
+	const handleCopy = () => copy(value);
 
 	const Icon = copied ? CheckIcon : CopyIcon;
 

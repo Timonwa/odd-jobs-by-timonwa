@@ -20,7 +20,8 @@ import type {
 	SocialPostHistory,
 } from "@/lib/types";
 import { useArticleSource } from "@/lib/hooks/use-article-source";
-import { COPY_FEEDBACK_MS, HISTORY_DEBOUNCE_MS } from "@/lib/constants";
+import { useCopyFeedback } from "@/lib/hooks/use-copy-feedback";
+import { HISTORY_DEBOUNCE_MS } from "@/lib/constants";
 import {
 	toActionCallErrorMessage,
 	articleSourceIdentity,
@@ -83,7 +84,7 @@ export function useWriter(runtime: WriterRuntime) {
 	const [lastSource, setLastSource] = useState<ArticleSource | null>(null);
 
 	const [regenerating, setRegenerating] = useState<Record<string, boolean>>({});
-	const [copiedKey, setCopiedKey] = useState<string | null>(null);
+	const { copiedKey, copy } = useCopyFeedback();
 
 	const [lastUsage, setLastUsage] = useState<TokenUsage | null>(null);
 
@@ -295,20 +296,19 @@ export function useWriter(runtime: WriterRuntime) {
 		[lastSource, xThreadLength, onRegenerate, styleStorage],
 	);
 
-	const copy = useCallback(async (key: string, text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-			setCopiedKey(key);
-			setTimeout(
-				() => setCopiedKey((k) => (k === key ? null : k)),
-				COPY_FEEDBACK_MS,
-			);
-		} catch {
-			setError(
-				"Your browser blocked copying. Select the text and copy it manually instead.",
-			);
-		}
-	}, []);
+	// Keeps the (key, text) order the writer UI already calls with, and owns the
+	// blocked-clipboard message — `useCopyFeedback` reports failure but doesn't
+	// word it, because each surface words it differently.
+	const copyText = useCallback(
+		async (key: string, text: string) => {
+			if (!(await copy(text, key))) {
+				setError(
+					"Your browser blocked copying. Select the text and copy it manually instead.",
+				);
+			}
+		},
+		[copy],
+	);
 
 	const loadFromHistory = useCallback(
 		(entry: SocialPostHistory) => {
@@ -371,11 +371,14 @@ export function useWriter(runtime: WriterRuntime) {
 		updatePostContent,
 		updateThreadPost,
 		regeneratePost,
-		copy,
+		copy: copyText,
 		copyAll: () =>
-			copy("all", buildAllPostsCopyText(editablePosts, result?.article.url)),
+			copyText(
+				"all",
+				buildAllPostsCopyText(editablePosts, result?.article.url),
+			),
 		copyPost: (post: SocialPost) =>
-			copy(
+			copyText(
 				`post-${post.platform}`,
 				buildPostCopyText(post, result?.article.url),
 			),

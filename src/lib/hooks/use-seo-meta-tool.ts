@@ -7,7 +7,7 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
-import { COPY_FEEDBACK_MS, HISTORY_DEBOUNCE_MS } from "@/lib/constants";
+import { HISTORY_DEBOUNCE_MS } from "@/lib/constants";
 import {
 	generateSeoMeta,
 	regenerateSeoMetaVariation,
@@ -20,6 +20,7 @@ import {
 	toActionCallErrorMessage,
 } from "@/lib/utils";
 
+import { useCopyFeedback } from "./use-copy-feedback";
 import { useSeoMetaHistory, type SeoMetaHistory } from "./use-seo-meta-history";
 
 export function useSeoMetaTool() {
@@ -34,7 +35,7 @@ export function useSeoMetaTool() {
 	);
 	const [regenError, setRegenError] = useState<string | null>(null);
 	const [regeneratingAll, setRegeneratingAll] = useState(false);
-	const [copiedAll, setCopiedAll] = useState(false);
+	const { isCopied, copy } = useCopyFeedback();
 	const [initial, setInitial] = useState<SeoMetaFormParams | undefined>();
 	// Lets the bottom "new article" button clear the form's inputs, which the form owns.
 	const formResetRef = useRef<(() => void) | null>(null);
@@ -139,13 +140,8 @@ export function useSeoMetaTool() {
 					`Variation ${i + 1}\nTitle: ${v.title}\nDescription: ${v.description}`,
 			)
 			.join("\n\n");
-		try {
-			// Awaited so a blocked clipboard (no user activation, insecure context)
-			// doesn't leave the UI claiming "Copied" with nothing copied.
-			await navigator.clipboard.writeText(text);
-			setCopiedAll(true);
-			setTimeout(() => setCopiedAll(false), COPY_FEEDBACK_MS);
-		} catch {
+		const ok = await copy(text);
+		if (!ok) {
 			setRegenError(
 				"Your browser blocked copying. Select the text and copy manually.",
 			);
@@ -216,7 +212,7 @@ export function useSeoMetaTool() {
 		regeneratingIndex,
 		regenError,
 		regeneratingAll,
-		copiedAll,
+		copiedAll: isCopied(),
 		initial,
 		formResetRef,
 		restoreNonce,

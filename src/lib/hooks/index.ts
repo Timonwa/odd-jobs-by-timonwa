@@ -5,4 +5,5 @@ export { useTheme, type Theme } from "./use-theme";
 export { useSocialPostsHistory } from "./writer/use-social-posts-history";
 export { useSocialPostsStyleTemplates } from "./writer/use-social-posts-style-templates";
 export { useWriter } from "./writer/use-writer";
+export { useCopyFeedback } from "./use-copy-feedback";
 export { useSeoMetaTool } from "./use-seo-meta-tool";

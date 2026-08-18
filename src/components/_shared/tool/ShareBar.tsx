@@ -21,7 +21,7 @@ import {
 	XLogo,
 	Button,
 } from "@/components/ui";
-import { COPY_FEEDBACK_MS } from "@/lib/constants";
+import { useCopyFeedback } from "@/lib/hooks";
 
 type ShareLink = {
 	key: string;
@@ -62,7 +62,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 	// Which trigger's menu is open, not a boolean: both triggers are visible at
 	// `sm+`, and a shared boolean rendered BOTH menus from a single click.
 	const [openMenu, setOpenMenu] = useState<"inline" | "fab" | null>(null);
-	const [copied, setCopied] = useState(false);
+	const { isCopied, copy } = useCopyFeedback();
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inlineTriggerRef = useRef<HTMLButtonElement>(null);
 	const fabTriggerRef = useRef<HTMLButtonElement>(null);
@@ -168,15 +168,9 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 		}
 	}
 
-	async function handleCopy() {
-		try {
-			await navigator.clipboard.writeText(url);
-			setCopied(true);
-			setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
-		} catch {
-			// Clipboard blocked (insecure context / permissions) — no-op.
-		}
-	}
+	// A blocked clipboard shows no confirmation; the menu has nowhere to put an
+	// error, and the URL is visible in the address bar anyway.
+	const handleCopy = () => copy(url);
 
 	const menuClass =
 		"z-50 max-h-[80vh] min-w-56 overflow-y-auto no-scrollbar rounded-xl border border-border bg-popover p-1.5 shadow-lg";
@@ -217,12 +211,12 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 			</li>
 			<li>
 				<button type="button" onClick={handleCopy} className={itemClass}>
-					{copied ? (
+					{isCopied() ? (
 						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
 					) : (
 						<LinkIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
 					)}
-					{copied ? "Link copied" : "Copy link"}
+					{isCopied() ? "Link copied" : "Copy link"}
 				</button>
 			</li>
 		</>
