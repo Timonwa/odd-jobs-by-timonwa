@@ -5,7 +5,11 @@ export type {
 	ArticleMeta,
 } from "./article.type";
 export type { HistoryEntry } from "./history.type";
-export type { SeoMetaVariation, SeoMetaResult } from "./seo-meta.type";
+export type {
+	SeoMetaVariation,
+	SeoMetaResult,
+	SeoMetaFormParams,
+} from "./seo-meta.type";
 export type {
 	SocialPost,
 	SocialPostsResult,
