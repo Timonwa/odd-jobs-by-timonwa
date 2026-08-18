@@ -1,6 +1,6 @@
 # Dependency audit — the-productivity-bug (single Next.js 16 app, pnpm)
 
-**Date:** 2026-08-17 (fix pass applied same day) · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** root `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `.github/workflows` + `.github/actions/setup`, and the source tree · **Overall:** 9/10
+**Date:** 2026-08-17 (fix pass applied same day) · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** root `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `.github/workflows` + `.github/actions/setup`, and the source tree · **Overall:** 9.5/10
 
 **Not a monorepo.** `pnpm-workspace.yaml` declares no `packages:` list — only `allowBuilds` and `overrides` — so the **workspace-protocol** and **pnpm catalog** checks do not apply and were **skipped** (exactly one importer, `.`). Version consistency was judged within the single manifest.
 
@@ -27,7 +27,7 @@ The remaining 1 point is two deliberate choices and one structural item, not ope
 | 7   | LOW      | Misplaced / unused deps     | **FIXED**    | `@types/mdx` + `@mdx-js/loader` in `dependencies`; `@mdx-js/react` unused                | Both moved to `devDependencies`; `@mdx-js/react` removed          |
 | 8   | LOW      | Supply chain / lifecycle    | **FIXED**    | `allowBuilds` pre-approved 4 packages absent from the tree                               | Trimmed to `sharp` + `unrs-resolver`, with the rule commented     |
 | 9   | LOW      | Supply chain / provenance   | **ACCEPTED** | 5 direct deps ship without provenance attestations                                       | No action available; treat provenance as a selection criterion    |
-| 10  | LOW      | Maintenance drift           | **DEFERRED** | `sugar-high` a major behind; `ai` 39 patches; `lucide-react` 7 minors                    | Project policy: bump for security or a deliberate major only      |
+| 10  | LOW      | Maintenance drift           | **PARTIAL**  | `sugar-high` a major behind; `ai` 39 patches; `lucide-react` 7 minors                    | Project policy: bump for security or a deliberate major only      |
 
 ### F1 — FIXED: `next` 16.2.10 → 16.2.11
 
@@ -99,7 +99,7 @@ Recorded because the first attempt did harm: scoped overrides (`brace-expansion@
 | Missing / phantom deps         | 10/10 | —   | Every external import specifier resolves to a declared dep.                                                                                                                                                            |
 | Duplicates                     | 9/10  | —   | Dev-tooling transitives only; singleton-sensitive packages remain single-copy (one `react`, `react-dom`, `next`, `zod`).                                                                                               |
 | Removed-package regressions    | 10/10 | —   | Nothing deliberately dropped has crept back.                                                                                                                                                                           |
-| Deprecated / unmaintained      | 8/10  | +1  | Zero deprecated packages. `gray-matter` is still de facto unmaintained, but no longer the source of an open advisory — it now requires an override to stay safe, which is the residual risk.                           |
+| Deprecated / unmaintained      | 10/10 | +3  | Zero deprecated packages, and `gray-matter` is gone — replaced by the maintained `yaml`, which also retired the `js-yaml` override it forced.                                                                          |
 | Vulnerabilities & supply chain | 9/10  | +4  | **Zero advisories** (`pnpm audit` clean), down from 21. Lifecycle-script posture tightened to the two packages that need it. Deduction: five deps without provenance, and three security floors that need maintaining. |
 | Lockfile                       | 10/10 | —   | One `pnpm-lock.yaml` in sync with the manifest; `packageManager` hash-pinned; CI installs `--frozen-lockfile`.                                                                                                         |
 
@@ -107,13 +107,13 @@ Recorded because the first attempt did harm: scoped overrides (`brace-expansion@
 
 ### Backlog
 
-| #   | Priority | Task (finding ID)                                                                                                                                                  | Effort |
-| --- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
-| 1   | P3       | Consider replacing `gray-matter` with a maintained frontmatter parser in `create-mdx-loader.utils.ts` — it is the only reason the `js-yaml` override exists (F5)   | M      |
-| 2   | P3       | A deliberate, tested bump of `ai` + `@ai-sdk/google` when convenient; those releases carry provider/streaming fixes on the path all three Server Actions use (F10) | S      |
-| 3   | P3       | Evaluate `sugar-high` 2.x separately — check its token class names against `src/styles/tokens.css` first (F10)                                                     | S      |
-| 4   | P3       | Re-check the `brace-expansion` override once ESLint's chain moves off `minimatch@3`                                                                                | XS     |
-| 5   | P3       | Prefer provenance-attested packages for new additions (F9)                                                                                                         | XS     |
+| #   | Priority | Task (finding ID)                                                                                                                                                                                               | Effort |
+| --- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | ~~P3~~   | ~~Replace `gray-matter`~~ **DONE** — swapped for `yaml` + a regex; the `js-yaml` override is gone and js-yaml now resolves 4.3.1 on its own. Original: it is the only reason the `js-yaml` override exists (F5) | M      |
+| 2   | P3       | A deliberate, tested bump of `ai` + `@ai-sdk/google` when convenient; those releases carry provider/streaming fixes on the path all three Server Actions use (F10)                                              | S      |
+| 3   | ~~P3~~   | ~~Evaluate `sugar-high` 2.x~~ **DONE** — v2.0.1 keeps the same nine `--sh-*` names and `highlight(code)`; the breaking changes are in `parse`/`render`, which moved to `sugar-high/core` and aren't used (F10)  | S      |
+| 4   | P3       | Re-check the `brace-expansion` override once ESLint's chain moves off `minimatch@3`                                                                                                                             | XS     |
+| 5   | P3       | Prefer provenance-attested packages for new additions (F9)                                                                                                                                                      | XS     |
 
 ### Maintenance note
 

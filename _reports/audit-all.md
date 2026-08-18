@@ -1,6 +1,6 @@
 # Audit suite roll-up
 
-**Date:** 2026-08-18 **Phase:** production **Mode:** fixes applied **Branch:** `code-restructuring` **Scope:** single Next.js app (whole repo) **Overall:** 9/10 (first run: 6.5/10)
+**Date:** 2026-08-18 **Phase:** production **Mode:** fixes applied **Branch:** `code-restructuring` **Scope:** single Next.js app (whole repo) **Overall:** 9/10 (first run: 6.5/10) · **181 findings fixed**
 
 The app is live at `https://tools.timonwa.com`, but this branch is unmerged — the live site still serves the pre-rebrand build (`/blog`, `/newsletter`, `/shop`, `/llms.txt` currently 404). Findings about those routes are pre-deploy, not live regressions.
 
@@ -8,18 +8,18 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 
 | Audit                  | Score  | Critical | High   | Med    | Low    | Trend  | Report                                           |
 | ---------------------- | ------ | -------- | ------ | ------ | ------ | ------ | ------------------------------------------------ |
-| codebase-audit ✅      | 9/10   | 0        | 1      | 1      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
-| conventions-audit ✅   | 9/10   | 0        | 0      | 1      | 1      | ▲ +2   | [conventions-audit.md](conventions-audit.md)     |
+| codebase-audit ✅      | 9/10   | 0        | 0      | 0      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
+| conventions-audit ✅   | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [conventions-audit.md](conventions-audit.md)     |
 | security-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [security-audit.md](security-audit.md)           |
 | environment-audit ✅   | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +2.5 | [environment-audit.md](environment-audit.md)     |
-| dependency-audit ✅    | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [dependency-audit.md](dependency-audit.md)       |
-| frontend-audit ✅      | 9/10   | 0        | 0      | 1      | 3      | ▲ +2   | [frontend-audit.md](frontend-audit.md)           |
-| docs-audit ✅          | 9/10   | 0        | 0      | 0      | 3      | ▲ +2   | [docs-audit.md](docs-audit.md)                   |
-| performance-audit ✅   | 9/10   | 0        | 0      | 1      | 1      | ▲ +2.5 | [performance-audit.md](performance-audit.md)     |
-| seo-code-audit ✅      | 9/10   | 0        | 0      | 0      | 2      | ▲ +3   | [seo-code-audit.md](seo-code-audit.md)           |
-| accessibility-audit ✅ | 9/10   | 0        | 0      | 2      | 0      | ▲ +3   | [accessibility-audit.md](accessibility-audit.md) |
-| redis-audit ✅         | 9/10   | 0        | 0      | 1      | 0      | ▲ +4   | [redis-audit.md](redis-audit.md)                 |
-| **Raw total (open)**   |        | **0**    | **1**  | **7**  | **11** |        |                                                  |
+| dependency-audit ✅    | 9.5/10 | 0        | 0      | 0      | 1      | ▲ +2.5 | [dependency-audit.md](dependency-audit.md)       |
+| frontend-audit ✅      | 9/10   | 0        | 0      | 1      | 0      | ▲ +2   | [frontend-audit.md](frontend-audit.md)           |
+| docs-audit ✅          | 9/10   | 0        | 0      | 0      | 1      | ▲ +2   | [docs-audit.md](docs-audit.md)                   |
+| performance-audit ✅   | 9/10   | 0        | 0      | 0      | 0      | ▲ +2.5 | [performance-audit.md](performance-audit.md)     |
+| seo-code-audit ✅      | 9/10   | 0        | 0      | 0      | 1      | ▲ +3   | [seo-code-audit.md](seo-code-audit.md)           |
+| accessibility-audit ✅ | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +3.5 | [accessibility-audit.md](accessibility-audit.md) |
+| redis-audit ✅         | 9/10   | 0        | 0      | 0      | 1      | ▲ +4   | [redis-audit.md](redis-audit.md)                 |
+| **Raw total (open)**   |        | **0**    | **0**  | **1**  | **5**  |        |                                                  |
 | **First-run baseline** |        | **1**    | **33** | **74** | **63** |        |                                                  |
 
 All eleven audits have run and all eleven have had their fix pass. `docs-audit` ran last by design, because every other pass changed the code it describes; it was the only score to fall on audit (7 → 5) and closed at 9/10 after its own pass. Skipped, with reasons: `storybook-audit` (no Storybook configured), `api-audit` (no route-handler layer; Server Action concerns covered by security + frontend), `rbac-audit` (no auth, roles, or protected objects exist), `firestore-audit` (no Firebase). `redis-audit` was added beyond the orchestrator's table because Upstash Redis is a real integration here.
@@ -95,6 +95,16 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 ## Resolved since last run
 
 **docs-audit — complete (7/10 → audit 5/10 → 9/10).** Thirty-two of thirty-five findings fixed; one accepted (a duplicate H1 inside an auto-managed block), one deferred to post-deploy, one open as a copy decision. The only score to fall, and the reason it ran last. Three findings were closed by other passes (the CI quantifier, the `config/` barrel, the stale CI env comment), and no document regressed on its own — but ten fix passes moved the code out from under the docs, adding four HIGHs: `IP_HASH_SECRET` is documented optional while production throws at boot without it, rate limiting is documented "production only, fails open" when it is credential-driven and fails **closed**, `LLM_MODEL` is documented in three places and exists nowhere in the code, and `GOOGLE_API_KEY` alone no longer enables the AI tools. The four original HIGHs (both structure trees, the contradictory branch model, the nonexistent `pnpm check`) are all still open. F3 was settled by events: this session created `dev` and merged into it, so `dev` really is the integration branch and CONTRIBUTING.md was the stale side — it now states the model once and AGENTS.md defers to it. Two findings needed code, not prose: the tool MDX slug guard and FAQ schema (F8), and listing `site.ts`'s exports explicitly so the repo's own `export *` rule is true as written (F36).
+
+**A follow-up pass after the suite closed** picked off items three reports had wrongly recorded as blocked, plus one live bug the maintainer found in the browser:
+
+- **The share control opened two menus at once.** The FAB wrapper never had the `sm:hidden` its own comment described, so it rendered at every width beside the inline button, and both read one boolean — a single click mounted both dropdowns. Reported with a screenshot; now each trigger owns its menu, the FAB is pinned at every width deliberately, and `ShareBar` is generic enough that blog posts, newsletter issues, and shop products are shareable. [accessibility F19]
+- **Three "blocked" findings weren't.** Section OG cards were called "new artwork" when `renderOgImage` is programmatic [seo F23]; the PNG compression was said to need tooling the session lacked when `sharp` was already in the tree [performance F12]; and `use-writer`'s memoization was left pending a React Compiler check that had never been run [frontend F11].
+- **gray-matter is gone**, and with it the `js-yaml` override it forced across the whole tree, ESLint's copy included. `sugar-high` went to v2 after checking its nine CSS token names against `tokens.css` rather than bumping blind. [dependency F5, F10]
+- **Two of the three oversized files split** — `SvgToJsxTool` 454 → 107 and `SeoMetaTool` 382 → 158, both by moving what wasn't JSX into `lib/` where the standard puts it. `use-writer` (396) is deliberately left whole: it is one state machine, and splitting it would thread setters between sub-hooks to satisfy a line count. What did come out was real duplication — the clipboard-plus-confirmation pattern, written four times, is now `useCopyFeedback`. [frontend F8]
+- **Future-date gating** landed, and surfaced a hazard worth knowing: Cache Components require `generateStaticParams` to return at least one param, so withholding every entry in a section fails the build. It now fails with a message naming the file and date instead of Next's opaque error.
+
+Two items closed by maintainer decision rather than code: **tests stay deferred** until this branch is merged, and the **18 merged local branches stay** as they are.
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
 

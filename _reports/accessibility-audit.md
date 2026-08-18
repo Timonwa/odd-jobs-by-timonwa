@@ -1,6 +1,6 @@
 # Accessibility audit — Tools by Timonwa (tools.timonwa.com)
 
-**Date:** 2026-08-17 · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** whole repo (`src/app`, `src/components`, `src/styles`, `eslint.config.mjs`) — static code audit, no browser run · **Overall:** 9/10
+**Date:** 2026-08-17 · **Phase:** production · **Mode:** fixes applied · **Branch:** `code-restructuring` · **Scope:** whole repo (`src/app`, `src/components`, `src/styles`, `eslint.config.mjs`) — static code audit, no browser run · **Overall:** 9.5/10
 
 > **Method note.** This is a **static-code** audit. No browser, screen reader, axe run, or zoom test was performed, so nothing below is a runtime observation — every finding is derived from the source and, for contrast, from computing sRGB values and WCAG ratios from the actual `oklch()` tokens in `src/styles/tokens.css`. Items that need a real browser to settle are marked **needs confirmation**.
 >
@@ -30,7 +30,7 @@ All eight HIGH findings fixed, plus fifteen of the eighteen MEDIUM/LOW items. Tw
 | 8   | HIGH     | Perceivable    | **FIXED** | `--border` is 1.26:1 (light) / 1.47:1 (dark) — inputs have no discernible boundary           | `src/styles/tokens.css:18`                                       |
 | 9   | MEDIUM   | Robust         | **FIXED** | `role="tablist"`/`role="tab"` with no tabpanel, no `aria-controls`, no arrow keys            | `src/components/_shared/source/SourceKindTabs.tsx:29`            |
 | 10  | MEDIUM   | Understandable | **FIXED** | Label-in-name failures: `aria-label` omits the visible text on three controls                | `src/components/_shared/layout/ThemeToggle.tsx:25`               |
-| 11  | MEDIUM   | Operable       | **OPEN**  | Four controls are under 24×24 CSS px with adjacent targets                                   | `src/components/_shared/result/HistorySidebar.tsx:116`           |
+| 11  | MEDIUM   | Operable       | **FIXED** | Four controls are under 24×24 CSS px with adjacent targets                                   | `src/components/_shared/result/HistorySidebar.tsx:116`           |
 | 12  | MEDIUM   | Perceivable    | **FIXED** | `text-tint-2` is 2.75:1 on white and 2.51:1 on its own `bg-tint-2/10` pill                   | `src/components/_shared/result/HostedUsagePill.tsx:65`           |
 | 13  | MEDIUM   | Operable       | **FIXED** | Sticky navbar with no `scroll-padding-top` — tabbed focus can land under it                  | `src/components/ui/patterns/Navbar/index.tsx:24`                 |
 | 14  | MEDIUM   | Robust         | **FIXED** | Per-keystroke `aria-live` character counters flood the screen reader                         | `src/components/_shared/source/ArticleSourceInput.tsx:98`        |
@@ -38,7 +38,7 @@ All eight HIGH findings fixed, plus fifteen of the eighteen MEDIUM/LOW items. Tw
 | 16  | MEDIUM   | Operable       | **FIXED** | Infinite animations with no `prefers-reduced-motion` guard                                   | `src/styles/animations.css:7`                                    |
 | 17  | MEDIUM   | Understandable | **FIXED** | SEO-meta out-of-range signalled by border colour only; four textareas named "Title"          | `src/components/tools/article-to-seo-meta/SeoMetaResults.tsx:75` |
 | 18  | MEDIUM   | Robust         | **FIXED** | `aria-expanded` on modal-dialog triggers; `aria-haspopup="menu"` on a non-menu dropdown      | `src/components/_shared/byok/ByokDrawer.tsx:74`                  |
-| 19  | MEDIUM   | Operable       | **OPEN**  | Share FAB is `fixed bottom-right` at every breakpoint — duplicate trigger, may obscure focus | `src/components/_shared/tool/ShareBar.tsx:249`                   |
+| 19  | MEDIUM   | Operable       | **FIXED** | Share FAB is `fixed bottom-right` at every breakpoint — duplicate trigger, may obscure focus | `src/components/_shared/tool/ShareBar.tsx:249`                   |
 | 20  | LOW      | Operable       | **FIXED** | Full-viewport overlay `<button>` is a redundant second "close" stop inside the dialog        | `src/components/ui/blocks/Drawer/index.tsx:72`                   |
 | 21  | LOW      | Robust         | **FIXED** | Primary nav links carry no `aria-current="page"`                                             | `src/components/_shared/layout/NavActions.tsx:160`               |
 | 22  | LOW      | Perceivable    | **FIXED** | `CardTitle` is `<h3>`, so tool pages jump h1 → h3                                            | `src/components/ui/blocks/Card/index.tsx:33`                     |
@@ -114,13 +114,17 @@ A `GenerationStatus` live region (`role="status" aria-live="polite" aria-atomic`
 
 ## Still open
 
-### F11 — OPEN: four controls under 24×24 px
+### F11 — FIXED: a 24×24 hit box without a density change
 
-Genuine (WCAG 2.5.8), but each needs a judgement call about layout: growing the history-sidebar remove button, the drawer close, and two icon buttons changes visual density in tight rows. Left for a deliberate design pass rather than padded arbitrarily.
+Measured rather than taken from the first write-up, which named the wrong controls: the drawer close and the BYOK reveal are already exactly 24×24 (`p-1` around a 16 px icon). The real offenders were **TemplateChip's four icon buttons at 22×22** (`p-1` around a 14 px icon) and **HistorySidebar's "Remove"**, a ~15 px text row.
 
-### F19 — OPEN: the share FAB
+A `tap-target` utility in `utilities.css` sets `min-width`/`min-height: 1.5rem` with inline-flex centering, so the box grows into transparent padding and nothing looks different. It lives in the stylesheet rather than repeated inline because the same string would otherwise appear five times, which is what `utilities.css` is for.
 
-`fixed bottom-right` at every breakpoint, duplicating a trigger that also exists in the page, and possibly obscuring focused content near the viewport foot. Whether it actually occludes anything **needs a browser** — and whether the FAB should exist at all is a product decision.
+### F19 — FIXED: the FAB is deliberate now, and it no longer double-fires
+
+The finding was right that the FAB renders at every breakpoint and right that it duplicated an in-page trigger — but it understated the problem. The wrapper never carried the `sm:hidden` its own comment described, and both triggers read one boolean `open`, so **a single click mounted both menus at once**. That came from the maintainer testing in a browser and sending a screenshot, which is what turned a layout question into a bug.
+
+It now tracks _which_ trigger is open. The maintainer's call was to keep the FAB pinned at every width — intentional rather than accidental — and to extend sharing to the blog, newsletter, and shop entry pages, which the generalized `ShareBar` plus a new `action` slot on `ContentBreadcrumbs` now do.
 
 ### F13's sibling — sticky-navbar focus obscuring
 
@@ -137,7 +141,7 @@ Genuine (WCAG 2.5.8), but each needs a judgement call about layout: growing the 
 | Category       | Score | Δ   | Notes                                                                                                                 |
 | -------------- | ----- | --- | --------------------------------------------------------------------------------------------------------------------- |
 | Perceivable    | 9/10  | +4  | Every text/UI contrast pair now clears its threshold, computed rather than estimated. Heading order fixed.            |
-| Operable       | 8/10  | +3  | Skip link, Tab trap, focus restore, scroll padding, reduced motion. Target sizes (F11) and the FAB (F19) remain.      |
+| Operable       | 9/10  | +4  | Skip link, Tab trap, focus restore, scroll padding, reduced motion, 24×24 hit targets, one share menu per trigger.    |
 | Understandable | 9/10  | +3  | State no longer signalled by colour alone; label-in-name documented.                                                  |
 | Robust         | 9/10  | +4  | Correct roles for the controls' real behaviour, live regions that actually announce, no orphan or contradictory ARIA. |
 
@@ -146,5 +150,3 @@ Genuine (WCAG 2.5.8), but each needs a judgement call about layout: growing the 
 | #   | Priority | Task                                                                                                          | Effort |
 | --- | -------- | ------------------------------------------------------------------------------------------------------------- | ------ |
 | 1   | P1       | Screen-reader pass (VoiceOver/NVDA) on one tool page and one content page — nothing here was browser-verified | S      |
-| 2   | P2       | Give the four undersized controls a 24px hit area, as a deliberate density decision (F11)                     | S      |
-| 3   | P2       | Decide whether the share FAB should be fixed at every breakpoint (F19)                                        | S      |

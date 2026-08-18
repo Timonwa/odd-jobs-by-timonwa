@@ -10,7 +10,7 @@
 | ------- | -------- | ------- | --- | ----- |
 | Overall | 6.5/10   | 8.5/10  | +2  | ▲     |
 
-Eleven of fourteen findings fixed. One is **corrected rather than fixed** — its premise turned out to be wrong when tested — one is deferred as a structural change owned by `frontend-audit`, and one needs image tooling this session doesn't have.
+Thirteen of fourteen findings fixed. One is **corrected rather than fixed** — its premise turned out to be wrong when tested. Two more closed on a later pass: the navbar moved into a `(hub)` layout (F5, by the frontend pass) and the source PNGs were recompressed with the `sharp` that was already in the tree (F12), after this report had wrongly claimed the tooling was unavailable.
 
 ## Findings
 
@@ -27,7 +27,7 @@ Eleven of fourteen findings fixed. One is **corrected rather than fixed** — it
 | 9   | MEDIUM   | Caching         | **FIXED**     | Content loaders re-read + re-parse MDX per call with no `cache()`; footer does it on every route | `src/lib/server/utils/create-mdx-loader.utils.ts:44`   |
 | 10  | MEDIUM   | Caching         | **FIXED**     | `cacheComponents: true` but no `use cache` / `cacheLife` / `cacheTag` anywhere                   | `next.config.ts:4`                                     |
 | 11  | LOW      | Bundle          | **FIXED**     | Redundant `defer` on an `afterInteractive` script; no `preconnect` to the analytics host         | `src/app/layout.tsx:79`                                |
-| 12  | LOW      | Images          | **OPEN**      | 1.7 MB of uncompressed source PNGs in `public/blog/` (single files up to 388 KB)                 | `public/blog/gemini/1-open-dashboard.png`              |
+| 12  | LOW      | Images          | **FIXED**     | 1.7 MB of uncompressed source PNGs in `public/blog/` (single files up to 388 KB)                 | `public/blog/gemini/1-open-dashboard.png`              |
 | 13  | LOW      | Core Web Vitals | **FIXED**     | No field RUM — Umami's `data-performance` is not Core Web Vitals, so INP is unobservable         | `src/app/layout.tsx:76`                                |
 | 14  | LOW      | Bundle          | **FIXED**     | Template-literal `await import()` builds a context module over the whole blog content dir        | `src/components/blog/post/index.tsx:17`                |
 
@@ -99,9 +99,13 @@ The tool routes keep rendering `AppNavbar` themselves, which is not the same def
 
 Marked DEFERRED in the first write-up of this report and left stale after the frontend pass closed it — corrected on the docs-pass re-read.
 
-### F12 — OPEN: 1.7 MB of source PNGs
+### F12 — FIXED: 1.7 MB of source PNGs, losslessly recompressed
 
-Genuine: six screenshots at 2704×1458, up to 388 KB each. Two reasons it is left alone. The new `images` config means Next serves AVIF/WebP derivatives, so **what visitors download is already much smaller** than the source weight — this is repo size, not delivery weight. And compressing them properly needs image tooling (`sharp` CLI, `oxipng`, or similar) that this session can't run without adding a dependency for a one-off task. Best done locally, once.
+Six screenshots at 2704×1458, up to 388 KB each, now 1.7 MB → 1.1 MB.
+
+**The reason first given for deferring was wrong:** it claimed this needed image tooling the session couldn't run. `sharp` 8.17.3 is already in the tree (Next depends on it, and it is one of the two packages in `allowBuilds`), so `sharp().png({ compressionLevel: 9, effort: 10 })` was available the whole time.
+
+Strictly lossless, verified by decoding both versions and comparing raw pixel buffers — all six are byte-identical. Palette quantization would have saved 66% instead of 37%, and was measured and rejected: it changed up to 0.62% of channels with a max delta of 23/255, and Next re-encodes these sources to AVIF/WebP for delivery, so accepting it would stack two lossy steps on documentation screenshots to save 505 KB of repo weight.
 
 ## Verification
 
@@ -113,7 +117,7 @@ Genuine: six screenshots at 2704×1458, up to 388 KB each. Two reasons it is lef
 
 | Category  | Score | Δ   | Notes                                                                                                                         |
 | --------- | ----- | --- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Images    | 8/10  | +3  | Real intrinsic dimensions, AVIF/WebP negotiation, matching placeholder ratio. Source PNGs still uncompressed in the repo.     |
+| Images    | 9/10  | +4  | Real intrinsic dimensions, AVIF/WebP negotiation, matching placeholder ratio, sources losslessly recompressed (−37%).         |
 | INP       | 8/10  | +3  | Coalesced storage writes with a hide-flush, and sanitizing gated on visibility. Unmeasurable without RUM (F13).               |
 | Caching   | 7/10  | +3  | Content parsed once per request rather than per call. No `use cache` tiers, which is correct while everything is prerendered. |
 | Bundle    | 8/10  | +3  | A budget in CI with a stated baseline. One eager 118 KB dependency, deliberately.                                             |
@@ -122,7 +126,6 @@ Genuine: six screenshots at 2704×1458, up to 388 KB each. Two reasons it is lef
 
 ## Remaining action items
 
-| #   | Priority | Task                                                                                                                  | Effort |
-| --- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------ |
-| 2   | P2       | Compress `public/blog/` PNGs locally with `oxipng`/`sharp` (F12) — delivery is already optimized, this is repo weight | S      |
-| 3   | P3       | Add Core Web Vitals RUM so INP is observable, then re-measure F2 (F13)                                                | S      |
+| #   | Priority | Task                                                                   | Effort |
+| --- | -------- | ---------------------------------------------------------------------- | ------ |
+| 3   | P3       | Add Core Web Vitals RUM so INP is observable, then re-measure F2 (F13) | S      |

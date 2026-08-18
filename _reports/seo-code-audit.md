@@ -40,7 +40,7 @@ First run — no prior report at `_reports/seo-code-audit.md`.
 | 20  | LOW      | Content quality           | **REJECTED**   | Commercial checkout links carry no `rel="sponsored"`/`nofollow`                               | `src/components/shop/product/ProductCheckoutCta.tsx:15` |
 | 21  | LOW      | Indexation                | **FIXED**      | No draft or future-date gating — any `.mdx` file ships straight into the sitemap              | `src/lib/server/utils/create-mdx-loader.utils.ts:67`    |
 | 22  | LOW      | Core Web Vitals (CLS)     | **FIXED**      | Raw-markdown `img` fallback has no `width`/`height`                                           | `src/mdx-components.tsx:107`                            |
-| 23  | LOW      | Social                    | **OPEN**       | `/categories`, `/categories/[category]`, `/tools` have no section OG image                    | `src/app/categories/page.tsx`                           |
+| 23  | LOW      | Social                    | **FIXED**      | `/categories`, `/categories/[category]`, `/tools` have no section OG image                    | `src/app/categories/page.tsx`                           |
 | 24  | LOW      | Keyword mapping           | **FIXED**      | Reading Time Estimator and Word & Character Counter both target "reading time" in the title   | `src/lib/data/tool-seo.data.ts:242`                     |
 | 25  | LOW      | Internal linking          | **FIXED**      | Tool breadcrumbs link `/tools?category=x` (non-canonical) instead of `/categories/x`          | `src/components/_shared/tool/ToolBreadcrumbs.tsx:23`    |
 
@@ -157,9 +157,17 @@ I applied this before checking and reverted it — recorded here so a future aud
 
 `alt` is a module-level constant in an image route, so it cannot vary by slug; `generateImageMetadata` is the API that can, and it isn't worth that indirection for social-card alt text. Recorded in the files so the constraint is visible rather than looking like an oversight.
 
-### F17 + F23 — OPEN
+### F23 — FIXED: the three utility sections have their own cards
 
-Search Console verification may be a DNS TXT record rather than a meta tag — **needs the maintainer to confirm**, since it isn't observable from the repo. And `/categories`, `/categories/[category]`, and `/tools` have no section OG image, so they fall back to the site card; worth adding, but it is new artwork rather than a fix.
+Recorded first as "new artwork rather than a fix", which was wrong: `renderOgImage` is a programmatic Satori template that 20+ routes already use, so this was code. `/tools` and `/categories` get their own cards, and `/categories/[category]` gets one per category.
+
+Per-category colour comes from a new `OG_PALETTE_BY_TINT` map. The tint scale already names these five colours in `tokens.css` (sky, amber, violet, emerald, rose) and the OG palette carries the same five names, so a category's card matches the colour it wears on the site without either side restating a hex.
+
+The dynamic route drops `runtime = "edge"` because Next forbids pairing it with `generateStaticParams`, matching the sibling `[slug]` image routes. Like every image route here it still builds `ƒ Dynamic` — that limitation is `frontend F3`, tested and unavoidable at this version.
+
+### F17 — OPEN
+
+Search Console verification may be a DNS TXT record rather than a meta tag — **needs the maintainer to confirm**, since it isn't observable from the repo.
 
 ### F21's remainder — no future-date gating
 
@@ -188,7 +196,7 @@ The rule this earns: a status column is a claim about the code, so each row gets
 | Content quality / E-E-A-T | 9/10  | +5  | Visible bylines and dates matching the markup; stubs out of the index entirely.                                                                                                                                                                        |
 | Internal linking          | 10/10 | +4  | Breadcrumbs on the content sections as well as the tools, all pointing at canonical URLs.                                                                                                                                                              |
 | Keyword mapping           | 9/10  | +2  | The "reading time" overlap is gone — one tool owns the query, with the maintainer choosing the replacement title.                                                                                                                                      |
-| Social                    | 8/10  | +2  | Per-item cards for content; three utility sections still fall back to the site card (F23).                                                                                                                                                             |
+| Social                    | 9/10  | +3  | Per-item cards for content, and the three utility sections now have their own instead of the site fallback.                                                                                                                                            |
 
 ## Remaining action items
 
@@ -196,5 +204,4 @@ The rule this earns: a status column is a claim about the code, so each row gets
 | --- | -------- | ----------------------------------------------------------------------------------------------------------------------- | ------ |
 | 1   | P1       | After deploy: confirm the `/guides/*` redirects resolve and run the rendered JSON-LD through Google's Rich Results Test | S      |
 | 2   | P2       | Confirm Search Console verification is in place (may be DNS TXT, not observable here) (F17)                             | XS     |
-| 3   | P3       | Section OG images for `/categories`, `/categories/[category]`, `/tools` (F23)                                           | S      |
 | 5   | P3       | Future-date gating in the loader, if writing ahead becomes a habit (F21)                                                | S      |

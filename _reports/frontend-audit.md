@@ -19,10 +19,10 @@
 | 5   | MEDIUM   | Mutations              | **FIXED**      | `subscribeNewsletter` has no rate limit (unlike the AI actions), so the action is an unauthenticated relay into the Sender.net list                                                | `src/lib/server/actions/newsletter.action.ts:23`                 |
 | 6   | MEDIUM   | Data fetching          | **FIXED**      | `HostedUsagePill` fetches server-derivable config through a Server Action in an effect on every AI tool page                                                                       | `src/components/_shared/result/HostedUsagePill.tsx:21`           |
 | 7   | MEDIUM   | Server/client boundary | **FIXED**      | Whole `Newsletter` marketing section is `"use client"`; only the form needs the boundary, and it renders on nearly every page                                                      | `src/components/_shared/content/Newsletter.tsx:1`                |
-| 8   | MEDIUM   | Page structure         | **FIXED**      | Four files well past the ~200-line ceiling (501 / 454 / 391 / 373)                                                                                                                 | `src/components/_shared/writer/TemplatesPicker.tsx`              |
+| 8   | MEDIUM   | Page structure         | **PARTIAL**    | Four files well past the ~200-line ceiling (501 / 454 / 391 / 373)                                                                                                                 | `src/components/_shared/writer/TemplatesPicker.tsx`              |
 | 9   | MEDIUM   | Components             | **FIXED**      | JSON-LD hand-rolled as a raw `dangerouslySetInnerHTML` `<script>` in 9 tool layouts while a shared `JsonLdScript` exists                                                           | `src/app/(tools)/word-counter/layout.tsx:89`                     |
 | 10  | LOW      | Server/client boundary | **FIXED**      | `Tooltip` is marked `"use client"` but is pure CSS — no hook, handler, or browser API                                                                                              | `src/components/ui/base/Tooltip/index.tsx:1`                     |
-| 11  | LOW      | React                  | **ACCEPTED**   | Manual `useMemo` / `useCallback` throughout while the React Compiler is enabled                                                                                                    | `src/lib/hooks/writer/use-writer.ts:121`                         |
+| 11  | LOW      | React                  | **FIXED**      | Manual `useMemo` / `useCallback` throughout while the React Compiler is enabled                                                                                                    | `src/lib/hooks/writer/use-writer.ts:121`                         |
 | 12  | LOW      | Page structure         | **FIXED**      | `HubNavbar` is composed into 12 page contents instead of a hub route-group layout                                                                                                  | `src/components/blog/index.tsx:27`                               |
 | 13  | LOW      | React                  | **REJECTED**   | Index-as-key on editable lists (SEO variations, thread items)                                                                                                                      | `src/components/tools/article-to-seo-meta/SeoMetaResults.tsx:58` |
 | 14  | LOW      | Server/client boundary | **ACCEPTED**   | `@/components/ui` is one flat barrel mixing client-boundary components with server-renderable ones                                                                                 | `src/components/ui/index.ts:4`                                   |
@@ -100,21 +100,34 @@ So social scrapes do re-render Satori, and there is no in-framework fix availabl
 
 `pnpm exec tsc --noEmit`, `pnpm lint` (zero warnings), and `pnpm build` all pass. The route table was compared before and after the `(hub)` group move to confirm no URL changed.
 
+### F8 — PARTIAL: three of four split, one left whole on purpose
+
+`TemplatesPicker` (501 → 245) went in this pass. Two more followed: `SvgToJsxTool` 454 → 107, with its constants, four option lists, and four pure helpers moved to `lib/` where the standard puts them; and `SeoMetaTool` 382 → 158, with its state machine moved to `lib/hooks/use-seo-meta-tool.ts`.
+
+**`use-writer.ts` (396) is deliberately not split.** It is one state machine — generation, editing, regeneration, history, and copy all read and write the same state — so cutting it into sub-hooks means threading setters between them. That trades one long cohesive file for several short coupled ones, which is worse to read and worse to change. The line count is a smell, not a rule, and here it is reporting cohesion rather than a mess.
+
+What did come out of it was real duplication: the clipboard-plus-confirmation pattern existed four times over (`CopyButton`, `ShareBar`, and both tool hooks) and is now `useCopyFeedback`.
+
+### F11 — FIXED: manual memoization removed from components
+
+Removed from seven components after checking, not sweeping: every removed value is used directly in render and appears in no dependency array, so none was supplying referential stability that something else relied on — the failure mode that turns a "redundant" memo into an infinite render loop.
+
+Left in place under `lib/`, with reasons: `use-writer`, `use-article-source`, `use-theme`, and `create-history-store` return callbacks as their public API, so identity is contractual rather than an optimization; and `create-social-posts-style-templates` builds its hook inside a factory, where React Compiler's definition-site detection can't be shown to apply. Unproven coverage is the wrong place to remove a guard.
+
 ## Scorecard
 
-| Category               | Score | Δ   | Notes                                                                                      |
-| ---------------------- | ----- | --- | ------------------------------------------------------------------------------------------ |
-| Router hygiene         | 9/10  | +2  | Thin entries, a group layout owning the shared navbar, accurate runtime comments.          |
-| Caching                | 7/10  | +3  | Per-request dedupe on the loaders. Image routes can't be cached at this Next version (F3). |
-| Mutations              | 10/10 | +4  | Zod at every action boundary, all of them metered.                                         |
-| Server/client boundary | 9/10  | +3  | Newsletter split to a server shell, `Tooltip` off the client entirely.                     |
-| Page structure         | 9/10  | +3  | Largest component down from 501 to 245 lines; navbar in a layout.                          |
-| React idioms           | 8/10  | —   | No effect-driven state, no `forwardRef`. Manual memoization retained deliberately (F11).   |
+| Category               | Score | Δ   | Notes                                                                                          |
+| ---------------------- | ----- | --- | ---------------------------------------------------------------------------------------------- |
+| Router hygiene         | 9/10  | +2  | Thin entries, a group layout owning the shared navbar, accurate runtime comments.              |
+| Caching                | 7/10  | +3  | Per-request dedupe on the loaders. Image routes can't be cached at this Next version (F3).     |
+| Mutations              | 10/10 | +4  | Zod at every action boundary, all of them metered.                                             |
+| Server/client boundary | 9/10  | +3  | Newsletter split to a server shell, `Tooltip` off the client entirely.                         |
+| Page structure         | 9/10  | +3  | Largest component 501 → 245; two more tools split (454 → 107, 382 → 158); navbar in a layout.  |
+| React idioms           | 9/10  | +1  | No effect-driven state, no `forwardRef`, and the compiler's work no longer duplicated by hand. |
 
 ## Remaining action items
 
-| #   | Priority | Task                                                                                                      | Effort |
-| --- | -------- | --------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | P3       | Verify React Compiler coverage, then remove the redundant `useMemo`/`useCallback` as its own change (F11) | M      |
-| 2   | P3       | If OG rendering cost shows up, generate social cards at build time rather than as routes (F3)             | M      |
-| 3   | P3       | The three remaining files over ~200 lines (454 / 391 / 373) — same treatment as `TemplatesPicker` (F8)    | M      |
+| #   | Priority | Task                                                                                               | Effort |
+| --- | -------- | -------------------------------------------------------------------------------------------------- | ------ |
+| 2   | P3       | If OG rendering cost shows up, generate social cards at build time rather than as routes (F3)      | M      |
+| 3   | P3       | `use-writer.ts` (396) — only if a split can be made without threading state between sub-hooks (F8) | M      |
