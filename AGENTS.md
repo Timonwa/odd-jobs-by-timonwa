@@ -205,7 +205,7 @@ None (single app). `pnpm-workspace.yaml` is the repo's dependency-security surfa
 
 ## CI/CD & Deploy
 
-`.github/workflows/ci.yml` gates PRs; `codeql.yml` (SAST), `label.yml` (path labels from `labeler.yml`), `auto-assign.yml`, and `release-notes.yml` (release-drafter, config in `.github/release-notes.yml`) automate the rest; Dependabot manages dependencies — security alerts + fix PRs (always on) and grouped weekly version updates (`.github/dependabot.yml`). Deliberately absent for a solo-maintained open-source repo: commitlint hooks, a PR-title check, `CODEOWNERS`, and `stale.yml`. Hosted on Vercel; `APP_ENV=production` is set explicitly on deploy (unset = `development`) and gates rate limiting + Umami analytics.
+`.github/workflows/ci.yml` gates PRs; `label.yml` (path labels from `labeler.yml`), `auto-assign.yml`, and `release-notes.yml` (release-drafter, config in `.github/release-notes.yml`) automate the rest. **SAST is GitHub's default CodeQL setup, configured in repo settings rather than a workflow** — a custom `codeql.yml` alongside the default setup fails every PR ("CodeQL analyses from advanced configurations cannot be processed when the default setup is enabled"), so don't re-add one without switching the repo to Advanced first. Dependabot manages dependencies — security alerts + fix PRs (always on) and grouped weekly version updates (`.github/dependabot.yml`). Deliberately absent for a solo-maintained open-source repo: commitlint hooks, a PR-title check, `CODEOWNERS`, and `stale.yml`. Hosted on Vercel; `APP_ENV=production` is set explicitly on deploy (unset = `development`) and gates rate limiting + Umami analytics.
 
 ## Env Vars & Config
 

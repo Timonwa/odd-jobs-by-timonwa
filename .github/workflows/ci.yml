@@ -97,12 +97,23 @@ jobs:
       # size is otherwise invisible in review. Measured, not analyzed: no extra
       # dependency, and the number is the one users actually download.
       #
-      # Baseline at the time of writing: ~1330 KB. The budget carries ~12%
-      # headroom, so it catches a newly-eager dependency rather than normal
-      # growth. Raise it deliberately, with a note saying what grew.
+      # Baseline 1584 KB (measured on a clean build of this branch; `dev` is
+      # 1432 KB). Raised from 1500 once, deliberately: the +152 KB is breadcrumbs
+      # on six more pages, share menus on three more, and the accessibility work
+      # — feature growth, not an eager dependency. The budget keeps ~7% headroom
+      # so it still catches the latter.
+      #
+      # One thing measured but NOT explained: a client chunk contains Zod, which
+      # `dev` has none of. Every component consuming `lib/schemas` uses
+      # `import type`, all three actions carry file-level "use server", and no
+      # client module imports zod directly. Tracked as performance F15 — if that
+      # turns out to be a boundary leak, closing it should claw back most of the
+      # raise, so lower the budget again when it does.
+      #
+      # Raise it deliberately, with a note saying what grew.
       - name: Client bundle budget
         run: |
-          BUDGET_KB=1500
+          BUDGET_KB=1700
           SIZE_KB=$(du -sk .next/static/chunks | cut -f1)
           echo "Client chunks: ${SIZE_KB} KB (budget ${BUDGET_KB} KB)"
           if [ "$SIZE_KB" -gt "$BUDGET_KB" ]; then

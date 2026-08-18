@@ -15,11 +15,11 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 | dependency-audit ✅    | 9.5/10 | 0        | 0      | 0      | 1      | ▲ +2.5 | [dependency-audit.md](dependency-audit.md)       |
 | frontend-audit ✅      | 9/10   | 0        | 0      | 1      | 0      | ▲ +2   | [frontend-audit.md](frontend-audit.md)           |
 | docs-audit ✅          | 9/10   | 0        | 0      | 0      | 1      | ▲ +2   | [docs-audit.md](docs-audit.md)                   |
-| performance-audit ✅   | 9/10   | 0        | 0      | 0      | 0      | ▲ +2.5 | [performance-audit.md](performance-audit.md)     |
+| performance-audit ⚠️   | 8.5/10 | 0        | 0      | 1      | 0      | ▲ +2   | [performance-audit.md](performance-audit.md)     |
 | seo-code-audit ✅      | 9/10   | 0        | 0      | 0      | 1      | ▲ +3   | [seo-code-audit.md](seo-code-audit.md)           |
 | accessibility-audit ✅ | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +3.5 | [accessibility-audit.md](accessibility-audit.md) |
 | redis-audit ✅         | 9/10   | 0        | 0      | 0      | 1      | ▲ +4   | [redis-audit.md](redis-audit.md)                 |
-| **Raw total (open)**   |        | **0**    | **0**  | **1**  | **5**  |        |                                                  |
+| **Raw total (open)**   |        | **0**    | **0**  | **2**  | **5**  |        |                                                  |
 | **First-run baseline** |        | **1**    | **33** | **74** | **63** |        |                                                  |
 
 All eleven audits have run and all eleven have had their fix pass. `docs-audit` ran last by design, because every other pass changed the code it describes; it was the only score to fall on audit (7 → 5) and closed at 9/10 after its own pass. Skipped, with reasons: `storybook-audit` (no Storybook configured), `api-audit` (no route-handler layer; Server Action concerns covered by security + frontend), `rbac-audit` (no auth, roles, or protected objects exist), `firestore-audit` (no Firebase). `redis-audit` was added beyond the orchestrator's table because Upstash Redis is a real integration here.
