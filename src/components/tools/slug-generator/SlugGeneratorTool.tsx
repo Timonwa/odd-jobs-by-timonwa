@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
 	Card,
@@ -28,10 +28,7 @@ export function SlugGeneratorTool() {
 	const [lowercase, setLowercase] = useState(true);
 	const [removeStopWords, setRemoveStopWords] = useState(false);
 
-	const slug = useMemo(
-		() => slugify(title, { separator, lowercase, removeStopWords }),
-		[title, separator, lowercase, removeStopWords],
-	);
+	const slug = slugify(title, { separator, lowercase, removeStopWords });
 
 	const slugLength = slug.length;
 	const wordCount = slug ? slug.split(separator).filter(Boolean).length : 0;

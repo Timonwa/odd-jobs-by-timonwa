@@ -2,7 +2,7 @@
 
 import DOMPurify from "dompurify";
 import { DownloadIcon, SettingsIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
 	Button,
@@ -141,27 +141,23 @@ export function SvgToJsxTool() {
 	//
 	// Gated on the Preview tab being open: sanitizing ran on every keystroke even
 	// while the JSX tab was showing, so the cost was paid for output nobody could
-	// see. The gate is on `tab`, not a ref, so switching tabs recomputes.
-	const safePreview = useMemo(
-		() =>
-			typeof window === "undefined" || tab !== "preview"
-				? ""
-				: DOMPurify.sanitize(trimmed, {
-						USE_PROFILES: { svg: true, svgFilters: true },
-					}),
-		[trimmed, tab],
-	);
+	// see. Reading `tab` rather than a ref is what makes switching tabs recompute.
+	const safePreview =
+		typeof window === "undefined" || tab !== "preview"
+			? ""
+			: DOMPurify.sanitize(trimmed, {
+					USE_PROFILES: { svg: true, svgFilters: true },
+				});
 
-	const generated = useMemo(() => {
-		if (!hasSvg) return "";
-		return svgToJsx(svg, {
-			componentName: wrap ? sanitizeComponentName(componentName) : undefined,
-			typescript,
-			spreadProps: wrap,
-			indent,
-			quotes,
-		});
-	}, [svg, hasSvg, wrap, componentName, typescript, indent, quotes]);
+	const generated = !hasSvg
+		? ""
+		: svgToJsx(svg, {
+				componentName: wrap ? sanitizeComponentName(componentName) : undefined,
+				typescript,
+				spreadProps: wrap,
+				indent,
+				quotes,
+			});
 
 	// Show the hand-edited value only while it still applies to the current
 	// generated output; otherwise fall back to freshly generated JSX.

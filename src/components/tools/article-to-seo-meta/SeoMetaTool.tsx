@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	useCallback,
-	useEffect,
-	useEffectEvent,
-	useRef,
-	useState,
-} from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import {
 	FilePlus2Icon,
 	Loader2Icon,
@@ -113,59 +107,55 @@ export function SeoMetaTool() {
 		setUsage(entry.usage ?? null);
 	}
 
-	const updateVariation = useCallback(
-		(index: number, field: "title" | "description", value: string) => {
-			setEditableVariations((cur) =>
-				cur.map((v, i) => (i === index ? { ...v, [field]: value } : v)),
-			);
-		},
-		[],
-	);
+	function updateVariation(
+		index: number,
+		field: "title" | "description",
+		value: string,
+	) {
+		setEditableVariations((cur) =>
+			cur.map((v, i) => (i === index ? { ...v, [field]: value } : v)),
+		);
+	}
 
 	// Passes the current set so the model returns a fresh angle rather than a near-duplicate; targets `initial`, not whatever's typed in the form.
-	const regenerateVariation = useCallback(
-		async (index: number) => {
-			if (!initial) return;
-			setRegeneratingIndex(index);
-			setRegenError(null);
-			try {
-				const byokKey = byokStorage.get() ?? undefined;
-				const res = await regenerateSeoMetaVariation({
-					source: initial.source,
-					primaryKeyword: initial.primaryKeyword,
-					existing: editableVariations,
-					byokApiKey: byokKey,
-					byokModel: byokKey ? byokModelStorage.get() : undefined,
-				});
-				if (!res.ok) {
-					setRegenError(res.error);
-					return;
-				}
-				emitHostedUsage(res.remaining);
-				setEditableVariations((cur) =>
-					cur.map((v, i) => (i === index ? res.variation : v)),
-				);
-				setUsage(res.usage);
-			} catch (error) {
-				setRegenError(
-					toActionCallErrorMessage(error, "seo-meta:regenerate-one"),
-				);
-			} finally {
-				setRegeneratingIndex(null);
+	async function regenerateVariation(index: number) {
+		if (!initial) return;
+		setRegeneratingIndex(index);
+		setRegenError(null);
+		try {
+			const byokKey = byokStorage.get() ?? undefined;
+			const res = await regenerateSeoMetaVariation({
+				source: initial.source,
+				primaryKeyword: initial.primaryKeyword,
+				existing: editableVariations,
+				byokApiKey: byokKey,
+				byokModel: byokKey ? byokModelStorage.get() : undefined,
+			});
+			if (!res.ok) {
+				setRegenError(res.error);
+				return;
 			}
-		},
-		[initial, editableVariations],
-	);
+			emitHostedUsage(res.remaining);
+			setEditableVariations((cur) =>
+				cur.map((v, i) => (i === index ? res.variation : v)),
+			);
+			setUsage(res.usage);
+		} catch (error) {
+			setRegenError(toActionCallErrorMessage(error, "seo-meta:regenerate-one"));
+		} finally {
+			setRegeneratingIndex(null);
+		}
+	}
 
-	const handleReset = useCallback(() => {
+	function handleReset() {
 		setResult(undefined);
 		setEditableVariations([]);
 		setUsage(null);
 		setInitial(undefined);
 		setRegenError(null);
-	}, []);
+	}
 
-	const handleCopyAll = useCallback(async () => {
+	async function handleCopyAll() {
 		const text = editableVariations
 			.map(
 				(v, i) =>
@@ -183,9 +173,9 @@ export function SeoMetaTool() {
 				"Your browser blocked copying. Select the text and copy manually.",
 			);
 		}
-	}, [editableVariations]);
+	}
 
-	const regenerateAll = useCallback(async () => {
+	async function regenerateAll() {
 		if (!initial) return;
 		setRegeneratingAll(true);
 		setRegenError(null);
@@ -219,7 +209,7 @@ export function SeoMetaTool() {
 		} finally {
 			setRegeneratingAll(false);
 		}
-	}, [initial, upsert]);
+	}
 
 	// useEffectEvent so the callback always sees fresh result/usage/initial without listing them as effect deps.
 	const persistEdits = useEffectEvent(() => {

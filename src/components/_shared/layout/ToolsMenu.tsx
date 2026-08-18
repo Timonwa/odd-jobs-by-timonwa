@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
@@ -28,13 +28,13 @@ export function ToolsMenu({ open, onToggle, onNavigate }: ToolsMenuProps) {
 	const pathname = usePathname();
 
 	const q = query.trim().toLowerCase();
-	const tools = useMemo(() => {
-		if (!q) return TOOLS;
-		return TOOLS.filter(
-			(t) =>
-				t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q),
-		);
-	}, [q]);
+	const tools = q
+		? TOOLS.filter(
+				(t) =>
+					t.name.toLowerCase().includes(q) ||
+					t.tagline.toLowerCase().includes(q),
+			)
+		: TOOLS;
 
 	return (
 		<div className="contents">

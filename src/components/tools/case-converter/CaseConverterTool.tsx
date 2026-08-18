@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
 	Button,
@@ -20,7 +20,7 @@ export function CaseConverterTool() {
 	const [text, setText] = useState("");
 	const [active, setActive] = useState<CaseId>("title-ap");
 
-	const output = useMemo(() => convertCase(text, active), [text, active]);
+	const output = convertCase(text, active);
 	const activeMeta = ALL_CASES.find((c) => c.id === active);
 
 	return (

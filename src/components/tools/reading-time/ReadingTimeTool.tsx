@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 
 import { SourceReuseControls } from "@/components/_shared/source";
 import { useArticleSource } from "@/lib/hooks";
@@ -35,7 +35,7 @@ export function ReadingTimeTool() {
 	const [speed, setSpeed] = useState<ReadingSpeed>("average");
 	const reuseId = useId();
 
-	const words = useMemo(() => countWords(text), [text]);
+	const words = countWords(text);
 	const wpm = READING_WPM[speed];
 	const readLabel = `${readingMinutes(words, wpm)} min read`;
 

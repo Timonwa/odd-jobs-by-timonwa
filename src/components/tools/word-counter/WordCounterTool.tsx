@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo } from "react";
+import { useId } from "react";
 
 import { SourceReuseControls } from "@/components/_shared/source";
 import { useArticleSource } from "@/lib/hooks";
@@ -38,7 +38,7 @@ export function WordCounterTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
 	const reuseId = useId();
-	const counts = useMemo(() => getTextCounts(text), [text]);
+	const counts = getTextCounts(text);
 
 	const stats = [
 		{ label: "Words", value: counts.words },
