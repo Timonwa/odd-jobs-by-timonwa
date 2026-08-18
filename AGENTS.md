@@ -94,6 +94,7 @@ pnpm format:check    # prettier --check
 pnpm test            # unit tests (Vitest) — CI-gated
 pnpm test:watch      # unit tests in watch mode
 pnpm test:coverage   # unit tests with V8 coverage
+pnpm test:e2e        # Playwright E2E — on-demand, not CI-gated; needs `pnpm build` + one-time `pnpm exec playwright install chromium`
 ```
 
 **Verify before you claim done — never report success on an unverified change.** Run the exact set CI gates, in order:
@@ -228,7 +229,7 @@ None — English only.
 
 ## Testing & Stories
 
-- **Tests** — Vitest, two projects in `vitest.config.mts`: `node` (utils, schemas, `lib/server` — the `server-only` package is aliased to `test/mocks/server-only.ts`) and `dom` (jsdom + Testing Library for hooks, storage utils, and components; `vitest.setup.ts` wires jest-dom matchers and RTL cleanup). Tests are colocated (`<name>.test.ts` / `<Component>.test.tsx`) and use explicit `vitest` imports — no globals. A file that needs the other environment overrides with a `// @vitest-environment` pragma. Security-critical paths (SSRF guard, rate-limit fail-closed, BYOK key handling, action input validation, key redaction in logs) must keep their tests when refactored. No E2E yet — Playwright is the planned next layer.
+- **Tests** — Vitest, two projects in `vitest.config.mts`: `node` (utils, schemas, `lib/server` — the `server-only` package is aliased to `test/mocks/server-only.ts`) and `dom` (jsdom + Testing Library for hooks, storage utils, and components; `vitest.setup.ts` wires jest-dom matchers and RTL cleanup). Tests are colocated (`<name>.test.ts` / `<Component>.test.tsx`) and use explicit `vitest` imports — no globals. A file that needs the other environment overrides with a `// @vitest-environment` pragma. Security-critical paths (SSRF guard, rate-limit fail-closed, BYOK key handling, action input validation, key redaction in logs) must keep their tests when refactored. Playwright E2E lives in `e2e/` and runs against a production build (`pnpm build` first); deliberately small — render smoke, security headers, the `/guides` redirect, and the BYOK sessionStorage flow — and deliberately **not** CI-gated: run it before releases and Next upgrades.
 - **Storybook** — None today; when added, follow `storybook-setup` / `storybook-story-writing` (CSF3, tiered titles matching `components/ui`).
 
 ## Commit Messages
