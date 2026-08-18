@@ -3,7 +3,6 @@ import { Suspense } from "react";
 
 import { Newsletter } from "@/components/_shared/content";
 import { ToolGrid } from "@/components/_shared/tool";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
@@ -13,7 +12,6 @@ import { FilterableTools } from "./FilterableTools";
 export function ToolsDirectoryPageContent() {
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<Breadcrumbs
 					items={[{ label: "Home", href: ROUTES.home }, { label: "Tools" }]}

@@ -1,4 +1,3 @@
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { Newsletter } from "@/components/_shared/content";
 import { BrowseByCategory } from "./BrowseByCategory";
@@ -13,7 +12,6 @@ import { WhyUseIt } from "./WhyUseIt";
 export function HubHomePageContent() {
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<HomeHero />
 				<ToolsPreview />

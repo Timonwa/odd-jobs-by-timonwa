@@ -1,5 +1,4 @@
 import { JsonLdScript, Newsletter } from "@/components/_shared/content";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { buildItemListJsonLd } from "@/lib/utils";
@@ -21,7 +20,6 @@ export function NewsletterPageContent() {
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<NewsletterHero />
 				<Newsletter className="mb-16" />

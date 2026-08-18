@@ -3,7 +3,6 @@ import {
 	Newsletter,
 	RelatedGrid,
 } from "@/components/_shared/content";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import type { PostMeta } from "@/lib/schemas";
 import { getAllPosts } from "@/lib/server";
@@ -46,7 +45,6 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
 					<PostHero post={post} />

@@ -1,5 +1,6 @@
 import { splitTitle } from "@/lib/utils";
-import { getIssue, getIssueSlugs } from "@/lib/server";
+import { getProduct, getProductSlugs } from "@/lib/server";
+import { SITE_NAME } from "@/lib/config/site";
 import {
 	OG_CONTENT_TYPE,
 	OG_SIZE,
@@ -8,12 +9,12 @@ import {
 
 // Deliberately NOT `runtime = "edge"`: this route loads MDX through
 // createMdxLoader, which uses node:fs and is unavailable on the edge.
-export const alt = "Newsletter issue — The Productivity Bug";
+export const alt = "Product — ${SITE_NAME}";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export function generateStaticParams() {
-	return getIssueSlugs().map((slug) => ({ slug }));
+	return getProductSlugs().map((slug) => ({ slug }));
 }
 
 export default async function Image({
@@ -22,20 +23,17 @@ export default async function Image({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const issue = getIssue(slug);
-	if (!issue) return new Response("Not found", { status: 404 });
+	const product = getProduct(slug);
+	if (!product) return new Response("Not found", { status: 404 });
 
-	const { lead, accent } = splitTitle(issue);
+	const { lead, accent } = splitTitle(product);
 	return renderOgImage({
-		eyebrow:
-			issue.issueNumber != null
-				? `Issue #${issue.issueNumber} · The Productivity Bug`
-				: `${issue.eyebrow} · The Productivity Bug`,
+		eyebrow: `${product.eyebrow} · ${SITE_NAME}`,
 		titleLead: lead.trim(),
 		titleAccent: accent,
-		subtitle: issue.ogSubtitle,
-		pills: issue.ogPills,
-		accent: issue.ogAccent,
-		backgroundTint: issue.ogBackgroundTint,
+		subtitle: product.ogSubtitle,
+		pills: product.ogPills,
+		accent: product.ogAccent,
+		backgroundTint: product.ogBackgroundTint,
 	});
 }

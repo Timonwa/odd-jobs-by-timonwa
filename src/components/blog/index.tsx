@@ -1,5 +1,4 @@
 import { JsonLdScript, Newsletter } from "@/components/_shared/content";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
@@ -17,7 +16,6 @@ export function BlogPageContent() {
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<BlogHero />
 				<PostGrid posts={posts} />

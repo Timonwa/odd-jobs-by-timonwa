@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { Newsletter } from "@/components/_shared/content";
 import { ToolGrid } from "@/components/_shared/tool";
-import { HubNavbar } from "@/components/_shared/layout";
 import {
 	PageMain,
 	Breadcrumbs,
@@ -21,7 +20,6 @@ export function CategoryDetail({ category }: { category: Category }) {
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<Breadcrumbs
 					items={[

@@ -1,5 +1,4 @@
 import { JsonLdScript, Newsletter } from "@/components/_shared/content";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
@@ -44,7 +43,6 @@ export async function ProductPageContent({
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
 					<div className="flex flex-col lg:col-span-2">

@@ -3,7 +3,6 @@ import {
 	IssuePrevNext,
 	Newsletter,
 } from "@/components/_shared/content";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
@@ -49,7 +48,6 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
 					<IssueHero issue={issue} />

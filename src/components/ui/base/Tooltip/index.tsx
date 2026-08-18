@@ -1,5 +1,5 @@
-"use client";
-
+// No "use client": this is pure CSS (group-hover/group-focus-within), so it
+// renders on the server and costs the client bundle nothing.
 import { cn } from "@/lib/utils";
 
 type TooltipProps = {

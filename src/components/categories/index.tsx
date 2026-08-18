@@ -2,14 +2,12 @@ import { TagsIcon } from "lucide-react";
 
 import { Newsletter } from "@/components/_shared/content";
 import { CategoryGrid } from "@/components/_shared/category";
-import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 
 export function CategoriesPageContent() {
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<Breadcrumbs
 					items={[
