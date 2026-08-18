@@ -7,6 +7,7 @@ import {
 	getCategory,
 	TOOL_CATEGORIES,
 } from "@/lib/config/categories";
+import { getToolsInCategory } from "@/lib/config/tools";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
 
@@ -35,6 +36,12 @@ export async function generateMetadata({
 		title,
 		description,
 		alternates: { canonical: path },
+		// A category with no live tools is a thin page. It stays reachable (the
+		// grid links it, and tools land in it later) but shouldn't be indexed
+		// while there is nothing on it.
+		...(getToolsInCategory(category.id).length === 0 && {
+			robots: { index: false, follow: true },
+		}),
 		openGraph: {
 			type: "website",
 			url: `${SITE_URL}${path}`,

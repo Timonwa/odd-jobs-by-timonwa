@@ -9,6 +9,9 @@ import {
 
 // Deliberately NOT `runtime = "edge"`: this route loads MDX through
 // createMdxLoader, which uses node:fs and is unavailable on the edge.
+// Section-level, not per item: `alt` is a module constant, so it cannot vary
+// by slug — `generateImageMetadata` is the API for that, and it isn't worth
+// the indirection for alt text on a social card.
 export const alt = "Product — ${SITE_NAME}";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;

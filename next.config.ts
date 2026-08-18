@@ -63,6 +63,15 @@ const nextConfig: NextConfig = {
 		return [
 			{ source: "/guides", destination: "/blog", permanent: true },
 			{ source: "/guides/:slug", destination: "/blog/:slug", permanent: true },
+			// The screenshots moved with the section rename, and the old paths are
+			// live and indexed. Listed before the :slug rule can't catch them —
+			// `/guides/gemini/1-open-dashboard.png` is two segments, so :slug
+			// wouldn't match it at all.
+			{
+				source: "/guides/:dir/:file",
+				destination: "/blog/:dir/:file",
+				permanent: true,
+			},
 		];
 	},
 	async headers() {

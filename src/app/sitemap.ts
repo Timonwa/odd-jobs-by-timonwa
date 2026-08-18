@@ -9,19 +9,31 @@ import { getAllPosts, getAllIssues } from "@/lib/server";
  * Served at /sitemap.xml. The hub home, the tool directory, the categories index
  * plus each non-empty category page, every live tool route (derived from the
  * TOOLS config — "soon" tools are excluded until they ship), the blog index
- * plus every post, the newsletter archive plus every issue, and the shop index
- * (product detail pages canonicalize to www, so they're omitted here).
+ * plus every post, and the newsletter archive plus every issue.
+ * The shop is excluded entirely — it duplicates the www listing and
+ * canonicalizes there.
  */
+// Static pages have no content date of their own, so they carry the build date:
+// a deploy is the only thing that can change them, and an absent lastModified
+// tells a crawler less than an approximate one.
+const BUILD_DATE = new Date();
+
 export default function sitemap(): MetadataRoute.Sitemap {
+	// The shop is deliberately absent — index and product pages alike. Every page
+	// in it duplicates the authoritative listing on www.timonwa.com and
+	// canonicalizes there, so sitemapping it would ask Google to index pages we
+	// have already told it to ignore.
 	return [
 		{ url: SITE_URL, changeFrequency: "weekly", priority: 1 },
 		{
 			url: `${SITE_URL}${ROUTES.tools}`,
+			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.9,
 		},
 		{
 			url: `${SITE_URL}${ROUTES.categories}`,
+			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
@@ -34,11 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		),
 		...TOOLS.filter((t) => t.status !== "soon").map((t) => ({
 			url: `${SITE_URL}${t.href}`,
+			lastModified: BUILD_DATE,
 			changeFrequency: "monthly" as const,
 			priority: 0.8,
 		})),
 		{
 			url: `${SITE_URL}${ROUTES.blog}`,
+			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
@@ -50,6 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		})),
 		{
 			url: `${SITE_URL}${ROUTES.newsletter}`,
+			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
@@ -59,12 +74,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			changeFrequency: "monthly" as const,
 			priority: 0.6,
 		})),
-		// Shop index only — product detail pages canonicalize to the www listing,
-		// so they're intentionally left out of this sitemap.
-		{
-			url: `${SITE_URL}${ROUTES.shop}`,
-			changeFrequency: "weekly",
-			priority: 0.7,
-		},
 	];
 }

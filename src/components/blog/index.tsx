@@ -1,4 +1,8 @@
-import { JsonLdScript, Newsletter } from "@/components/_shared/content";
+import {
+	ContentBreadcrumbs,
+	JsonLdScript,
+	Newsletter,
+} from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
@@ -17,6 +21,7 @@ export function BlogPageContent() {
 	return (
 		<>
 			<PageMain>
+				<ContentBreadcrumbs section="blog" />
 				<BlogHero />
 				<PostGrid posts={posts} />
 				<Newsletter className="mt-16" />

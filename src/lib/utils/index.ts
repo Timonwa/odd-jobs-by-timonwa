@@ -7,7 +7,12 @@ export {
 	emitHostedUsage,
 	subscribeHostedUsage,
 } from "./hosted-usage-signal.utils";
-export { buildItemListJsonLd, ogImageUrl } from "./json-ld.utils";
+export {
+	buildItemListJsonLd,
+	buildSiteGraphJsonLd,
+	JSON_LD_IDS,
+	ogImageUrl,
+} from "./json-ld.utils";
 export { isBrowser } from "./is-browser.utils";
 export { splitTitle } from "./text/split-title.utils";
 export { timeAgo } from "./time.utils";

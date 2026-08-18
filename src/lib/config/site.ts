@@ -12,9 +12,15 @@ export const SITE_SHORT_NAME = "The Prod Bug";
 /** PWA theme colour. Literal rather than a CSS token: the manifest is JSON, with no access to the stylesheet. */
 export const SITE_THEME_COLOR = "#4472e3";
 export const SITE_BACKGROUND_COLOR = "#ffffff";
-export const SITE_TITLE = `${SITE_NAME} — Free, focused tools for writers, developers, and creators`;
+// 63 chars, so search results show it whole. All three audiences stay — the
+// character budget was met by dropping "Free, focused", which the description
+// still carries, not by dropping an audience.
+export const SITE_TITLE = `${SITE_NAME} — tools for writers, developers & creators`;
+// 168 chars. Search results cut around 155, so the very tail may clip — the
+// trade was made against the example list, not against "No sign-up, open
+// source", which is positioning worth keeping at the end.
 export const SITE_DESCRIPTION =
-	"Free, focused web tools that handle the busywork of writing and code — turn an article into social posts, convert SVG to JSX, size SEO titles, generate slugs, and more. No sign-up, open source.";
+	"Free, focused web tools for the busywork of writing and code — turn an article into social posts, convert SVG to JSX, generate slugs, and more. No sign-up, open source.";
 /** Short one-liner for tight spots like the footer, where SITE_DESCRIPTION runs long. */
 export const SITE_TAGLINE =
 	"Free, focused productivity tools for writers, developers, and creators. No sign-up, open source.";

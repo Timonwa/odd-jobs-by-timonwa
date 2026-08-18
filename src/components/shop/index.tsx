@@ -1,4 +1,8 @@
-import { JsonLdScript, Newsletter } from "@/components/_shared/content";
+import {
+	ContentBreadcrumbs,
+	JsonLdScript,
+	Newsletter,
+} from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { buildItemListJsonLd } from "@/lib/utils";
@@ -21,6 +25,7 @@ export function ShopPageContent() {
 	return (
 		<>
 			<PageMain>
+				<ContentBreadcrumbs section="shop" />
 				<ShopHero />
 				<ProductGrid products={products} />
 				<Newsletter className="mt-16" />

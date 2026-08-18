@@ -3,7 +3,9 @@
 // route layouts, which left tool copy with several competing sources of truth.
 
 export type ToolSeo = {
-	/** `<title>`, and the JSON-LD/OpenGraph title. */
+	/** `<title>`, and the JSON-LD/OpenGraph title. Write it for the page, not for
+	 * the character budget: the root template appends the site name as a *suffix*,
+	 * so a truncated result loses the branding and keeps the descriptive part. */
 	title: string;
 	description: string;
 	/** Display name for `applicationName` and JSON-LD `name`. */
@@ -237,7 +239,7 @@ export const TOOL_SEO: Record<string, ToolSeo> = {
 		],
 	},
 	"word-counter": {
-		title: "Word & Character Counter — reading time & limits",
+		title: "Word & Character Counter — live counts & SEO limits",
 		description:
 			"Count words, characters, sentences, and paragraphs as you type, with reading time and live limits for SEO titles, meta descriptions, and social posts.",
 		applicationName: "Word & Character Counter",

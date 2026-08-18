@@ -19,8 +19,11 @@ export function ToolBreadcrumbs({
 	const items: BreadcrumbItem[] = [
 		{ label: "Home", href: ROUTES.home },
 		{ label: "Tools", href: ROUTES.tools },
+		// `/categories/<id>`, not `/tools?category=<id>`: the filtered tools URL
+		// canonicalizes to `/tools`, so linking it sent crawlers (and the
+		// BreadcrumbList) at a non-canonical address.
 		...(category
-			? [{ label: category.label, href: ROUTES.toolsCategory(category.id) }]
+			? [{ label: category.label, href: ROUTES.category(category.id) }]
 			: []),
 		{ label: name },
 	];

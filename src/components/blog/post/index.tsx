@@ -1,4 +1,5 @@
 import {
+	ContentBreadcrumbs,
 	JsonLdScript,
 	Newsletter,
 	RelatedGrid,
@@ -47,6 +48,7 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 		<>
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
+					<ContentBreadcrumbs section="blog" title={post.title} />
 					<PostHero post={post} />
 					<article>
 						<PostBody />

@@ -9,6 +9,9 @@ import {
 
 // Deliberately NOT `runtime = "edge"`: this route loads MDX through
 // createMdxLoader, which uses node:fs and is unavailable on the edge.
+// `alt` is a module constant, so it can't vary per item; `generateImageMetadata`
+// is the API for that. Left as the section-level description rather than
+// claiming per-item text the export cannot deliver.
 export const alt = `Blog post — ${SITE_NAME}`;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;

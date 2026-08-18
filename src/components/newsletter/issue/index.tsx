@@ -1,4 +1,5 @@
 import {
+	ContentBreadcrumbs,
 	JsonLdScript,
 	IssuePrevNext,
 	Newsletter,
@@ -50,6 +51,7 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 		<>
 			<PageMain>
 				<div className="mx-auto max-w-3xl">
+					<ContentBreadcrumbs section="newsletter" title={issue.title} />
 					<IssueHero issue={issue} />
 					<article>
 						<IssueBody />

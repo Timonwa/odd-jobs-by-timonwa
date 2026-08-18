@@ -8,10 +8,13 @@ import { ShopPreview } from "./ShopPreview";
 import { ToolsPreview } from "./ToolsPreview";
 import { WhatItIs } from "./WhatItIs";
 import { WhyUseIt } from "./WhyUseIt";
+import { JsonLdScript } from "@/components/_shared/content";
+import { buildSiteGraphJsonLd } from "@/lib/utils";
 
 export function HubHomePageContent() {
 	return (
 		<>
+			<JsonLdScript data={buildSiteGraphJsonLd()} />
 			<PageMain>
 				<HomeHero />
 				<ToolsPreview />

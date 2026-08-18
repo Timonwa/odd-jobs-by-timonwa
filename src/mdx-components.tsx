@@ -105,10 +105,13 @@ const elements: MDXComponents = {
 		/>
 	),
 	img: ({ alt = "", ...props }: ComponentPropsWithoutRef<"img">) => (
-		// Screenshots should use <PostFigure>; this is a fallback for raw markdown images.
+		// Screenshots should use <PostFigure>; this is a fallback for raw markdown
+		// images. `aspect-video` reserves a box when markdown gives no dimensions,
+		// so the fallback can't shift the article as it loads; an explicit
+		// width/height on the markdown image overrides it.
 		// eslint-disable-next-line @next/next/no-img-element
 		<img
-			className="mt-4 rounded-xl border border-border"
+			className="mt-4 aspect-video h-auto w-full rounded-xl border border-border object-cover"
 			alt={alt}
 			{...props}
 		/>

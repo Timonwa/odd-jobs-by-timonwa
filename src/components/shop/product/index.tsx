@@ -1,4 +1,8 @@
-import { JsonLdScript, Newsletter } from "@/components/_shared/content";
+import {
+	ContentBreadcrumbs,
+	JsonLdScript,
+	Newsletter,
+} from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
@@ -11,6 +15,26 @@ import { ProductCheckoutCta } from "./ProductCheckoutCta";
 import { ProductHeader } from "./ProductHeader";
 import { ProductPageFooter } from "./ProductPageFooter";
 import { StickyCheckout } from "./StickyCheckout";
+
+/**
+ * Turns a display price into schema.org offer fields, and only when the string
+ * says one unambiguous thing.
+ *
+ * The frontmatter is free text, and one product reads "Free · $5 Pro" — a
+ * grab-the-first-number parse would publish `price: 5` for something that is
+ * free, which is worse than publishing no price at all. So: exactly "Free", or
+ * exactly one "$N", or nothing.
+ */
+function parseOfferPrice(
+	display: string | undefined,
+): { price: string; priceCurrency: string } | Record<string, never> {
+	const value = display?.trim();
+	if (!value) return {};
+	if (/^free$/i.test(value)) return { price: "0", priceCurrency: "USD" };
+	const exact = value.match(/^\$(\d+(?:\.\d{1,2})?)$/);
+	if (!exact?.[1]) return {};
+	return { price: exact[1], priceCurrency: "USD" };
+}
 
 export async function ProductPageContent({
 	product,
@@ -38,12 +62,17 @@ export async function ProductPageContent({
 			"@type": "Offer",
 			url: product.checkoutUrl,
 			availability: "https://schema.org/InStock",
+			// `price` is required for a Product rich result. The frontmatter carries a
+			// display string ("Free", "$10"), so parse the number out and only claim a
+			// price when there is one to claim.
+			...parseOfferPrice(product.price),
 		},
 	};
 
 	return (
 		<>
 			<PageMain>
+				<ContentBreadcrumbs section="shop" title={product.title} />
 				<div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
 					<div className="flex flex-col lg:col-span-2">
 						<ProductHeader product={product} />
