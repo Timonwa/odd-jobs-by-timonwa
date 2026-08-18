@@ -1,28 +1,28 @@
 # Audit suite roll-up
 
-**Date:** 2026-08-17 **Phase:** production **Mode:** Report-only **Branch:** `code-restructuring` **Scope:** single Next.js app (whole repo) **Overall:** 6.5/10
+**Date:** 2026-08-18 **Phase:** production **Mode:** fixes applied **Branch:** `code-restructuring` **Scope:** single Next.js app (whole repo) **Overall:** 8.5/10 (first run: 6.5/10)
 
 The app is live at `https://tools.timonwa.com`, but this branch is unmerged — the live site still serves the pre-rebrand build (`/blog`, `/newsletter`, `/shop`, `/llms.txt` currently 404). Findings about those routes are pre-deploy, not live regressions.
 
 ## Suite summary
 
-| Audit                    | Score  | Critical | High   | Med    | Low    | Trend  | Report                                           |
-| ------------------------ | ------ | -------- | ------ | ------ | ------ | ------ | ------------------------------------------------ |
-| codebase-audit ✅        | 9/10   | 0        | 1      | 1      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
-| conventions-audit ✅     | 9/10   | 0        | 0      | 1      | 1      | ▲ +2   | [conventions-audit.md](conventions-audit.md)     |
-| security-audit           | 7/10   | 0        | 3      | 4      | 4      | —      | [security-audit.md](security-audit.md)           |
-| environment-audit ✅     | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +2.5 | [environment-audit.md](environment-audit.md)     |
-| dependency-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [dependency-audit.md](dependency-audit.md)       |
-| frontend-audit ✅        | 9/10   | 0        | 0      | 1      | 3      | ▲ +2   | [frontend-audit.md](frontend-audit.md)           |
-| docs-audit               | 7/10   | 0        | 5      | 7      | 11     | —      | [docs-audit.md](docs-audit.md)                   |
-| performance-audit ✅     | 8.5/10 | 0        | 0      | 2      | 1      | ▲ +2   | [performance-audit.md](performance-audit.md)     |
-| seo-code-audit ✅        | 9/10   | 0        | 0      | 0      | 2      | ▲ +3   | [seo-code-audit.md](seo-code-audit.md)           |
-| accessibility-audit ✅   | 9/10   | 0        | 0      | 2      | 0      | ▲ +3   | [accessibility-audit.md](accessibility-audit.md) |
-| redis-audit              | 5/10   | 0        | 3      | 5      | 4      | —      | [redis-audit.md](redis-audit.md)                 |
-| **Raw total (open)**     |        | **0**    | **33** | **74** | **63** |        |                                                  |
-| **After de-duplication** |        | **1**    | **20** | —      | —      |        |                                                  |
+| Audit                  | Score  | Critical | High   | Med    | Low    | Trend  | Report                                           |
+| ---------------------- | ------ | -------- | ------ | ------ | ------ | ------ | ------------------------------------------------ |
+| codebase-audit ✅      | 9/10   | 0        | 1      | 1      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
+| conventions-audit ✅   | 9/10   | 0        | 0      | 1      | 1      | ▲ +2   | [conventions-audit.md](conventions-audit.md)     |
+| security-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [security-audit.md](security-audit.md)           |
+| environment-audit ✅   | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +2.5 | [environment-audit.md](environment-audit.md)     |
+| dependency-audit ✅    | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [dependency-audit.md](dependency-audit.md)       |
+| frontend-audit ✅      | 9/10   | 0        | 0      | 1      | 3      | ▲ +2   | [frontend-audit.md](frontend-audit.md)           |
+| docs-audit ⚠️          | 5/10   | 0        | 8      | 13     | 14     | ▼ −2   | [docs-audit.md](docs-audit.md)                   |
+| performance-audit ✅   | 8.5/10 | 0        | 0      | 2      | 1      | ▲ +2   | [performance-audit.md](performance-audit.md)     |
+| seo-code-audit ✅      | 9/10   | 0        | 0      | 0      | 2      | ▲ +3   | [seo-code-audit.md](seo-code-audit.md)           |
+| accessibility-audit ✅ | 9/10   | 0        | 0      | 2      | 0      | ▲ +3   | [accessibility-audit.md](accessibility-audit.md) |
+| redis-audit ✅         | 9/10   | 0        | 0      | 1      | 0      | ▲ +4   | [redis-audit.md](redis-audit.md)                 |
+| **Raw total (open)**   |        | **0**    | **9**  | **21** | **22** |        |                                                  |
+| **First-run baseline** |        | **1**    | **33** | **74** | **63** |        |                                                  |
 
-First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storybook configured), `api-audit` (no route-handler layer; Server Action concerns covered by security + frontend), `rbac-audit` (no auth, roles, or protected objects exist), `firestore-audit` (no Firebase). `redis-audit` was added beyond the orchestrator's table because Upstash Redis is a real integration here.
+All eleven audits have now run, and ten have had their fix pass. `docs-audit` is the exception by design — it was held until last because every other pass changed the code it describes, and it is the only score that fell (7 → 5). Skipped, with reasons: `storybook-audit` (no Storybook configured), `api-audit` (no route-handler layer; Server Action concerns covered by security + frontend), `rbac-audit` (no auth, roles, or protected objects exist), `firestore-audit` (no Firebase). `redis-audit` was added beyond the orchestrator's table because Upstash Redis is a real integration here.
 
 ## Top priorities (cross-cutting, worst-first)
 
@@ -34,7 +34,7 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 6. ~~**HIGH ×4 — the design tokens fail WCAG contrast (one root cause).**~~ **FIXED** in the accessibility pass — lightness lowered to the computed minimum per token (hue and chroma preserved), a visible `--ring` at 4.85:1, and a dedicated `--input-border` at 3.1:1 so decorative borders stayed put. Original detail: Filled primary buttons 4.24:1 (hub) and 3.24–4.47:1 across the nine tool accents; `text-primary` as small text 3.38–4.67:1 on white and 3.03:1 on `bg-primary/10` across 51 usages; `--ring` 2.59:1 as the _only_ focus affordance while `Button` sets `outline-none`; `--border`/`--input` 1.26:1 light / 1.47:1 dark, the sole thing distinguishing form fields from the page. Fixing the token values in `src/styles/tokens.css` fixes all four. → accessibility F5–F8.
 7. ~~**HIGH ×4 — focus management and async announcement.**~~ **FIXED** — Tab trap in `Drawer`, visibility-checked focus restore, a skip link with a focusable `<main>`, and a `GenerationStatus` live region with `aria-disabled` replacing `disabled` on the submit button. Original detail: `Drawer` declares `aria-modal="true"` with no Tab trap; opening the BYOK/settings drawer from the nav menu drops focus to `<body>`; no skip link anywhere, with 8+ header tab stops before content on every page (WCAG 2.4.1, Level A); AI generation start/finish is never announced and the focused submit button self-disables mid-run. → accessibility F1–F4.
 8. ~~**HIGH — a paid product page canonicalizes to a 404.**~~ **FIXED** (drafts pass — product unpublished). Original detail: `/shop/content-script-generator` points at `https://www.timonwa.com/shop/content-script-generator`, verified 404 over the network (the other five product canonicals are 200). Combined with the deliberate sitemap exclusion, the only page for a $10 product self-excludes with no valid target. → seo F1.
-9. **HIGH ×3 — the structure docs contradict the code and each other.** Both AGENTS.md and CONTRIBUTING.md still show `app/`, `components/`, `lib/` at the repo root after the move under `src/`; AGENTS.md says feature PRs target `dev` while CONTRIBUTING.md says branch from and PR against `main`. Introduced during this refactor. → docs F1–F3.
+9. **HIGH ×8 — the docs describe the pre-audit app.** Re-run 2026-08-18 after ten fix passes: the four original structure/branch/PR-template findings are all still open, and four more landed because the code moved underneath them — `IP_HASH_SECRET` is documented optional but throws at boot in production, rate limiting is documented "production only, fails open" when it is credential-driven and fails **closed**, `LLM_MODEL` is documented in three places and exists nowhere, and `GOOGLE_API_KEY` alone no longer enables the AI tools. Original detail: **HIGH ×3 — the structure docs contradict the code and each other.** Both AGENTS.md and CONTRIBUTING.md still show `app/`, `components/`, `lib/` at the repo root after the move under `src/`; AGENTS.md says feature PRs target `dev` while CONTRIBUTING.md says branch from and PR against `main`. Introduced during this refactor. → docs F1–F3.
 10. ~~**HIGH — the `postcss` override has gone stale.**~~ **FIXED** — floor raised to `>=8.5.23`, resolving postcss 8.5.26 and nanoid 3.3.18. Original detail: It is still necessary (Next pins postcss 8.4.31 exactly), but its `>=8.5.10` floor no longer patches: the lockfile resolved 8.5.17, carrying a high advisory fixed in 8.5.18, and drags `nanoid` 3.3.15 with two high advisories. Build-time-only reachability; one-line fix to `>=8.5.23`. → dependency F2, codebase F1.
 11. ~~**HIGH ×2 — the nine tool layouts duplicate and hardcode.**~~ **FIXED** in the conventions pass — 99 lines each became 18, with SEO copy in one registry and metadata/JSON-LD built from it; built HTML verified identical. Original detail: Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
 12. **HIGH — no test infrastructure at all** (DEFERRED by decision — tests are a separate branch; the dead CI job that claimed otherwise was removed), and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
@@ -92,6 +92,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 - Whether Next 16 OG routes still require `runtime = "edge"`. [codebase F20]
 
 ## Resolved since last run
+
+**docs-audit — run, not yet fixed (7/10 → 5/10).** The only score to fall, and the reason it ran last. Three findings were closed by other passes (the CI quantifier, the `config/` barrel, the stale CI env comment), and no document regressed on its own — but ten fix passes moved the code out from under the docs, adding four HIGHs: `IP_HASH_SECRET` is documented optional while production throws at boot without it, rate limiting is documented "production only, fails open" when it is credential-driven and fails **closed**, `LLM_MODEL` is documented in three places and exists nowhere in the code, and `GOOGLE_API_KEY` alone no longer enables the AI tools. The four original HIGHs (both structure trees, the contradictory branch model, the nonexistent `pnpm check`) are all still open. Remediation is one focused documentation pass, and F3 is now settled by events: this session created `dev` and merged into it, so `dev` really is the integration branch and CONTRIBUTING.md is the stale side.
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
 

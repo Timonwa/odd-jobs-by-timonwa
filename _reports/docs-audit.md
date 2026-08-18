@@ -1,252 +1,340 @@
 # Docs audit — The Productivity Bug (root documentation surface)
 
-**Date:** 2026-08-17 · **Phase:** production · **Mode:** Report-only · **Branch:** `code-restructuring` · **Scope:** `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `CLAUDE.md`, `SECURITY.md`, `LICENSE`, `LICENSE-content`, `TRADEMARK.md`, `.github/**` templates + workflow doc-logic, `public/llms.txt` — verified against `src/**`, `package.json`, `next.config.ts`, `tsconfig.json`, `.env` schema, and the live site. The gitignored `docs/` folder was excluded. · **Overall:** 7/10
+**Date:** 2026-08-18 · **Phase:** production · **Mode:** Report-only · **Branch:** `code-restructuring` · **Scope:** `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `CLAUDE.md`, `SECURITY.md`, `TRADEMARK.md`, `LICENSE`, `LICENSE-content`, `.github/**` templates + workflow doc-logic, `public/llms.txt`, `_reports/**` — verified against `src/**`, `package.json`, `next.config.ts`, `pnpm-workspace.yaml`, the env schema, and the live site. The gitignored `docs/` folder was excluded. · **Overall:** 5/10
 
 ## Score change (previous → current)
 
 | Metric  | Previous | Current | Δ   | Trend |
 | ------- | -------- | ------- | --- | ----- |
-| Overall | N/A      | 7/10    | N/A | N/A   |
+| Overall | 7/10     | 5/10    | −2  | ▼     |
 
-First run — no prior `_reports/docs-audit.md`, so every finding is `NEW` and there is nothing to carry forward.
+**The score fell because the code moved and the docs didn't.** Three of the previous run's findings were fixed, and no documentation regressed on its own. But ten audit passes landed between the two runs — rate limiting was rewritten, Redis got a client layer, the model id left the environment, a route group appeared, a CSP was added — and AGENTS.md and README.md still describe the pre-pass app. Sixteen new findings, four of them HIGH, all of the same shape: a doc that was true in the last run and is false now.
+
+This is the expected cost of a fix-first, docs-last sequence, and it is why this audit was held until the end. The remediation is one focused pass, not eleven scattered ones.
 
 ## Findings
 
-| ID  | Severity | Category        | Status | Issue                                                                                        | Location                               |
-| --- | -------- | --------------- | ------ | -------------------------------------------------------------------------------------------- | -------------------------------------- |
-| 1   | HIGH     | Stale claims    | NEW    | Repository-structure tree puts the App Router at root `app/`; it lives at `src/app/`         | `AGENTS.md:37`                         |
-| 2   | HIGH     | Stale claims    | NEW    | Codebase-layout tree shows `app/`, `components/`, `lib/` at repo root; all three are `src/*` | `CONTRIBUTING.md:72`                   |
-| 3   | HIGH     | Stale claims    | NEW    | Branch model contradicts itself: PRs target `dev` (AGENTS) vs `main` (CONTRIBUTING)          | `AGENTS.md:92` / `CONTRIBUTING.md:147` |
-| 4   | HIGH     | README accuracy | NEW    | PR checklist requires `pnpm check`, a script that does not exist                             | `.github/pull_request_template.md:16`  |
-| 5   | HIGH     | Stale claims    | NEW    | CI's `docs-only` gate skips lint/typecheck/build for any PR that touches one `.md`           | `.github/workflows/ci.yml:22`          |
-| 6   | MEDIUM   | Stale claims    | NEW    | Action filename documented as `<slug>.action.ts`; real convention is `<domain>.action.ts`    | `AGENTS.md:30` / `CONTRIBUTING.md:121` |
-| 7   | MEDIUM   | Stale claims    | NEW    | "barrel per kind" / "every kind barrel" — `src/lib/config/` has no barrel                    | `AGENTS.md:47` / `CONTRIBUTING.md:113` |
-| 8   | MEDIUM   | Stale claims    | NEW    | `src/content/tools/` is not loaded by a service or validated by Zod, as documented           | `AGENTS.md:169`                        |
-| 9   | MEDIUM   | Duplication     | NEW    | Scripts/verify commands maintained in 3 docs with 4 different command sets                   | `README.md:76` / `CONTRIBUTING.md:55`  |
-| 10  | MEDIUM   | Links & URLs    | NEW    | Issue-chooser links GitHub Discussions; Discussions is disabled on the repo                  | `.github/ISSUE_TEMPLATE/config.yml:4`  |
-| 11  | MEDIUM   | Coverage        | NEW    | README env table omits `APP_ENV` and mislabels `GOOGLE_API_KEY` as required                  | `README.md:64`                         |
-| 12  | MEDIUM   | Stale claims    | NEW    | CI comment claims a missing `GOOGLE_API_KEY` fails the build, and names Cloudflare Analytics | `.github/workflows/ci.yml:74`          |
-| 13  | LOW      | Duplication     | NEW    | Whole dev-setup block duplicated verbatim in README and CONTRIBUTING                         | `README.md:48` / `CONTRIBUTING.md:41`  |
-| 14  | LOW      | Consistency     | NEW    | Node requirement stated as 20.9+; repo standardizes on 22 and enforces nothing               | `README.md:50` / `CONTRIBUTING.md:43`  |
-| 15  | LOW      | Stale claims    | NEW    | JSON-LD escape claim is mangled to a no-op — `` `<` → `<` `` instead of `<`                  | `AGENTS.md:160`                        |
-| 16  | LOW      | Stale claims    | NEW    | `src/styles/` described as tokens/theme/base only; three more partials exist                 | `AGENTS.md:41`                         |
-| 17  | LOW      | Stale claims    | NEW    | Rate-limit key format omits the client-hash segment                                          | `AGENTS.md:165`                        |
-| 18  | LOW      | Stale claims    | NEW    | "never `export *`" stated without noting `src/components/ui/index.ts` does exactly that      | `AGENTS.md:47`                         |
-| 19  | LOW      | Coverage        | NEW    | Neither structure tree lists `src/mdx-components.tsx`, required by the MDX setup             | `AGENTS.md:37` / `CONTRIBUTING.md:72`  |
-| 20  | LOW      | Coverage        | NEW    | Documentation inventory omits SECURITY/TRADEMARK/`.github` templates/`public/llms.txt`       | `AGENTS.md:239`                        |
-| 21  | LOW      | Links & URLs    | NEW    | `/blog`, `/newsletter`, `/shop` advertised in README + llms.txt 404 on the live site today   | `README.md:14` / `public/llms.txt:13`  |
-| 22  | LOW      | Consistency     | NEW    | SECURITY.md cites CONTRIBUTING.md for a statement CONTRIBUTING.md doesn't make               | `SECURITY.md:54`                       |
-| 23  | LOW      | Consistency     | NEW    | Two `# ` H1s in one file                                                                     | `AGENTS.md:3`, `AGENTS.md:9`           |
+| ID  | Severity | Category        | Status     | Issue                                                                                           | Location                               |
+| --- | -------- | --------------- | ---------- | ----------------------------------------------------------------------------------------------- | -------------------------------------- |
+| 24  | HIGH     | Stale claims    | NEW        | `IP_HASH_SECRET` documented optional; production **throws at boot** without it                  | `README.md:71` / `AGENTS.md:181`       |
+| 27  | HIGH     | Stale claims    | NEW        | Rate limiting documented "production only, fails open" — it follows Upstash creds, fails closed | `AGENTS.md:159` / `AGENTS.md:244`      |
+| 26  | HIGH     | Stale claims    | NEW        | `LLM_MODEL` documented as a settable var in 3 places; the name exists nowhere in the code       | `README.md:69` / `AGENTS.md:183,243`   |
+| 25  | HIGH     | Stale claims    | NEW        | `GOOGLE_API_KEY` alone no longer enables the AI tools — unmetered builds refuse to serve        | `README.md:74` / `AGENTS.md:181`       |
+| 1   | HIGH     | Stale claims    | UNRESOLVED | Repository-structure tree puts the App Router at root `app/`; it lives at `src/app/`            | `AGENTS.md:38`                         |
+| 2   | HIGH     | Stale claims    | UNRESOLVED | Codebase-layout tree shows `app/`, `components/`, `lib/` at repo root; all three are `src/*`    | `CONTRIBUTING.md:73,82,98`             |
+| 3   | HIGH     | Stale claims    | UNRESOLVED | Branch model contradicts itself: PRs target `dev` (AGENTS) vs `main` (CONTRIBUTING)             | `AGENTS.md:92` / `CONTRIBUTING.md:147` |
+| 4   | HIGH     | README accuracy | UNRESOLVED | PR checklist requires `pnpm check`, a script that does not exist                                | `.github/pull_request_template.md:15`  |
+| 28  | MEDIUM   | Stale claims    | NEW        | Redis key format wrong on both counts, and the burst tier is undocumented                       | `AGENTS.md:165`                        |
+| 39  | MEDIUM   | Stale claims    | NEW        | "action inputs in the action files" — they live in `lib/schemas/` now                           | `AGENTS.md:19`                         |
+| 29  | MEDIUM   | Coverage        | NEW        | The `(hub)` route group is in neither structure tree nor the Routing section                    | `AGENTS.md:38` / `CONTRIBUTING.md:73`  |
+| 30  | MEDIUM   | Stale claims    | NEW        | `clients/` documented as `<service>.client.ts` singletons; `clients/redis/` is a 4-file folder  | `AGENTS.md:60`                         |
+| 31  | MEDIUM   | Stale claims    | NEW        | `pnpm-workspace.yaml` described as one postcss pin; it holds 3 overrides + `allowBuilds`        | `AGENTS.md:173,245`                    |
+| 32  | MEDIUM   | Coverage        | NEW        | The CSP and five other security headers are documented nowhere                                  | `AGENTS.md:155` / `next.config.ts:77`  |
+| 33  | MEDIUM   | Coverage        | NEW        | Newsletter metering, burst caps, and the honeypot are absent from the backend docs              | `AGENTS.md:153,165`                    |
+| 34  | MEDIUM   | Coverage        | NEW        | `parseActionInput` — mandatory at every action boundary — is in no reuse list                   | `AGENTS.md:70` / `CONTRIBUTING.md:121` |
+| 6   | MEDIUM   | Stale claims    | UNRESOLVED | Action filename documented as `<slug>.action.ts`; real convention is `<domain>.action.ts`       | `AGENTS.md:30` / `CONTRIBUTING.md:121` |
+| 8   | MEDIUM   | Stale claims    | UNRESOLVED | `src/content/tools/` is not loaded by a service or validated by Zod, as documented              | `AGENTS.md:169`                        |
+| 9   | MEDIUM   | Duplication     | UNRESOLVED | Scripts/verify commands maintained in 3 docs with 4 different command sets                      | `README.md:78` / `CONTRIBUTING.md:57`  |
+| 10  | MEDIUM   | Links & URLs    | UNRESOLVED | Issue-chooser links GitHub Discussions; Discussions is disabled on the repo                     | `.github/ISSUE_TEMPLATE/config.yml:4`  |
+| 11  | MEDIUM   | Coverage        | UNRESOLVED | README env table omits `APP_ENV` and mislabels `GOOGLE_API_KEY` as required                     | `README.md:64`                         |
+| 36  | LOW      | Consistency     | NEW        | `lib/config/index.ts` uses `export *` — inside `lib/`, where both docs forbid it                | `src/lib/config/index.ts:20`           |
+| 37  | LOW      | Links & URLs    | NEW        | `llms.txt` promotes `/shop` as a key page after the section canonicalized away                  | `public/llms.txt:15`                   |
+| 38  | LOW      | Consistency     | NEW        | Four different taglines across README, `llms.txt`, `SITE_TAGLINE`, `SITE_DESCRIPTION`           | `README.md:3` / `public/llms.txt:3`    |
+| 35  | LOW      | Coverage        | NEW        | `_reports/` is committed but absent from the Documentation section                              | `AGENTS.md:239`                        |
+| 13  | LOW      | Duplication     | UNRESOLVED | Whole dev-setup block duplicated verbatim in README and CONTRIBUTING                            | `README.md:48` / `CONTRIBUTING.md:41`  |
+| 14  | LOW      | Consistency     | UNRESOLVED | Node requirement stated as 20.9+; `.nvmrc` pins 22 and nothing is enforced                      | `README.md:50` / `CONTRIBUTING.md:43`  |
+| 15  | LOW      | Stale claims    | UNRESOLVED | JSON-LD escape claim is still a no-op — `` `<` `` → `` `<` ``                                   | `AGENTS.md:160`                        |
+| 16  | LOW      | Stale claims    | UNRESOLVED | `src/styles/` described as tokens/theme/base only; three more partials exist                    | `AGENTS.md:41,117`                     |
+| 18  | LOW      | Stale claims    | UNRESOLVED | "never `export *`" stated without noting `src/components/ui/index.ts` does exactly that         | `AGENTS.md:47`                         |
+| 19  | LOW      | Coverage        | UNRESOLVED | Neither structure tree lists `src/mdx-components.tsx`, required by the MDX setup                | `AGENTS.md:38` / `CONTRIBUTING.md:73`  |
+| 20  | LOW      | Coverage        | UNRESOLVED | Documentation inventory omits SECURITY/TRADEMARK/`.github` templates/`public/llms.txt`          | `AGENTS.md:239`                        |
+| 21  | LOW      | Links & URLs    | UNRESOLVED | `/blog`, `/newsletter`, `/shop`, `/llms.txt` still 404 on the live site (unmerged branch)       | `README.md:14` / `public/llms.txt:13`  |
+| 22  | LOW      | Consistency     | UNRESOLVED | SECURITY.md cites CONTRIBUTING.md for a statement CONTRIBUTING.md doesn't make                  | `SECURITY.md:54`                       |
+| 23  | LOW      | Consistency     | UNRESOLVED | Two `# ` H1s in one file                                                                        | `AGENTS.md:3,9`                        |
+
+### F24 — `IP_HASH_SECRET` is documented optional and is a hard boot failure
+
+- **What:** `README.md:71` gives it `—` in the Required column, and `AGENTS.md:181` opens the secrets paragraph with "all optional — features degrade gracefully when unset". Neither is true since the redis pass. `src/lib/server/utils/rate-limit.utils.ts:55-59` runs at module load: `if (isProduction && !env.IP_HASH_SECRET) throw new Error(...)`. It is a module-scope throw in a file every AI action imports, so with `APP_ENV=production` and no `IP_HASH_SECRET` the app does not boot — nothing degrades.
+- **Why it matters:** This is the worst kind of doc defect: the docs promise graceful degradation and the code hard-fails. Someone self-hosting from the README sets `APP_ENV=production` (which `AGENTS.md:177` tells them to do on deploy), doesn't set a var the table says is optional, and their deploy crashes at startup with no hint from either document. The throw is correct — an unkeyed IP hash is brute-forceable — so the code is right and the docs are wrong.
+- **Fix:** Mark it "Required when `APP_ENV=production`" in the README table with the `openssl rand -hex 32` hint the error message already gives, and replace AGENTS.md's "all optional" with "all optional except `IP_HASH_SECRET`, which is required in production".
+
+### F27 — Rate limiting is documented with the opposite failure mode
+
+- **What:** `AGENTS.md:159` says "production only, fails open". Both halves are now false. **Activation:** `rate-limit.utils.ts:42` sets `isDevServer = process.env.NODE_ENV === "development"` and `canServeHostedAi()` returns `isDevServer || hasRedisCredentials()` — metering follows the Upstash credentials, not `APP_ENV`, so any built deploy meters (previews included). **Failure mode:** `rate-limit.utils.ts:172-179` fails **closed** — "Both paths failed, so Redis itself is unreachable: fail CLOSED". `AGENTS.md:244`'s troubleshooting entry repeats the stale rule: "it only activates with `APP_ENV=production` + Upstash vars set".
+- **Why it matters:** Fail-open versus fail-closed is the single most important property of a cost control, and the doc states it backwards. An agent or contributor reasoning about spend risk from AGENTS.md reaches the exact wrong conclusion, and someone debugging a 429 storm will chase `APP_ENV` when the answer is Redis reachability. The whole point of the environment pass was to invert this behaviour; the doc still describes the bug that was fixed.
+- **Fix:** "Metering follows the Upstash credentials, not the tier — the dev server is exempt, every built deploy meters, and an unreachable Redis **denies** hosted generations (`canServeHostedAi`). BYOK requests skip it." Update the troubleshooting entry to match.
+
+### F26 — `LLM_MODEL` is documented three times and exists nowhere
+
+- **What:** `README.md:69` lists it as an env var ("Server model (default `gemini-flash-lite-latest`)"), `AGENTS.md:183` calls it a per-tier constant, and `AGENTS.md:243`'s troubleshooting says "use a `-latest` alias in `LLM_MODEL`". `grep -rn "LLM_MODEL" src/` returns only `HOSTED_LLM_MODEL`, a committed constant in `src/lib/config/byok.ts:13`, whose own comment says why: "Committed rather than env-held: a model id isn't a secret, and holding it in env let staging and production drift onto different models with no review and no allowlist check." It is not read from `process.env` anywhere, and it is absent from the `EnvSchema`.
+- **Why it matters:** Setting `LLM_MODEL` in a deploy does nothing at all, silently — the most confusing failure shape there is, because the variable name looks canonical and appears in the official env table. The troubleshooting entry actively misdirects: it is the documented remedy for a live 404 from Gemini, and following it changes nothing while the outage continues.
+- **Fix:** Drop the README row and point the troubleshooting entry at `HOSTED_LLM_MODEL` in `lib/config/byok.ts`, noting the allowlist (`ByokModel`) that constrains it.
+
+### F25 — `GOOGLE_API_KEY` is no longer sufficient to run the AI tools
+
+- **What:** `README.md:74` says "the AI tools need `GOOGLE_API_KEY` (or a user's own key)" and `.env.example`'s quickstart comment says "add at least `GOOGLE_API_KEY`". Since the environment pass a platform key is necessary but not sufficient: `canServeHostedAi()` (`rate-limit.utils.ts:45`) returns false in any built app without Upstash credentials, and hosted generations are refused rather than served unmetered. `rate-limit.utils.ts:63-68` logs exactly this at boot: "A platform Gemini key is configured but Upstash credentials are not, so hosted generations cannot be metered and will be refused."
+- **Why it matters:** A self-hoster follows the README, sets one key, builds, and finds every AI tool refusing hosted runs with no documented explanation — while the boot log explains it perfectly. The design is deliberate and good (never spend an unmetered key); it is just undocumented, which converts a safety feature into an apparent bug.
+- **Fix:** One line under the env table: hosted AI needs `GOOGLE_API_KEY` **and** the two Upstash vars, because a build that cannot meter refuses to spend the platform key; BYOK works with neither. Note that the dev server is exempt.
 
 ### F1 — AGENTS.md structure tree puts the App Router at root `app/`
 
-- **What:** The "Repository Structure" block opens with `app/` and then prefixes every sibling with `src/` (`src/styles/`, `src/components/`, `src/lib/`, `src/content/`). On this branch there is no root `app/` directory — `find` returns 70 route files, all under `src/app/` (`src/app/layout.tsx`, `src/app/(tools)/word-counter/page.tsx`, …). `git ls-tree origin/main` still shows a root `app/`, which is where the stale line comes from: the directory moved during the refactor and the tree wasn't updated.
-- **Why it matters:** This is the highest-traffic paragraph in the file, and it's the one an agent reads before creating a route. A file created at `app/<slug>/page.tsx` is not routed by Next at all, and a human reading the same block will look for routes in the wrong place. The intra-block inconsistency (`app/` bare, everything else `src/`-prefixed) makes it read as deliberate.
-- **Fix:** Change the tree root to `src/app/` (and the nested `(tools)/`, `blog/ newsletter/ shop/` lines stay relative to it).
+- **What:** Unchanged from the previous run. `AGENTS.md:38` opens the tree with a bare `app/` while every sibling carries `src/` (`src/styles/`, `src/components/`, `src/lib/`, `src/content/`). There is no root `app/`; `ls src` returns `app components content lib mdx-components.tsx styles`.
+- **Why it matters:** It is the paragraph an agent reads before creating a route, and a file created at `app/<slug>/page.tsx` is not routed by Next at all. The intra-block inconsistency makes it read as deliberate.
+- **Fix:** Change the tree root to `src/app/`. Do it in the same pass as F29, which rewrites the same lines.
 
 ### F2 — CONTRIBUTING.md codebase-layout tree is unprefixed for three top-level dirs
 
-- **What:** The tree lists `app/` (line 73), `components/` (line 82), and `lib/` (line 98) at the root, with only `src/styles/` (line 81) carrying the `src/` prefix. Actual: `src/app/`, `src/components/`, `src/lib/` — verified by `ls src` (`app components content lib mdx-components.tsx styles`). There is no root-level `app/`, `components/`, or `lib/`.
-- **Why it matters:** This is the onboarding map for external contributors, and it's the section CONTRIBUTING is pointed at from both README and AGENTS.md ("For the full tool anatomy and dev setup, see CONTRIBUTING.md"). It also disagrees with AGENTS.md, which does use `src/components/` and `src/lib/` — so a contributor comparing the two docs gets two different layouts.
-- **Fix:** Prefix all four top-level entries with `src/`, matching AGENTS.md, and keep the "Anatomy of a tool" paths (`components/tools/<slug>/`, `lib/server/…`) consistent with whichever convention you pick — currently they're bare too.
+- **What:** Unchanged. `CONTRIBUTING.md:73` (`app/`), `:82` (`components/`), `:98` (`lib/`) sit at the root while only `src/styles/` (`:81`) carries the prefix.
+- **Why it matters:** This is the onboarding map for external contributors, and both README and AGENTS.md point at it. It also disagrees with AGENTS.md, which uses `src/components/` and `src/lib/` — so a contributor comparing the two gets two layouts.
+- **Fix:** Prefix all four entries with `src/`, and make the "Anatomy of a tool" paths consistent with whichever convention you pick — they are bare too.
 
 ### F3 — The two docs give contributors different base branches
 
-- **What:** `AGENTS.md:92` states "**Default / base branch**: `main`; active integration branch: `dev` (feature PRs target `dev`)" and `AGENTS.md:94` lists `dev` as protected. `CONTRIBUTING.md:147` says "Fork and branch from `main`" and `CONTRIBUTING.md:158` says "Push and open a PR **against `main`**". Both branches exist (`origin/main`, `origin/dev`; API reports `default_branch: main`), so neither instruction fails loudly — the PR just lands on the wrong branch.
-- **Why it matters:** Every external contribution follows CONTRIBUTING; every agent-assisted change follows AGENTS. If `dev` is really the integration branch, contributor PRs bypass it; if `main` is, the AGENTS rule sends agents to a branch the maintainer isn't merging into. `ci.yml` only has a `push` trigger for `main`, which weakly suggests `main` is the real target and the AGENTS claim is the stale one.
-- **Fix:** Pick one model and state it in one place — put the branch model in CONTRIBUTING and have AGENTS.md link it rather than restate it.
+- **What:** Unchanged. `AGENTS.md:92` says feature PRs target `dev`; `CONTRIBUTING.md:147` says branch from `main` and `:158` says open the PR against `main`. Both branches exist, so neither instruction fails loudly.
+- **Why it matters:** Every external contribution follows CONTRIBUTING and every agent-assisted change follows AGENTS, so the two audiences are routed to different branches. **This one has become live rather than theoretical:** this session created `dev`, merged PR #22 into it, and branched `code-restructuring` from it — so `dev` is now genuinely the integration branch and CONTRIBUTING is the stale document.
+- **Fix:** State the model once in CONTRIBUTING (`dev` is the integration branch; PRs target `dev`) and have AGENTS.md link it rather than restate it.
 
 ### F4 — PR template requires a script that doesn't exist
 
-- **What:** The checklist reads "- [ ] `pnpm check` and `pnpm typecheck` pass". `package.json` scripts are exactly `dev`, `build`, `start`, `lint`, `typecheck`, `format`, `format:check`, `prepare` — there is no `check`. Running it errors out.
-- **Why it matters:** It's the last thing every contributor reads before submitting, and the one command they're told to run is unrunnable. Worse, the two gates CI actually enforces beyond typecheck — `pnpm lint` and `pnpm format:check` (`ci.yml:57,60`) — aren't named, so a contributor who ticks the box still gets red CI on formatting.
-- **Fix:** Replace with the real gate set: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build` — the same list AGENTS.md:88 uses, so the two agree.
+- **What:** Unchanged. `.github/pull_request_template.md:15` reads "`pnpm check` and `pnpm typecheck` pass". The scripts are exactly `dev build start lint typecheck format format:check prepare` — no `check`.
+- **Why it matters:** It is the last thing a contributor reads before submitting, and the command is unrunnable. The two gates CI enforces beyond typecheck — `pnpm lint` and `pnpm format:check` — aren't named, so ticking the box still yields red CI on formatting.
+- **Fix:** Replace with the real CI set: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`. Fold into F9's single-source-of-truth pass.
 
-### F5 — The `docs-only` CI skip fires on mixed code+docs PRs
+### F28 — The Redis key format is now wrong on both counts, and a whole tier is missing
 
-- **What:** `ci.yml` computes `should-skip: ${{ steps.filter.outputs.docs-only == 'true' }}` from `dorny/paths-filter@v3` with no `predicate-quantifier`. The default quantifier is `some`: a filter output is `true` when **any** changed file matches its globs. The `docs-only` filter matches `**/*.md` and `**/*.mdx`. So a PR that changes `src/lib/server/actions/seo-meta.action.ts` **and** `README.md` sets `docs-only=true`, and both `lint-and-typecheck` and `build` are skipped via `if: needs.changes.outputs.should-skip != 'true'`.
-- **Why it matters:** Adding a line to a README is the most ordinary thing to do alongside a code change, and it silently disables the only quality gate on a production repo — lint, format check, typecheck, and build all skipped, with the checks reporting green. This is adjacent to the docs surface rather than in it, but the filter exists to serve docs changes, so it belongs here.
-- **Fix:** Add `predicate-quantifier: every` to the `paths-filter` step so `docs-only` means what its name says. Also drop the `stale.yml` / `pr-title.yml` globs — AGENTS.md:177 documents both workflows as deliberately absent, and they are.
+- **What:** `AGENTS.md:165` documents "`ratelimit:<toolSlug>:user|pool:<date>`". The redis pass moved every key into `src/lib/server/clients/redis/keys.ts`, which builds them as `rl:<APP_ENV>:<toolSlug>:user:<clientHash>:<date>`, `rl:<APP_ENV>:<toolSlug>:pool:<date>`, and `rl:<APP_ENV>:<toolSlug>:burst:<clientHash>:<windowStart>`. So the prefix changed (`ratelimit` → `rl`), a tier scope was added (one Upstash database serves every environment), the user key's hash segment is still missing as it was in the last run, and the **burst tier doesn't appear in the docs at all**.
+- **Why it matters:** The key shape is what you would use to inspect or purge counters against a live Redis, and the documented pattern now matches nothing. The burst ceiling is also a user-visible refusal reason (`reason: "burst"`), so support-debugging a rejected request from the docs alone is impossible.
+- **Fix:** Document all three shapes with the `rl:<APP_ENV>` scope and say why the tier is in the key (one database, many environments — a preview must not spend production's pool). Point at `keys.ts` as the one file where the keyspace lives.
+
+### F39 — Action-input schemas are documented as living in the action files
+
+- **What:** `AGENTS.md:19` states "Validation: Zod — content frontmatter in `lib/schemas/`, env in `lib/config/env.ts`, **action inputs in the action files**", and `AGENTS.md:163` repeats "Inputs validated with Zod in the action". The security pass moved them: `src/lib/schemas/` now holds `shared.schema.ts`, `seo-meta.schema.ts`, and `social-posts.schema.ts` alongside the three content schemas, and the actions call `parseActionInput(SomeSchema, input)`.
+- **Why it matters:** The `schemas/` bullet three lines down says the folder owns "content frontmatter" specifically, so an agent adding a tool follows the documented split and declares a new input schema inline in the action — diverging from all three existing actions on the single most security-relevant convention in the repo.
+- **Fix:** Say action-input schemas live in `lib/schemas/<domain>.schema.ts` beside the content ones and are applied via `parseActionInput` at the top of the action.
+
+### F29 — The `(hub)` route group is undocumented
+
+- **What:** `src/app/` contains `(hub)/` holding `page.tsx`, `layout.tsx`, `blog/`, `newsletter/`, `shop/`, `categories/`, and `tools/`. Neither tree shows it: `AGENTS.md:38-40` lists `(tools)/<slug>/` and then `blog/ newsletter/ shop/` as plain siblings, and `CONTRIBUTING.md:74` puts `layout.tsx page.tsx` at the `app/` root as "hub shell + landing". `AGENTS.md:121`'s Routing section names `(tools)` as the only route group and describes the content sections as "plain segments".
+- **Why it matters:** The group exists to render `HubNavbar` once for every hub page, so a new content section created outside it silently loses the navbar — a defect that looks like a styling bug and is actually a file-placement one. Two route groups with different purposes and only one documented is exactly the shape that produces that mistake.
+- **Fix:** Add `(hub)/` to both trees with its purpose (shared navbar layout for home, tools, categories, and the content sections) and mention both groups in the Routing section, contrasting grouping-only `(tools)` with layout-bearing `(hub)`.
+
+### F30 — `clients/` is documented as flat single files
+
+- **What:** `AGENTS.md:60` describes `lib/server/clients/` as "`<service>.client.ts` — configured SDK singletons (gemini)", and `CONTRIBUTING.md:113` says the same. The redis pass added `clients/redis/` as a four-file folder — `client.ts` (pooled client with auto-pipelining), `keys.ts`, `ttl.ts`, `index.ts` — none of which matches the `<service>.client.ts` pattern.
+- **Why it matters:** The naming convention as documented would have the Redis client at `redis.client.ts`, so an agent will either "correct" the folder or add a second, conflicting client file. The `keys.ts`/`ttl.ts` split also encodes two real rules — every key is built in one file, every key gets a TTL — that no document states, so a new key written inline breaks both invisibly.
+- **Fix:** Document the folder form (`clients/<service>/` when a client needs more than a singleton) and carry the two invariants into the Backend section: keys only from `REDIS_KEYS`, TTLs only from `ttl.ts`.
+
+### F31 — The `pnpm-workspace.yaml` description is a third of the file
+
+- **What:** `AGENTS.md:173` says it "exists only to pin `postcss >= 8.5.10` against a vulnerability Next still transitively pins", and `:245`'s troubleshooting repeats the 8.5.10 figure. Actual: the floor is `>=8.5.23` (three advisories, not one), plus `js-yaml: ">=3.15.1 <4"` — whose `<4` ceiling is load-bearing, because js-yaml 4 dropped the `safeLoad` that `gray-matter` calls and forcing 4.x breaks frontmatter parsing at build — plus `sharp: ">=0.35.0"` for four libvips CVEs, an `allowBuilds` allowlist (`sharp`, `unrs-resolver`), and a comment recording `brace-expansion` as a deliberate non-override because pinning it breaks `pnpm lint`.
+- **Why it matters:** "Exists only to pin postcss" invites someone to delete or simplify the file, which would silently reintroduce four advisories and — via the js-yaml ceiling — break the build in a way whose cause is two dependency hops away from the symptom. The stale 8.5.10 also makes the documented floor look satisfied when a newer advisory sits above it.
+- **Fix:** Describe it as the repo's dependency-security control surface, note that every floor carries its advisory IDs inline, and flag the js-yaml ceiling and the `brace-expansion` exception as decisions with reasons in the file. Drop the specific version number from AGENTS.md so it cannot drift again — point at the file.
+
+### F32 — The CSP and the security headers are documented nowhere
+
+- **What:** `next.config.ts:77` serves `SECURITY_HEADERS` on `/:path*`, including a `Content-Security-Policy` (`:31`) and a `Permissions-Policy` (`:39`). The Security section of AGENTS.md (`:155-161`) covers BYOK storage, SSRF, rate limiting, JSON-LD escaping, and secrets — and never mentions headers. Neither does README, CONTRIBUTING, or SECURITY.md. SECURITY.md's out-of-scope list still says "Missing best-practice HTTP headers that have no concrete impact", written when there were none.
+- **Why it matters:** A CSP is the security control most likely to be broken by ordinary feature work — one inline script, one new third-party embed, one analytics swap — and the failure appears in the browser console, far from `next.config.ts`. Nothing in the docs tells a contributor the policy exists, let alone that adding a script domain means editing it. It is also the repo's main defense-in-depth story and is missing from the one file a reviewer reads to assess posture.
+- **Fix:** Add a Security bullet naming the header set and the CSP's location, with the one operational rule: a new external script, font, or frame source requires a CSP edit in the same PR.
+
+### F33 — Newsletter metering, burst caps, and the honeypot are missing from the backend docs
+
+- **What:** `AGENTS.md:165` lists the hosted quota budgets as exactly four constants (`SEO_META_*`, `SOCIAL_POST_*`). `src/lib/constants/newsletter.constant.ts` adds `NEWSLETTER_DAILY_USER_CAP`, `NEWSLETTER_DAILY_SHARED_POOL`, and `NEWSLETTER_BURST_CAP`, all consumed by `newsletter.action.ts:56-58`; `NEWSLETTER_HONEYPOT_FIELD` gates the form (`:38`). `AGENTS.md:153` also still says "The only gating is the hosted daily quota", which now understates it — there is a burst tier on every metered action and a bot trap on the newsletter form.
+- **Why it matters:** The newsletter action writes to Sender.net with a server token, so its metering is a spend-and-abuse control equal in importance to the AI quotas; a doc listing only the AI caps implies the newsletter is unmetered and invites someone to "add" the protection that already exists, or to remove the honeypot field as dead markup.
+- **Fix:** List all seven quota constants, add the burst tier to the description, and note the honeypot as a deliberate hidden field that must not be removed or made visible.
+
+### F34 — `parseActionInput` is mandatory and appears in no reuse list
+
+- **What:** `AGENTS.md:70` enumerates the shared server layer (`resolvePlatformApiKey`, `enforceDailyQuota`, `generateSchemaOutputFromArticle`, `resolveArticleSource`, `toUserMessage`) and `CONTRIBUTING.md:121-126` gives the same list as build-a-tool step 3. Neither names `parseActionInput` (`utils/ai/action-input.utils.ts:17`), which every action now calls first and which throws the coded `INVALID_INPUT` the UI depends on. Also absent: `assertSafeArticleUrl` (the SSRF guard, named in the Security section but not the reuse list), `withResolvedArticleUrl`, and `canServeHostedAi`.
+- **Why it matters:** These lists are the "before you add plumbing, check here" surface, and the one helper that is non-optional is the one missing from them. An agent writing a new AI action follows the list, validates ad hoc or not at all, and reintroduces the unvalidated-input finding the security pass closed.
+- **Fix:** Add `parseActionInput` at the top of both lists, marked as required at every action boundary rather than merely available, and add the three other missing helpers.
 
 ### F6 — Action files are documented as `<slug>.action.ts`
 
-- **What:** `AGENTS.md:30` ("Action in `lib/server/actions/<slug>.action.ts`") and `CONTRIBUTING.md:121` (step 3, same path) name the file after the tool slug. The real files are `seo-meta.action.ts` and `social-posts.action.ts`, while the slugs are `article-to-seo-meta` and `article-to-social-posts` (`src/lib/config/tools.ts:33,42`). `AGENTS.md:57` states the actual convention correctly — `<domain>.action.ts` — so the file contradicts itself two lines apart in the same document.
-- **Why it matters:** An agent following the "what this is" section names the new file `article-to-<x>.action.ts` and immediately breaks the naming convention the same file enforces elsewhere. Same for services: the sibling `<name>.service.ts` phrasing is vague where `<domain>.service.ts` is what's on disk.
-- **Fix:** Use `<domain>.action.ts` / `<domain>.service.ts` in all three places, and note that the domain is the short name (`seo-meta`), not the route slug.
-
-### F7 — "barrel per kind" is false for `lib/config/`
-
-- **What:** `AGENTS.md:47` describes `src/lib/` as "kind-first, flat inside each kind; **barrel per kind**, one explicit export line per file", and `CONTRIBUTING.md:113` says "Every kind barrel lists one explicit export line per file". Seven kinds have `index.ts` (`constants`, `data`, `hooks`, `schemas`, `types`, `utils`, `server`); `src/lib/config/` does not. `grep -rn 'from "@/lib/config"' src` returns nothing — config is deliberately imported by direct file path (`@/lib/config/tools`, `@/lib/config/site`).
-- **Why it matters:** The convention as written is either violated by the code or misstated by the docs, and an agent will resolve the mismatch by creating `lib/config/index.ts` — inventing a barrel the codebase intentionally avoids (and re-exporting `env.ts`, which is `server-only`, through a client-reachable path).
-- **Fix:** State the real rule: barrel per kind **except `config/`, which is imported per-file** (and say why — `env.ts` is `server-only`, so a config barrel would drag it into client bundles).
+- **What:** Unchanged. `AGENTS.md:30` and `CONTRIBUTING.md:121` name the file after the tool slug; the real files are `seo-meta.action.ts` and `social-posts.action.ts` against slugs `article-to-seo-meta` and `article-to-social-posts`. `AGENTS.md:57` states the correct `<domain>.action.ts` convention, so AGENTS.md contradicts itself.
+- **Why it matters:** An agent following the "What this is" section names the file `article-to-<x>.action.ts` and breaks the convention the same document enforces elsewhere.
+- **Fix:** Use `<domain>.action.ts` / `<domain>.service.ts` in all three places, noting the domain is the short name (`seo-meta`), not the route slug.
 
 ### F8 — `src/content/tools/` isn't loaded or validated the way the docs claim
 
-- **What:** `AGENTS.md:169` says content under `src/content/` — explicitly listing `blog/`, `issues/`, `shop/`, `tools/` — is "loaded by `lib/server/services/` through `create-mdx-loader.utils.ts` (slug allowlist `^[a-z0-9-]+$`, frontmatter validated at build, reading time derived)". True for the first three (`blog.service.ts`, `issues.service.ts`, `shop.service.ts`, with `post.schema.ts` / `issue.schema.ts` / `product.schema.ts`). Not true for `tools/`: the nine `src/content/tools/*.mdx` files are pulled in by a dynamic import in a component — `src/components/_shared/content/ToolContent.tsx:11`, `await import(\`@/content/tools/${currentSlug}.mdx\`)`— with no service, no`create-mdx-loader` slug allowlist, and no Zod schema (`src/lib/schemas/` holds only issue/post/product).
-- **Why it matters:** The claim overstates the validation surface, which matters twice: someone auditing input handling concludes all MDX frontmatter is schema-checked at build when a quarter of it isn't, and an agent adding a tool content file expects a loader and schema that don't exist. The `currentSlug` interpolation into a dynamic import is also the one MDX read not behind the documented `^[a-z0-9-]+$` allowlist.
-- **Fix:** Either document the exception (tool SEO copy is imported directly by `ToolContent`, frontmatter unvalidated) or bring `tools/` under a `tools.service.ts` + `tool.schema.ts` so the documented rule becomes true.
+- **What:** Unchanged. `AGENTS.md:169` says all four content dirs — including `tools/` — are loaded through `create-mdx-loader.utils.ts` with a slug allowlist and build-time frontmatter validation. The nine `src/content/tools/*.mdx` files are pulled in by a dynamic import in a component (`ToolContent.tsx:11`, `await import(\`@/content/tools/${currentSlug}.mdx\`)`), with no service, no allowlist, and no schema — `src/lib/schemas/` holds no tool-content schema.
+- **Why it matters:** It overstates the validation surface, so an input-handling reviewer concludes all MDX frontmatter is schema-checked when a quarter of it isn't, and it is the one MDX read not behind the documented `^[a-z0-9-]+$` allowlist.
+- **Fix:** Document the exception, or bring `tools/` under a service and schema so the documented rule becomes true.
 
 ### F9 — Scripts and verify commands live in three docs with four different command sets
 
-- **What:** The same facts are maintained in four places, and they've already drifted:
-  - `README.md:78` — table of 5 scripts (omits `start`, `format:check`)
-  - `CONTRIBUTING.md:57` — table of 6 scripts (omits `typecheck`), then `CONTRIBUTING.md:66` tells readers to "Type-check with `pnpm exec tsc --noEmit`" even though a `typecheck` script exists
-  - `AGENTS.md:78` — all 7 scripts, correct
-  - Verify sets: `AGENTS.md:88` and `:230` say `typecheck && lint && build`; `AGENTS.md:213` says `lint && typecheck && format:check`; `CONTRIBUTING.md:151` says `lint`, `pnpm exec tsc --noEmit`, `build`; the PR template says `check` + `typecheck` (F4). CI runs `lint`, `format:check`, `typecheck`, `build`.
-- **Why it matters:** Four sources of truth for one list guarantees the drift already present, and none of the four matches what CI actually gates — so a contributor can follow any of them faithfully and still fail the pipeline.
-- **Fix:** Keep the full scripts table in one doc (CONTRIBUTING, since it's the dev-setup home), have README and AGENTS link it, and make every "verify" instruction the exact CI set.
+- **What:** Unchanged and still drifted. `README.md:78` lists 5 of 7 scripts (omits `start`, `format:check`); `CONTRIBUTING.md:57` lists 6 (omits `typecheck`) and then `:66` tells readers to run `pnpm exec tsc --noEmit` even though `typecheck` exists; `AGENTS.md:78` has all 7. Verify sets: AGENTS says `typecheck && lint && build` in two places and `lint && typecheck && format:check` in a third; CONTRIBUTING `:152` says `lint` + `tsc --noEmit`; the PR template says `check` + `typecheck` (F4). CI runs `lint`, `format:check`, `typecheck`, `build`.
+- **Why it matters:** Four sources for one list guarantees the drift already present, and none of the four matches what CI gates — so a contributor can follow any of them faithfully and still fail the pipeline.
+- **Fix:** Keep the full table in CONTRIBUTING, have README and AGENTS link it, and make every "verify" instruction the exact CI set.
 
 ### F10 — Issue chooser links a disabled Discussions tab
 
-- **What:** `.github/ISSUE_TEMPLATE/config.yml` contact link "Ask a Question" → `https://github.com/Timonwa/tools-by-timonwa/discussions`. `gh api repos/Timonwa/tools-by-timonwa` returns `has_discussions: false`, so the feature is off and the URL doesn't resolve to a Discussions page.
-- **Why it matters:** It's the first thing shown to anyone opening an issue, and it routes questions into a dead end. CONTRIBUTING.md:16 sends "Questions or ideas" to the issue chooser, so the two compound.
-- **Fix:** Enable Discussions, or drop the contact link and point questions at the blank-issue path CONTRIBUTING already documents.
+- **What:** Unchanged. `.github/ISSUE_TEMPLATE/config.yml:4` points "Ask a Question" at `/discussions`; the repo has `has_discussions: false`.
+- **Why it matters:** First thing shown to anyone opening an issue, routing questions to a dead end — compounded by `CONTRIBUTING.md:16` sending questions to the chooser.
+- **Fix:** Enable Discussions, or drop the contact link and point at the blank-issue path.
 
 ### F11 — README env table omits `APP_ENV` and overstates `GOOGLE_API_KEY`
 
-- **What:** Two defects in the same table (`README.md:64`). (a) `APP_ENV` is absent, yet `src/lib/config/env.ts:9` defines it and `isProduction` (`env.ts:43`) gates both rate limiting and the Umami script (`src/app/layout.tsx:73`); `AGENTS.md:183` and `:177` document it as something you must set explicitly on deploy. (b) The table marks `GOOGLE_API_KEY` "Required ✅", but `env.ts:11` is `z.string().optional()` and the README's own note two lines down (`README.md:74`) says the app builds with nothing set.
-- **Why it matters:** Someone self-hosting from the README deploys with rate limiting and analytics silently off, because the one variable that switches them on isn't in the table they're working from. The Required column being wrong also undercuts trust in the rest of the table.
-- **Fix:** Add an `APP_ENV` row (`production` on deploy; unset = `development`; gates rate limiting + analytics) and change `GOOGLE_API_KEY` to "Required for the AI tools" rather than a bare ✅.
+- **What:** Unchanged, and now compounded by F24 and F25 in the same table. `APP_ENV` is still absent though it gates rate limiting and analytics and `AGENTS.md:177` says to set it explicitly on deploy; `GOOGLE_API_KEY` still shows "Required ✅" against `secret()` (optional) in the schema and the README's own note two lines below.
+- **Why it matters:** Someone self-hosting from this table deploys with analytics off and — per F24 — possibly a crash. Four separate defects in one nine-row table make it the least trustworthy thing in the docs.
+- **Fix:** Rebuild the table in one edit covering F11, F24, F25, and F26 together.
 
-### F12 — CI env comment describes behavior the code doesn't have
+### F36 — `lib/config/index.ts` uses `export *`, the thing both docs forbid
 
-- **What:** `.github/workflows/ci.yml:74-79`: "env.ts validates required vars at module load via Zod. Missing `GOOGLE_API_KEY` fails the build with a Zod error. Optional vars (Upstash, **Cloudflare Analytics**) are left unset". `GOOGLE_API_KEY` is `optional()` in `env.ts:11`, so a missing value does not fail the build; and there is no Cloudflare Analytics anywhere in the repo — analytics is Umami (`src/app/layout.tsx:79`), presumably a leftover from a prior provider.
-- **Why it matters:** It documents a build-time guarantee that doesn't exist (someone will rely on CI catching a missing key) and names a service the project doesn't use, which sends anyone auditing third-party data flows looking for the wrong vendor.
-- **Fix:** Rewrite the comment: the placeholder key exists only so AI-tool code paths have something to read; all env vars are optional and features degrade. Replace "Cloudflare Analytics" with "Umami".
+- **What:** The previous run's F7 (no `config/` barrel) is **resolved** — `src/lib/config/index.ts` now exists, and its header comment correctly explains why `env.ts` is excluded. But `:20` is `export * from "./site"`, while `AGENTS.md:47` says `lib/` barrels use "one explicit export line per file (never export \*)" and `CONTRIBUTING.md:115` says "no `export *` from a directory". The previous F18 noted `components/ui/index.ts` as the only violation, and read as an intentionally scoped exception; there are now two, one of them inside `lib/`, where the rule is unambiguous.
+- **Why it matters:** A rule with undocumented exceptions in both of the places it is stated stops functioning as a rule. `site.ts` is also the module whose exports changed most this session (`SITE_TITLE`, `SHOP_CANONICAL_BASE`), so the wildcard hides exactly the surface a reviewer would want listed.
+- **Fix:** Either list `site.ts`'s exports explicitly (consistent with the file's six siblings) or document the exception and why. Fold the wording fix into F18.
+
+### F37 — `llms.txt` promotes a section that canonicalizes away
+
+- **What:** `public/llms.txt:15` lists "Shop: https://tools.timonwa.com/shop" under "Key pages". The SEO pass established that this section duplicates `www.timonwa.com/shop`: `/shop` and every product now canonicalize to `SHOP_CANONICAL_BASE`, and the section was removed from `sitemap.ts` because sitemapping a page whose canonical points elsewhere asks a crawler to index what we've told it to ignore. Pointing AI crawlers at it does the same thing in a different manifest.
+- **Why it matters:** Small, but it is the same contradiction the SEO pass just spent a finding resolving, reintroduced in the file nobody thought to update. `llms.txt:9` also advertises `/shop` product copy under the content licence, which is fine, but the canonical listing should follow the sitemap decision.
+- **Fix:** Point the shop entry at `www.timonwa.com/shop`, matching the canonical. Add `public/llms.txt` to the "update when a section or key URL changes" note that F20 asks for.
+
+### F38 — Four different taglines
+
+- **What:** `README.md:3` — "Free, focused tools that skip the busywork of writing and code — for writers, developers, and creators."; `public/llms.txt:3` — "Free, focused web tools for writers, developers, and creators — plus a blog, newsletter archive, and digital-product shop."; `SITE_TAGLINE` — "Free, focused productivity tools for writers, developers, and creators."; `SITE_DESCRIPTION` — "Free, focused web tools for the busywork of writing and code — …". All four share a voice and none matches another.
+- **Why it matters:** Cosmetic, and partly legitimate — `SITE_TAGLINE` exists precisely because `SITE_DESCRIPTION` is too long for the footer, and a README hero line reasonably differs from a meta description. Flagged because the checklist asks for one canonical tagline and because these drifted independently rather than by design. **This is copy, so it is the maintainer's call, not a fix to apply** — the SEO pass already established that measuring and presenting beats editing brand lines to satisfy a rule.
+- **Fix:** Decide whether one canonical short tagline should feed README and `llms.txt` from `SITE_TAGLINE`'s wording, or accept the variants as per-surface copy and record that in the Brand section so a future audit doesn't re-raise it.
+
+### F35 — `_reports/` is committed and undocumented
+
+- **What:** `AGENTS.md:239` describes the documentation surface as "README.md (user-facing) + CONTRIBUTING.md" plus the licensing files, and notes that `docs/` is private and gitignored. `git ls-files _reports` returns twelve tracked audit reports; `.gitignore` covers `docs` but not `_reports`. So the repo's largest documentation artifact by volume is committed, public, and unmentioned.
+- **Why it matters:** An agent asked to run an audit has no documented home for the output and no signal that these are committed rather than scratch. It also matters for a public repo: twelve reports enumerating the app's security controls and past weaknesses are visible to anyone, which is a deliberate choice worth stating rather than discovering.
+- **Fix:** Add `_reports/` to the Documentation section — what it holds, that it is tracked deliberately, and that a fix pass updates the report in the same commit as the fix. Fold into F20's inventory.
 
 ### F13 — Dev-setup block duplicated verbatim
 
-- **What:** `README.md:48-58` and `CONTRIBUTING.md:41-51` carry byte-identical prerequisites + `git clone` / `cd` / `pnpm install` / `cp .env.example .env` / `pnpm dev` blocks. Both commands are correct today (repo name matches `origin`, `.env.example` exists and is `!`-negated in `.gitignore`).
-- **Why it matters:** Not broken, but it's the drift vector that already produced F9 and F14 — two copies of the same fact aging at different rates.
-- **Fix:** Keep the quickstart in README (a reader shouldn't need a second file to run the app) and have CONTRIBUTING link `README.md#run-locally`, the same way it already links `README.md#environment-variables`.
+- **What:** Unchanged. `README.md:48-58` and `CONTRIBUTING.md:41-51` carry byte-identical prerequisites and clone/install/env/dev blocks. Both are correct today.
+- **Why it matters:** Not broken, but it is the drift vector that produced F9 and F14 — two copies of one fact aging at different rates.
+- **Fix:** Keep the quickstart in README and have CONTRIBUTING link `README.md#run-locally`, as it already links `README.md#environment-variables`.
 
 ### F14 — Node requirement doesn't match what the repo uses
 
-- **What:** README:50 and CONTRIBUTING:43 both state "Node.js 20.9+". `.nvmrc` pins `22`, `.github/actions/setup/action.yml` sets `node-version: "22"`, and `package.json` has no `engines` field at all — so nothing enforces the documented floor and nothing documents the version actually used.
-- **Why it matters:** Minor as long as 20.9 works (it satisfies Next 16's floor), but a contributor on Node 20 develops against a runtime CI never exercises, and there's no machine-readable guard either way.
+- **What:** Unchanged. Both docs state "Node.js 20.9+"; `.nvmrc` pins `22`, the setup action sets `node-version: "22"`, and `package.json` has no `engines` field.
+- **Why it matters:** A contributor on Node 20 develops against a runtime CI never exercises, with no machine-readable guard either way.
 - **Fix:** State "Node.js 22 (see `.nvmrc`)" in both docs, and add `"engines": { "node": ">=20.9" }` if 20.9 is genuinely still supported.
 
-### F15 — JSON-LD escaping claim is a no-op as written
+### F15 — JSON-LD escaping claim is still a no-op
 
-- **What:** `AGENTS.md:160` reads "**JSON-LD** is escaped via `JsonLdScript` (`` `<` `` → `` `<` ``)" — byte-inspected, both sides of the arrow are the single character `<`. The code escapes to `<`: `JSON.stringify(data).replace(/</g, "\\u003c")` (`src/components/_shared/content/JsonLdScript.tsx:7`).
-- **Why it matters:** The security bullet describes an identity transform, so the mitigation reads as pointless — and an agent "restoring" the documented behavior would remove the actual escape. Almost certainly a Markdown/escaping accident during the rewrite.
-- **Fix:** Write it as `` `<` `` → `` `<` `` (escape the backslash for Markdown).
+- **What:** Unchanged. `AGENTS.md:160` reads "escaped via `JsonLdScript` (`` `<` `` → `` `<` ``)" — both sides of the arrow are the same character. The code escapes to `<`.
+- **Why it matters:** The bullet describes an identity transform, so the mitigation reads as pointless, and an agent "restoring" the documented behaviour would remove the real escape.
+- **Fix:** Escape the backslash for Markdown so the arrow's right side renders as `<`.
 
 ### F16 — `src/styles/` partial list is incomplete
 
-- **What:** `AGENTS.md:41` says "globals.css + tokens/theme/base partials, imported in order" and `AGENTS.md:117` repeats "layered partials (tokens, theme, base)". `ls src/styles` shows `animations.css`, `base.css`, `components.css`, `globals.css`, `theme.css`, `tokens.css`, `utilities.css` — three partials unmentioned, including `components.css` and `utilities.css`, which is where the docs' own "custom utilities/component classes over repeated class strings" guidance would land.
+- **What:** Unchanged. `AGENTS.md:41` and `:117` name tokens/theme/base; `ls src/styles` shows `animations.css`, `base.css`, `components.css`, `globals.css`, `theme.css`, `tokens.css`, `utilities.css`.
 - **Why it matters:** An agent adding a component class has no idea `components.css` exists and will inline the styles or create a new file.
-- **Fix:** List all six partials in import order (`CONTRIBUTING.md:81` already hedges with "tokens/theme/base/... partials" — make both explicit).
+- **Fix:** List all six partials in import order in both places.
 
-### F17 — Rate-limit key format is missing a segment
+### F18 — "never `export *`" doesn't note where it's used
 
-- **What:** `AGENTS.md:165` documents "counters are Redis keys `ratelimit:<toolSlug>:user|pool:<date>`". Actual (`src/lib/server/utils/rate-limit.utils.ts:90-91`): the user key is `` `ratelimit:${toolSlug}:user:${clientHash}:${date}` `` and only the pool key is `` `ratelimit:${toolSlug}:pool:${date}` ``. The per-user key carries a client-hash segment the doc collapses away.
-- **Why it matters:** The shape is the thing you'd use to inspect or purge counters against a live Redis, and the documented pattern matches nothing for the user tier.
-- **Fix:** Document the two shapes separately: `ratelimit:<toolSlug>:user:<ipHash>:<date>` and `ratelimit:<toolSlug>:pool:<date>`.
-
-### F18 — "never `export *`" doesn't note the one place it's used
-
-- **What:** `AGENTS.md:47` ("one explicit export line per file (never export \*)") and `CONTRIBUTING.md:113` ("no `export *` from a directory"). Every `lib/` kind barrel complies. `src/components/ui/index.ts:4-7` does not — it is four `export *` lines re-exporting the tier barrels. Both statements sit in a `src/lib/` context, so this reads as an intentionally scoped rule with an undocumented exception rather than a flat violation.
-- **Why it matters:** The nearest reading of the rule is repo-wide, so an agent touching `components/ui/index.ts` will either "fix" the root barrel into ~30 explicit lines or treat the rule as advisory.
-- **Fix:** Scope the sentence explicitly — "`lib/` kind barrels list one export line per file; the `ui/` root barrel re-exports its four tier barrels with `export *`".
+- **What:** Unchanged, and now understated — see F36. `src/components/ui/index.ts:4-7` is four `export *` lines, and `lib/config/index.ts:20` adds a fifth inside `lib/`.
+- **Why it matters:** The nearest reading of the rule is repo-wide, so an agent will either expand the `ui/` barrel into ~30 lines or treat the rule as advisory.
+- **Fix:** Scope it explicitly — `lib/` kind barrels list one export line per file (F36 brings `config/` into line); the `ui/` root barrel re-exports its four tier barrels with `export *`.
 
 ### F19 — `src/mdx-components.tsx` is in neither structure tree
 
-- **What:** `ls src` shows `mdx-components.tsx` at the `src/` root — the file `@next/mdx` requires for MDX component mapping. Neither `AGENTS.md:37` nor `CONTRIBUTING.md:72` lists it, though both trees enumerate `src/`-level entries and both docs describe MDX as a core mechanism (`AGENTS.md:16`, `next.config.ts:18`).
-- **Why it matters:** An agent asked to restyle MDX output (headings, code blocks, links) has no pointer to the file that owns it and will reach for the content components instead.
-- **Fix:** Add `src/mdx-components.tsx` to both trees with a one-line note ("MDX element mapping required by `@next/mdx`").
+- **What:** Unchanged. The file `@next/mdx` requires sits at `src/` root and appears in neither tree, though both enumerate `src/`-level entries and both docs treat MDX as core.
+- **Why it matters:** An agent asked to restyle MDX output has no pointer to the file that owns it and will reach for the content components instead.
+- **Fix:** Add it to both trees with a one-line note. Same edit as F1, F2, and F29.
 
 ### F20 — Documentation inventory undercounts the docs surface
 
-- **What:** `AGENTS.md:239` describes the documentation surface as "README.md (user-facing) + CONTRIBUTING.md (tool anatomy, dev setup, PR workflow)" plus the licensing files. Not listed: `SECURITY.md`, `TRADEMARK.md`, `public/llms.txt` (the AI-crawler policy file), and the `.github/` issue/PR templates — all maintained docs, and TRADEMARK.md is referenced by name two clauses later in the same paragraph.
-- **Why it matters:** This section is where an agent looks to decide which file a doc change belongs in; an unlisted file gets its content duplicated into README instead of updated in place. `public/llms.txt` in particular needs an update whenever a section or key URL changes, and nothing in AGENTS.md says so.
-- **Fix:** Enumerate the full surface with one line of ownership each, and note that `public/llms.txt` tracks the key-pages list.
+- **What:** Unchanged, and now short by one more (F35). `AGENTS.md:239` omits `SECURITY.md`, `TRADEMARK.md`, `public/llms.txt`, the `.github/` templates, and `_reports/` — and names TRADEMARK.md two clauses later in the same paragraph.
+- **Why it matters:** This is where an agent looks to decide which file a doc change belongs in; an unlisted file gets its content duplicated into README instead of updated in place. `public/llms.txt` in particular needs updating whenever a section or key URL changes (see F37), and nothing says so.
+- **Fix:** Enumerate the full surface with one line of ownership each, including the `llms.txt` maintenance rule.
 
-### F21 — Advertised section URLs currently 404 on the live site
+### F21 — Advertised section URLs still 404 on the live site
 
-- **What:** `curl -L` against production: `/blog` → 404, `/newsletter` → 404, `/shop` → 404, while the retired `/guides` → 200. README's intro and license sections plus `public/llms.txt:13-15` all advertise the first three. Cause confirmed as deploy ordering, not a wrong URL: `git ls-tree origin/main` has no `src/app/blog|newsletter|shop`, no `public/llms.txt`, and a root `app/` — this branch is unmerged, and `next.config.ts:12` adds the `/guides` → `/blog` 308 that also isn't live yet.
-- **Why it matters:** Low risk because docs and app ship in the same commit — but only if they do. Merging or cherry-picking the doc changes ahead of the app deploy publishes a README and an AI-crawler manifest whose primary links 404. Flagged as **needs confirmation** after deploy.
-- **Fix:** Re-run the URL check post-deploy. Keep README/`llms.txt` in the same merge as the route move; don't split them.
+- **What:** Re-verified 2026-08-18: `/` → 200, `/blog` → 404, `/newsletter` → 404, `/shop` → 404, `/llms.txt` → 404, retired `/guides` → 200. Cause is unchanged and confirmed: this branch is unmerged and `origin/main` still holds the pre-rebrand build.
+- **Why it matters:** Low risk **only if** docs and app ship together. Merging or cherry-picking doc changes ahead of the app deploy publishes a README and an AI-crawler manifest whose primary links 404. Still **needs confirmation** after deploy.
+- **Fix:** Keep README, `llms.txt`, and the route move in one merge. Re-run the URL check post-deploy.
 
 ### F22 — SECURITY.md cross-reference doesn't land
 
-- **What:** `SECURITY.md:54` lists prompt injection as out of scope "— tool agents' output is schema-validated and prompts are not treated as a secret (see `CONTRIBUTING.md`)". CONTRIBUTING's only prompt section ("Agent prompt changes", line 137) covers where agents live and how to submit prompt PRs; it says nothing about prompts not being secret or outputs being schema-validated. The underlying claims are true (`SeoMetaSchema` / `SocialPostsSchema` gate the outputs), but the pointer goes nowhere.
+- **What:** Unchanged. `SECURITY.md:54` sends readers to CONTRIBUTING.md for the claim that prompts aren't secret and outputs are schema-validated; CONTRIBUTING's prompt section (`:137`) covers only where agents live and how to submit prompt PRs. The underlying claims are true.
 - **Why it matters:** A researcher checking whether their prompt-injection report is in scope follows the pointer, finds nothing, and files anyway.
-- **Fix:** Drop the parenthetical, or add one line to CONTRIBUTING's prompt section stating prompts are public by design and outputs are schema-validated.
+- **Fix:** Drop the parenthetical, or add one line to CONTRIBUTING's prompt section stating prompts are public by design and outputs schema-validated.
 
 ### F23 — Two H1s in AGENTS.md
 
-- **What:** `AGENTS.md:3` (`# This is NOT the Next.js you know`, inside the auto-managed block) and `AGENTS.md:9` (`# AGENTS.md — The Productivity Bug`).
-- **Why it matters:** Cosmetic; heading hierarchy is otherwise clean and both README and CONTRIBUTING have a single top-level heading. Noting it because the auto-managed block's level is the thing to change, not the document title.
-- **Fix:** Demote the managed block's heading to `##` if the generator allows it; otherwise leave and consider this accepted.
+- **What:** Unchanged. `AGENTS.md:3` (inside the auto-managed block) and `:9` (the document title).
+- **Why it matters:** Cosmetic; the rest of the hierarchy is clean.
+- **Fix:** Demote the managed block's heading to `##` if the generator allows it; otherwise accept it and record that.
 
 ## Scorecard
 
-| Category        | Score | Notes                                                                                                                                                                               |
-| --------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stale claims    | 6/10  | ~40 documented exports, routes, env vars, quota constants, sitemap and SSRF claims all verified true — but both structure trees are wrong post-move, plus F6–F8                     |
-| Links & URLs    | 7/10  | Every internal link and the one anchor (`README.md#environment-variables`) resolves; all 13 external links 200 except the dead Discussions link and the pending-deploy section URLs |
-| Navigation      | 9/10  | No docs site, so nav integrity is largely N/A; the six root docs cross-link cleanly and `CLAUDE.md` correctly imports `@AGENTS.md`                                                  |
-| Duplication     | 5/10  | Setup block, scripts table, structure tree, and conventions each maintained in 2–3 files, with measurable drift already present                                                     |
-| Coverage        | 8/10  | All 9 tools in `TOOLS` documented with accurate taglines and 6 platforms; gaps are `APP_ENV`, `mdx-components.tsx`, the docs inventory                                              |
-| Consistency     | 7/10  | One canonical product name and tagline throughout; branch model, Node version, and verify commands disagree across files                                                            |
-| README accuracy | 8/10  | Quickstart, badges, license split, and privacy claims all check out against code; env table and the PR template it implies are the gaps                                             |
-| Freshness       | 7/10  | Docs were rewritten with the refactor and are mostly current; the structure trees are the one high-churn area that didn't move                                                      |
+| Category        | Score | Notes                                                                                                                                                                                |
+| --------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Stale claims    | 3/10  | Down from 6. Ten passes rewrote rate limiting, Redis keys, the model source, and the dependency pins; the docs describe the pre-pass app, including two inverted security properties |
+| Links & URLs    | 7/10  | Every internal link and both anchors resolve; the dead Discussions link, the `/shop` entry in `llms.txt`, and the pending-deploy 404s are the gaps                                   |
+| Navigation      | 9/10  | No docs site, so nav integrity is largely N/A; the six root docs cross-link cleanly and `CLAUDE.md` correctly imports `@AGENTS.md`                                                   |
+| Duplication     | 5/10  | Unchanged: setup block, scripts table, structure tree, and conventions each maintained in 2–3 files, with drift already present                                                      |
+| Coverage        | 5/10  | Down from 8. New undocumented surface: the `(hub)` group, the CSP, `clients/redis/`, newsletter metering, `parseActionInput`, `_reports/`                                            |
+| Consistency     | 6/10  | Branch model, Node version, and verify commands still disagree; `export *` now has two undocumented exceptions and the tagline has four variants                                     |
+| README accuracy | 5/10  | Down from 8. Quickstart, badges, licence split, and privacy claims still check out, but four of the nine env-table rows are now wrong or missing                                     |
+| Freshness       | 3/10  | The whole point of this run: eleven code passes landed, zero doc passes followed                                                                                                     |
 
 ## Action items
 
 ### Fix Now
 
-| #   | Priority | Task (finding ID)                                                                  | Effort |
-| --- | -------- | ---------------------------------------------------------------------------------- | ------ |
-| 1   | P0       | Repoint both structure trees at `src/app/`, `src/components/`, `src/lib/` (F1, F2) | 15 min |
-| 2   | P0       | Replace `pnpm check` in the PR template with the real CI gate set (F4)             | 5 min  |
-| 3   | P0       | Add `predicate-quantifier: every` to the `docs-only` paths-filter (F5)             | 5 min  |
-| 4   | P1       | Settle the base branch and state it once; link it from the other doc (F3)          | 15 min |
+| #   | Priority | Task (finding ID)                                                                                                                                                                  | Effort |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | P0       | Rebuild the README env table: `IP_HASH_SECRET` required in production, drop `LLM_MODEL`, add `APP_ENV`, soften `GOOGLE_API_KEY`, note the Upstash requirement (F24, F25, F26, F11) | 20 min |
+| 2   | P0       | Correct the rate-limiting description: credential-driven, fails **closed** — plus the troubleshooting entry (F27)                                                                  | 10 min |
+| 3   | P0       | Repoint both structure trees at `src/*` and add `(hub)/` + `mdx-components.tsx` in the same edit (F1, F2, F29, F19)                                                                | 25 min |
+| 4   | P1       | Replace `pnpm check` in the PR template with the real CI gate set (F4)                                                                                                             | 5 min  |
+| 5   | P1       | State the base branch once — `dev` is now genuinely the integration branch (F3)                                                                                                    | 15 min |
 
 ### Next Release
 
-| #   | Priority | Task (finding ID)                                                                           | Effort |
-| --- | -------- | ------------------------------------------------------------------------------------------- | ------ |
-| 5   | P1       | Correct `<slug>.action.ts` → `<domain>.action.ts` in both docs (F6)                         | 5 min  |
-| 6   | P1       | Document the `config/` no-barrel exception and why (F7)                                     | 10 min |
-| 7   | P1       | Fix the `src/content/tools/` loading + validation claim, or add the service and schema (F8) | 30 min |
-| 8   | P1       | Collapse scripts/verify commands to one source of truth matching CI (F9, F13)               | 30 min |
-| 9   | P2       | Add `APP_ENV` to the README env table; soften `GOOGLE_API_KEY`'s Required ✅ (F11)          | 10 min |
-| 10  | P2       | Enable Discussions or drop the contact link (F10)                                           | 5 min  |
-| 11  | P2       | Rewrite the stale CI env comment (Zod-required claim, Cloudflare → Umami) (F12)             | 5 min  |
+| #   | Priority | Task (finding ID)                                                                                     | Effort |
+| --- | -------- | ----------------------------------------------------------------------------------------------------- | ------ |
+| 6   | P1       | Document the three Redis key shapes with the `rl:<APP_ENV>` scope and the burst tier (F28)            | 10 min |
+| 7   | P1       | Fix the action-input-schema location claim and name `parseActionInput` as required (F39, F34)         | 15 min |
+| 8   | P1       | Add the CSP and header set to the Security section with the "new script source = CSP edit" rule (F32) | 10 min |
+| 9   | P1       | Rewrite the `pnpm-workspace.yaml` description; drop the version number, keep the reasons (F31)        | 10 min |
+| 10  | P2       | Document `clients/<service>/` folder form + the keys/TTL invariants (F30)                             | 10 min |
+| 11  | P2       | Add newsletter quota constants, the burst tier, and the honeypot to the backend docs (F33)            | 10 min |
+| 12  | P2       | Collapse scripts/verify commands to one source of truth matching CI (F9, F13)                         | 30 min |
+| 13  | P2       | Correct `<slug>.action.ts` → `<domain>.action.ts` in both docs (F6)                                   | 5 min  |
+| 14  | P2       | Fix the `src/content/tools/` loading claim, or add the service and schema (F8)                        | 30 min |
+| 15  | P2       | Enable Discussions or drop the contact link (F10)                                                     | 5 min  |
 
 ### Backlog
 
-| #   | Priority | Task (finding ID)                                                          | Effort |
-| --- | -------- | -------------------------------------------------------------------------- | ------ |
-| 12  | P3       | Align the Node version statement with `.nvmrc`/CI; add `engines` (F14)     | 10 min |
-| 13  | P3       | Fix the JSON-LD escape notation (F15)                                      | 2 min  |
-| 14  | P3       | List all six `src/styles/` partials in import order (F16)                  | 5 min  |
-| 15  | P3       | Document both Redis key shapes (F17)                                       | 5 min  |
-| 16  | P3       | Scope the "never `export *`" rule to `lib/` barrels (F18)                  | 5 min  |
-| 17  | P3       | Add `src/mdx-components.tsx` to both trees (F19)                           | 5 min  |
-| 18  | P3       | Enumerate the full docs surface in AGENTS.md's Documentation section (F20) | 10 min |
-| 19  | P3       | Re-check `/blog`, `/newsletter`, `/shop` after deploy (F21)                | 5 min  |
-| 20  | P3       | Fix or drop the SECURITY.md → CONTRIBUTING.md prompt cross-reference (F22) | 5 min  |
-| 21  | P3       | Demote the managed block's H1 in AGENTS.md if the generator permits (F23)  | 5 min  |
+| #   | Priority | Task (finding ID)                                                                                  | Effort |
+| --- | -------- | -------------------------------------------------------------------------------------------------- | ------ |
+| 16  | P3       | Enumerate the full docs surface, including `_reports/` and the `llms.txt` rule (F20, F35)          | 15 min |
+| 17  | P3       | List `site.ts`'s exports explicitly, then scope the `export *` rule to the `ui/` barrel (F36, F18) | 10 min |
+| 18  | P3       | Point `llms.txt`'s shop entry at the www canonical (F37)                                           | 2 min  |
+| 19  | P3       | Align the Node version statement with `.nvmrc`; add `engines` (F14)                                | 10 min |
+| 20  | P3       | Fix the JSON-LD escape notation (F15)                                                              | 2 min  |
+| 21  | P3       | List all six `src/styles/` partials in import order (F16)                                          | 5 min  |
+| 22  | P3       | Fix or drop the SECURITY.md → CONTRIBUTING.md prompt cross-reference (F22)                         | 5 min  |
+| 23  | P3       | Demote the managed block's H1 in AGENTS.md if the generator permits (F23)                          | 5 min  |
+| 24  | P3       | Re-check `/blog`, `/newsletter`, `/shop`, `/llms.txt` after deploy (F21)                           | 5 min  |
+| 25  | —        | **Maintainer decision, not a fix:** whether the four taglines converge (F38)                       | —      |
 
 ## Resolved since last audit
 
-First run — nothing to compare against.
+| ID  | Issue                                                                                             | How it was resolved                                                                                                                                                        |
+| --- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F5  | `docs-only` CI skip fired on mixed code+docs PRs                                                  | `predicate-quantifier: every` added, with a comment recording why; the stale `stale.yml` / `pr-title.yml` globs were dropped as the finding also asked                     |
+| F7  | "barrel per kind" was false for `lib/config/`                                                     | `src/lib/config/index.ts` was created, with a header comment explaining that `env.ts` is deliberately excluded because it is `server-only`. Its `export *` line is now F36 |
+| F12 | CI env comment claimed a missing `GOOGLE_API_KEY` fails the build, and named Cloudflare Analytics | Comment rewritten to state that every var is optional and that the placeholder key exists to exercise the configured-key path; the Cloudflare reference is gone            |
 
 ## Verified accurate (not findings)
 
-Recorded so a future run doesn't re-litigate them. Every one was checked against code:
+Recorded so a future run doesn't re-litigate them. Each was checked against code on this run:
 
-- All 40 exported symbols named across AGENTS.md and CONTRIBUTING.md exist with the documented names and locations — `createGeminiClient`, `toTokenUsage`, `resolvePlatformApiKey`, `enforceDailyQuota`, `getHostedQuotaStatus`, `generateSchemaOutputFromArticle`, `resolveArticleSource`, `articleSourceErrorRules`, `assertSafeArticleUrl`, `toUserMessage`, `renderOgImage`, `isBrowser`, `articleSourceIdentity`, `createLocalStore`, `createHistoryStore`, `createWriterStorage`, `useWriter`, `WriterRuntime`, `JsonLdScript`, `namespaced`, `ROUTES`, `TOOLS`, `SITE_NAME`, `SITE_URL`, `SHOP_CANONICAL_BASE`, `BYOK_MODELS`, the four daily-quota constants, the three actions, the three content loaders, `PostFrontmatterSchema`, `SeoMetaSchema`, `PostMeta`, `ArticleSource`, `POST_SLUGS`, `STORAGE_KEYS`, and the error-boundary components.
-- `lib/config/` file list in AGENTS.md:48 matches `ls` exactly; so do the `lib/server/utils/` and `lib/utils/` descriptions (including "`cn.ts` is the one bare name").
-- Next config claims: `cacheComponents`, `typedRoutes`, `reactCompiler`, `@next/mdx`, and the two 308 `/guides` redirects are all present and permanent.
-- `tsconfig.json` provides both documented aliases (`@/*`, `@env`); strict mode on.
-- Sitemap description in AGENTS.md:141 matches `src/app/sitemap.ts` line for line, including `status !== "soon"` exclusion and shop products being omitted for the www canonical.
-- Rate limiting is production-gated via `isProduction` and fails open; Umami is gated the same way; no `NEXT_PUBLIC_*` var exists anywhere in `src/`.
-- All 9 tools in `TOOLS` appear in the README with accurate taglines; the 6 social platforms and the 50–60 / 150–160 SEO character bounds match their constants.
-- `.github` inventory in AGENTS.md:177 is exact — the five workflows and dependabot config exist; commitlint, `pr-title.yml`, `CODEOWNERS`, and `stale.yml` are genuinely absent as claimed.
-- `labeler.yml` globs were correctly updated to `src/**` during the refactor.
-- Husky pre-commit runs `lint-staged` as documented; `src/content/**/_drafts/` and `docs` are gitignored; `.env.example` is committed.
-- `public/llms.txt` licensing and key-page claims are accurate; the repo URL is one canonical form (`github.com/Timonwa/tools-by-timonwa`) everywhere and matches `origin`.
+- The `lib/` kind list, `constants/`, `data/`, `hooks/`, `schemas/`, `types/`, and `utils/` descriptions all match `ls`, including "`cn.ts` is the one bare name" and the `text/ svg/ storage/ writer/` sub-groups.
+- The drafts mechanism is documented correctly and precisely: `src/content/**/_drafts/`, gitignored, dev-server only, gated on `NODE_ENV` rather than `APP_ENV` — and the code's own comment gives the same reason AGENTS.md does.
+- `AGENTS.md:133`'s caching claim is still exactly true: `cacheComponents` is on and `grep -rn "use cache" src/` returns nothing, so "no `use cache` readers exist yet" holds.
+- The four quota constants AGENTS.md names do exist with those names; the omission is the three newsletter ones (F33), not a rename.
+- `.github` inventory is still exact — the five workflows and `dependabot.yml` exist; commitlint, `pr-title.yml`, `CODEOWNERS`, and `stale.yml` are genuinely absent as claimed.
+- Both path aliases (`@/*`, `@env`) resolve; strict mode is on; `.env.example` is committed and `docs/` is gitignored.
+- All nine tools in `TOOLS` appear in the README with accurate taglines; the repo URL is one canonical form (`github.com/Timonwa/tools-by-timonwa`) everywhere and matches `origin`.
+- Every internal Markdown link resolves, and the one cross-file anchor (`README.md#environment-variables`) matches a real heading.
+- README's Privacy section is accurate against the code, including the in-memory hour-long URL fetch cache, `sessionStorage` for BYOK keys, `localStorage` for history, and BYOK requests skipping rate limits.
