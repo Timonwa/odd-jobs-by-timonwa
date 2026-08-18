@@ -12,12 +12,12 @@ A productivity hub for writers, developers, and creators — free single-purpose
 
 ## Tech Stack
 
-- **Project type / tooling**: single Next.js app, pnpm (`pnpm-workspace.yaml` holds pnpm settings only — not a monorepo)
+- **Project type / tooling**: single Next.js app, pnpm (not a monorepo — `pnpm-workspace.yaml` exists for `allowBuilds` + security version floors)
 - **Framework**: Next.js 16 (App Router; `cacheComponents`, `typedRoutes`, `reactCompiler` all on; MDX via `@next/mdx`)
 - **Language**: TypeScript strict, React 19
 - **Rendering**: Server Components by default; `"use client"` only on interactive leaves (tools, pickers, drawers)
 - **Styling**: Tailwind CSS v4 (CSS-first; no class prefix — single app)
-- **Validation**: Zod — content frontmatter in `lib/schemas/`, env in `lib/config/env.ts`, action inputs in the action files
+- **Validation**: Zod — all schemas in `lib/schemas/` (content frontmatter _and_ action inputs), env in `lib/config/env.ts`. Actions apply theirs via `parseActionInput` as their first statement
 - **Auth**: None — no accounts, no sessions
 - **Data store**: None — content is MDX in `src/content/`; Upstash Redis only for hosted rate limiting
 - **AI**: Vercel AI SDK + Gemini (`@ai-sdk/google`); BYOK keys live in the browser's `sessionStorage`, never on a server
@@ -67,7 +67,7 @@ Conventions (full detail in `code-structure`):
 - **Components hold `.tsx` only** — hooks/constants/types live in `lib/`. Named exports everywhere.
 - **`schemas/` owns Zod schemas and their inferred types together** (`post.schema.ts` → `PostMeta`) — never re-declare an inferred type in `types/`.
 - **Never share a barrel between server-only and client-safe code.** Everything outside `lib/server/` is client-safe.
-- **Reuse the shared layer.** Before adding plumbing, check `lib/server/` (`createGeminiClient` in `clients/`, plus `resolvePlatformApiKey`, `enforceDailyQuota`, `generateSchemaOutputFromArticle`, `resolveArticleSource`, `toUserMessage` in `utils/ai/`), `lib/utils/` (client-safe: `isBrowser`, `articleSourceIdentity`, the `createLocalStore`/`createHistoryStore`/`createWriterStorage` factories in `storage/`), and `components/_shared/` (incl. the `writer/` engine — `Writer`, `useWriter`, `WriterRuntime` — and `JsonLdScript`).
+- **Reuse the shared layer.** Before adding plumbing, check `lib/server/` — `utils/ai/` holds **`parseActionInput` (required: every action's first statement)**, `assertSafeArticleUrl` (the SSRF guard), `resolvePlatformApiKey`, `enforceDailyQuota`, `getHostedQuotaStatus`, `generateSchemaOutputFromArticle`, `withResolvedArticleUrl`, `resolveArticleSource`, `toUserMessage`; `clients/` holds `createGeminiClient` and the `redis/` module; `utils/rate-limit.utils.ts` holds `canServeHostedAi`. Then `lib/utils/` (client-safe: `isBrowser`, `articleSourceIdentity`, `assertToolSlug`/`parseToolFaq`, the `createLocalStore`/`createHistoryStore`/`createWriterStorage` factories in `storage/`), and `components/_shared/` (incl. the `writer/` engine — `Writer`, `useWriter`, `WriterRuntime` — plus `JsonLdScript`, `ContentBreadcrumbs`, `ContentByline`).
 - Path alias `@/*` (and `@env` for `lib/config/env.ts`).
 
 ## Setup & Commands
@@ -156,13 +156,24 @@ None — no accounts. The only gating is the hosted daily quota (see Backend / A
 
 - **BYOK keys** live in `sessionStorage` (browser only), sent per-request, never logged or stored server-side. Only allowlisted BYOK models are honored (`BYOK_MODELS`).
 - **SSRF**: article URLs pass `assertSafeArticleUrl` (blocks loopback, link-local/metadata endpoint, RFC 1918, IPv6 local ranges).
-- **Rate limiting**: per-user (HMAC-SHA256 IP hash, peppered by `IP_HASH_SECRET`) + shared daily pool in Upstash Redis, production only, fails open; BYOK requests skip it.
+- **Rate limiting**: three tiers in Upstash Redis — per-user daily, per-user burst, and a shared daily pool — charged atomically by one Lua script, keyed on an HMAC-SHA256 IP hash peppered by `IP_HASH_SECRET`. **Metering follows the Upstash credentials, not the tier**: only the dev server is exempt, so every built deploy meters (previews included). An unreachable Redis **fails closed** — `canServeHostedAi()` returns false and hosted generations are refused rather than spending the platform key unmetered. BYOK requests skip all of it.
+- **Security headers**: a `Content-Security-Policy` plus five others, served on every path from `headers()` in `next.config.ts` (no middleware — there's no other dynamic surface). A new external script, font, or frame source needs a CSP edit in the same PR, or it is blocked in the browser.
 - **JSON-LD** is escaped via `JsonLdScript` (`<` → `<`).
 - No secrets in the client bundle; no `NEXT_PUBLIC_*` vars are used.
 
 ## Backend / API
 
-No API layer — Server Actions only. Hosted quota budgets live in `lib/constants/` (`SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`); counters are Redis keys `ratelimit:<toolSlug>:user|pool:<date>`, reset at UTC midnight.
+No API layer — Server Actions only. Quota budgets live in `lib/constants/`: `SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`, and `NEWSLETTER_DAILY_USER_CAP` / `NEWSLETTER_DAILY_SHARED_POOL` / `NEWSLETTER_BURST_CAP` — the newsletter action is metered too, because it writes to Sender.net with the server token. `subscribeNewsletter` also has a honeypot field (`NEWSLETTER_HONEYPOT_FIELD`), hidden from people and assistive tech; don't remove it as dead markup.
+
+Every key is built in `lib/server/clients/redis/keys.ts` — grep that one file to see the whole keyspace — and every key gets a TTL from `ttl.ts`, because an un-expiring key is a permanent cost leak. The three shapes, all reset at UTC midnight except the burst window:
+
+```txt
+rl:<APP_ENV>:<toolSlug>:user:<ipHash>:<date>
+rl:<APP_ENV>:<toolSlug>:pool:<date>
+rl:<APP_ENV>:<toolSlug>:burst:<ipHash>:<windowStart>
+```
+
+The `<APP_ENV>` scope is load-bearing: one Upstash database serves every environment, so without it a preview deploy would spend production's shared pool.
 
 ## Data Store (Firebase / other)
 
@@ -170,7 +181,7 @@ None. Content is MDX under `src/content/` (`blog/`, `issues/`, `shop/`, `tools/`
 
 ## Monorepo / Workspace
 
-None (single app). `pnpm-workspace.yaml` exists only to pin `postcss >= 8.5.10` against a vulnerability Next still transitively pins — re-check on Next upgrades.
+None (single app). `pnpm-workspace.yaml` is the repo's dependency-security surface, not workspace config: it holds an `allowBuilds` allowlist (pnpm 11 blocks install scripts by default) and version floors for transitive dependencies Next pins below their patched releases. Each floor carries its advisory IDs inline — **read the file before changing it**, because two entries are subtler than they look: `js-yaml`'s `<4` ceiling is required (v4 dropped the `safeLoad` that `gray-matter` calls, so forcing it breaks frontmatter parsing at build), and `brace-expansion` is deliberately _not_ overridden (pinning the patched version breaks `pnpm lint`). Re-check the floors on Next upgrades.
 
 ## CI/CD & Deploy
 
@@ -178,9 +189,14 @@ None (single app). `pnpm-workspace.yaml` exists only to pin `postcss >= 8.5.10` 
 
 ## Env Vars & Config
 
-**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; all optional — features degrade gracefully when unset): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`, `SENDER_API_TOKEN`. Every one appears in `.env.example` with no value.
+**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; a blank value normalizes to absent, so `KEY=""` placeholders don't fail validation): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`, `SENDER_API_TOKEN`. Every one appears in `.env.example` with no value.
 
-**Per-tier constants**: `APP_ENV` (`development` | `production`) and `LLM_MODEL` (default `gemini-flash-lite-latest` — always a `-latest` alias; Google 404s pinned older models). Site URLs and external links live in `lib/config/site.ts`.
+Optional in the schema, but **two are load-bearing at runtime and don't degrade gracefully**:
+
+- `IP_HASH_SECRET` — `rate-limit.utils.ts` **throws at module load** when `APP_ENV=production` and it's unset, so the app doesn't boot. An unkeyed SHA-256 of an IPv4 address is brute-forceable, which would turn rate-limit keys into recoverable personal data.
+- `UPSTASH_REDIS_REST_URL` / `_TOKEN` — without them a built app can't meter, so hosted generations are **refused** rather than served on an uncapped platform key. `GOOGLE_API_KEY` alone is not enough outside the dev server.
+
+**Per-tier constant**: `APP_ENV` (`development` | `production`). The Gemini model is **not** env-held — it's `HOSTED_LLM_MODEL` in `lib/config/byok.ts`, committed and constrained to the `ByokModel` allowlist so staging and production can't drift onto different models without review. Site URLs and external links live in `lib/config/site.ts`.
 
 **Namespaced keys + events**: every localStorage/sessionStorage key and custom DOM event is built via `namespaced()` as `tbt:<area>:<name>` — keys in `constants/storage-keys.constant.ts`, events in `constants/events.constant.ts`. Never inline a raw key/event string.
 
@@ -240,6 +256,8 @@ README.md (user-facing) + CONTRIBUTING.md (tool anatomy, dev setup, PR workflow)
 
 ## Troubleshooting
 
-- Gemini returns 404 → the model id is pinned; use a `-latest` alias in `LLM_MODEL`.
-- Rate limiting seemingly off locally → intentional; it only activates with `APP_ENV=production` + Upstash vars set.
-- `postcss` audit warning after a Next upgrade → re-check the `pnpm-workspace.yaml` pin.
+- Gemini returns 404 → the model id is pinned; `HOSTED_LLM_MODEL` in `lib/config/byok.ts` must be a `-latest` alias (Google 404s pinned older models for newly-created keys). It is a committed constant, not an env var — setting `LLM_MODEL` anywhere does nothing.
+- Rate limiting seemingly off locally → intentional; the dev server is the one exempt environment. Any _built_ app meters if it can and refuses hosted AI if it can't, regardless of `APP_ENV`.
+- Hosted AI refuses with a platform key set → Upstash credentials are missing or wrong, so the request can't be metered. The boot log says so explicitly; check it before anything else.
+- App won't boot in production → `IP_HASH_SECRET` is unset. It throws at module load by design.
+- `postcss` (or other transitive) audit warning after a Next upgrade → re-check the floors in `pnpm-workspace.yaml`; raise the number rather than removing the entry, or the override keeps resolving a vulnerable version while looking like protection.

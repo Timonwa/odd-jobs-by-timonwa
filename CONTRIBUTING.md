@@ -40,7 +40,7 @@ If you're not sure, open an issue and ask.
 
 ## Dev setup
 
-**Prerequisites:** Node.js 20.9+, [pnpm](https://pnpm.io), and a [Google AI Studio key](https://aistudio.google.com/api-keys).
+**Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc); `engines` enforces it), [pnpm](https://pnpm.io), and a [Google AI Studio key](https://aistudio.google.com/api-keys) if you're touching the AI tools.
 
 ```bash
 git clone https://github.com/Timonwa/tools-by-timonwa.git

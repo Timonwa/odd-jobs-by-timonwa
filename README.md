@@ -47,13 +47,13 @@ _More on the way._
 
 ## Run locally
 
-**Prerequisites:** Node.js 20.9+, [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys).
+**Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc)), [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys) if you want the AI tools.
 
 ```bash
 git clone https://github.com/Timonwa/tools-by-timonwa.git
 cd tools-by-timonwa
 pnpm install
-cp .env.example .env      # add at least GOOGLE_API_KEY
+cp .env.example .env      # GOOGLE_API_KEY for the AI tools; the rest are optional locally
 pnpm dev
 ```
 
@@ -61,17 +61,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment variables
 
-| Variable                                | Required | Purpose                                                |
-| --------------------------------------- | -------- | ------------------------------------------------------ |
-| `GOOGLE_API_KEY`                        | ✅       | Gemini key powering the tools                          |
-| `GOOGLE_API_KEY_ARTICLE_TO_SEO_META`    | —        | Optional per-tool key (falls back to `GOOGLE_API_KEY`) |
-| `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —        | Optional per-tool key                                  |
-| `LLM_MODEL`                             | —        | Server model (default `gemini-flash-lite-latest`)      |
-| `UPSTASH_REDIS_REST_URL` / `..._TOKEN`  | —        | Enables hosted daily rate limiting                     |
-| `IP_HASH_SECRET`                        | —        | Pepper for hashed IPs in rate-limit keys (production)  |
-| `SENDER_API_TOKEN`                      | —        | Sender.net token for newsletter signups                |
+| Variable                                | Required                  | Purpose                                                                                                                                                      |
+| --------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `APP_ENV`                               | on deploy                 | `production` or `development` (the default when unset). Gates analytics, and makes `IP_HASH_SECRET` mandatory                                                |
+| `GOOGLE_API_KEY`                        | for hosted AI             | Gemini key behind the free quota. Without it the AI tools are bring-your-own-key only                                                                        |
+| `UPSTASH_REDIS_REST_URL` / `..._TOKEN`  | for hosted AI             | Rate-limit counters. A built app that can't meter **refuses** hosted AI rather than spending the key unmetered                                               |
+| `IP_HASH_SECRET`                        | when `APP_ENV=production` | Pepper for hashed IPs. The app **throws at boot** without it in production — an unkeyed IP hash is brute-forceable. Generate one with `openssl rand -hex 32` |
+| `GOOGLE_API_KEY_ARTICLE_TO_SEO_META`    | —                         | Per-tool key override (falls back to `GOOGLE_API_KEY`)                                                                                                       |
+| `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —                         | Per-tool key override                                                                                                                                        |
+| `SENDER_API_TOKEN`                      | —                         | Sender.net token for newsletter signups                                                                                                                      |
 
-The app builds and the instant tools work with nothing set; the AI tools need `GOOGLE_API_KEY` (or a user's own key). [`.env.example`](./.env.example) is the source of truth.
+The app builds and the instant tools work with nothing set. **Hosted AI needs `GOOGLE_API_KEY` _and_ the two Upstash variables** — a build that can't meter refuses to spend the platform key, so one without the other leaves the AI tools BYOK-only. The dev server is exempt from metering, so local work needs no Upstash account. [`.env.example`](./.env.example) is the source of truth.
+
+The model is not an environment variable: it's `HOSTED_LLM_MODEL` in [`src/lib/config/byok.ts`](./src/lib/config/byok.ts), committed and constrained to an allowlist so environments can't silently drift onto different models.
 
 ### Scripts
 
