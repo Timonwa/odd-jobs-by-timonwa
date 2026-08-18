@@ -3,6 +3,7 @@
 # the tree — a stale entry silently pre-approves install-time code if the
 # package is ever pulled back in.
 allowBuilds:
+  esbuild: true # Vitest's transform pipeline — its install script fetches the platform binary
   sharp: true
   unrs-resolver: true
 overrides:

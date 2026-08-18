@@ -51,7 +51,7 @@ Two things worth knowing before your first change:
 
 ## Scripts
 
-Every script, with what it does: [README → Scripts](./README.md#scripts). CI gates four of them, in order — `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build` — and that is the set to run before pushing.
+Every script, with what it does: [README → Scripts](./README.md#scripts). CI gates five of them, in order — `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test`, `pnpm build` — and that is the set to run before pushing.
 
 A `pre-commit` hook runs **lint-staged** (ESLint `--fix` + Prettier) on staged files via **husky**, so most formatting is automatic.
 

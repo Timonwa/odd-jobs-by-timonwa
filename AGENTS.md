@@ -91,13 +91,15 @@ pnpm typecheck       # tsc --noEmit — used to verify fixes
 pnpm lint            # eslint .
 pnpm format          # prettier --write
 pnpm format:check    # prettier --check
-# no tests
+pnpm test            # unit tests (Vitest) — CI-gated
+pnpm test:watch      # unit tests in watch mode
+pnpm test:coverage   # unit tests with V8 coverage
 ```
 
 **Verify before you claim done — never report success on an unverified change.** Run the exact set CI gates, in order:
 
 ```bash
-pnpm lint && pnpm format:check && pnpm typecheck && pnpm build
+pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build
 ```
 
 Full script table: [README.md](./README.md#scripts) — one home for it, linked from here and CONTRIBUTING.
@@ -226,7 +228,7 @@ None — English only.
 
 ## Testing & Stories
 
-- **Tests** — None today; don't add a test framework without asking.
+- **Tests** — Vitest, two projects in `vitest.config.mts`: `node` (utils, schemas, `lib/server` — the `server-only` package is aliased to `test/mocks/server-only.ts`) and `dom` (jsdom + Testing Library for hooks, storage utils, and components; `vitest.setup.ts` wires jest-dom matchers and RTL cleanup). Tests are colocated (`<name>.test.ts` / `<Component>.test.tsx`) and use explicit `vitest` imports — no globals. A file that needs the other environment overrides with a `// @vitest-environment` pragma. Security-critical paths (SSRF guard, rate-limit fail-closed, BYOK key handling, action input validation, key redaction in logs) must keep their tests when refactored. No E2E yet — Playwright is the planned next layer.
 - **Storybook** — None today; when added, follow `storybook-setup` / `storybook-story-writing` (CSF3, tiered titles matching `components/ui`).
 
 ## Commit Messages
@@ -246,7 +248,7 @@ type(scope): subject
 
 - Title follows conventional-commit format
 - PR template: `.github/pull_request_template.md`
-- Run the same four gates as CI: `pnpm lint && pnpm format:check && pnpm typecheck && pnpm build`
+- Run the same five gates as CI: `pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build`
 
 ## Boundaries
 
@@ -263,7 +265,7 @@ type(scope): subject
 
 ### Always
 
-- Run `pnpm lint && pnpm format:check && pnpm typecheck && pnpm build` before claiming done — the CI set
+- Run `pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build` before claiming done — the CI set
 - Validate inputs with Zod (frontmatter via `lib/schemas/`, env via `@env`, action inputs in the action)
 - Keep semantic HTML + a11y intact — real elements, labels, focus order, keyboard paths; jsx-a11y gates CI
 - Specific, self-contained copy — name the subject; no vague headings or deixis

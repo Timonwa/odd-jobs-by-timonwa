@@ -77,17 +77,20 @@ The model is not an environment variable: it's `HOSTED_LLM_MODEL` in [`src/lib/c
 
 ### Scripts
 
-| Command             | What it does             |
-| ------------------- | ------------------------ |
-| `pnpm dev`          | Dev server (Turbopack)   |
-| `pnpm build`        | Production build         |
-| `pnpm start`        | Run the production build |
-| `pnpm typecheck`    | `tsc --noEmit`           |
-| `pnpm lint`         | ESLint                   |
-| `pnpm format`       | Prettier — write         |
-| `pnpm format:check` | Prettier — check         |
+| Command              | What it does             |
+| -------------------- | ------------------------ |
+| `pnpm dev`           | Dev server (Turbopack)   |
+| `pnpm build`         | Production build         |
+| `pnpm start`         | Run the production build |
+| `pnpm typecheck`     | `tsc --noEmit`           |
+| `pnpm lint`          | ESLint                   |
+| `pnpm format`        | Prettier — write         |
+| `pnpm format:check`  | Prettier — check         |
+| `pnpm test`          | Unit tests (Vitest)      |
+| `pnpm test:watch`    | Unit tests, watch mode   |
+| `pnpm test:coverage` | Unit tests with coverage |
 
-CI gates four of these, in order: `lint`, `format:check`, `typecheck`, `build`.
+CI gates five of these, in order: `lint`, `format:check`, `typecheck`, `test`, `build`.
 
 Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK](https://ai-sdk.dev/) + Gemini, and Upstash Redis.
 
