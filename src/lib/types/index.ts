@@ -25,3 +25,4 @@ export type {
 	WriterFeatures,
 	WriterRuntime,
 } from "./writer.type";
+export type { IconComponent } from "./ui.type";

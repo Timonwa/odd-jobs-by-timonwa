@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -21,7 +22,6 @@ export default function Image() {
 		subtitle:
 			"Switch text between UPPERCASE, Title Case, camelCase, snake_case, and more — then copy.",
 		pills: ["17 cases", "Live preview", "One-click copy"],
-		accent: "#fb7185",
-		backgroundTint: "#4c0519",
+		...OG_PALETTES.rose,
 	});
 }

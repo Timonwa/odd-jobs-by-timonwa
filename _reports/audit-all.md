@@ -9,7 +9,7 @@ The app is live at `https://tools.timonwa.com`, but this branch is unmerged — 
 | Audit                    | Score  | Critical | High   | Med    | Low    | Trend  | Report                                           |
 | ------------------------ | ------ | -------- | ------ | ------ | ------ | ------ | ------------------------------------------------ |
 | codebase-audit ✅        | 9/10   | 0        | 1      | 1      | 1      | ▲ +2   | [codebase-audit.md](codebase-audit.md)           |
-| conventions-audit        | 7/10   | 0        | 4      | 14     | 7      | —      | [conventions-audit.md](conventions-audit.md)     |
+| conventions-audit ✅     | 9/10   | 0        | 0      | 1      | 1      | ▲ +2   | [conventions-audit.md](conventions-audit.md)     |
 | security-audit           | 7/10   | 0        | 3      | 4      | 4      | —      | [security-audit.md](security-audit.md)           |
 | environment-audit ✅     | 9.5/10 | 0        | 0      | 0      | 0      | ▲ +2.5 | [environment-audit.md](environment-audit.md)     |
 | dependency-audit ✅      | 9/10   | 0        | 0      | 0      | 0      | ▲ +2   | [dependency-audit.md](dependency-audit.md)       |
@@ -36,7 +36,7 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 8. **HIGH — a paid product page canonicalizes to a 404.** `/shop/content-script-generator` points at `https://www.timonwa.com/shop/content-script-generator`, verified 404 over the network (the other five product canonicals are 200). Combined with the deliberate sitemap exclusion, the only page for a $10 product self-excludes with no valid target. → seo F1.
 9. **HIGH ×3 — the structure docs contradict the code and each other.** Both AGENTS.md and CONTRIBUTING.md still show `app/`, `components/`, `lib/` at the repo root after the move under `src/`; AGENTS.md says feature PRs target `dev` while CONTRIBUTING.md says branch from and PR against `main`. Introduced during this refactor. → docs F1–F3.
 10. ~~**HIGH — the `postcss` override has gone stale.**~~ **FIXED** — floor raised to `>=8.5.23`, resolving postcss 8.5.26 and nanoid 3.3.18. Original detail: It is still necessary (Next pins postcss 8.4.31 exactly), but its `>=8.5.10` floor no longer patches: the lockfile resolved 8.5.17, carrying a high advisory fixed in 8.5.18, and drags `nanoid` 3.3.15 with two high advisories. Build-time-only reachability; one-line fix to `>=8.5.23`. → dependency F2, codebase F1.
-11. **HIGH ×2 — the nine tool layouts duplicate and hardcode.** Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
+11. ~~**HIGH ×2 — the nine tool layouts duplicate and hardcode.**~~ **FIXED** in the conventions pass — 99 lines each became 18, with SEO copy in one registry and metadata/JSON-LD built from it; built HTML verified identical. Original detail: Each hardcodes `const TOOL_PATH = "/<slug>"` for canonicals and JSON-LD instead of `ROUTES.tool()` (which AGENTS.md explicitly forbids), and each repeats ~70 lines of identical `Metadata` + `WebApplication` scaffolding, re-inlining escaping that the shared `JsonLdScript` owns — leaving tool copy with four competing sources of truth. → conventions F1 + F2.
 12. **HIGH — no test infrastructure at all** (DEFERRED by decision — tests are a separate branch; the dead CI job that claimed otherwise was removed), and the CI test job is hard-disabled with `if: false` while invoking a nonexistent script. The SSRF blocklist, quota logic, and ordered error-mapping rules are all uncovered. → codebase F3.
 13. ~~**HIGH — 26 OG/Twitter image routes opt into `runtime = "edge"`.**~~ **CORRECTED, then fixed** — testing showed removing `edge` does _not_ restore static generation (non-parameterized image routes are dynamic either way), so the premise was wrong; the real defect was three contradictory comments, now one accurate note per route. Original detail: which the build explicitly warns disables static generation; every image route is `ƒ Dynamic` while every page is `○ Static`. → frontend F1, performance F3. Whether `edge` is needed at all on Next 16 is **unconfirmed** (docs read was denied in-session).
 14. **HIGH — layout shift on every blog post.** `next/image` is called with `width={0} height={0}`, reserving no space for all six lazy screenshots — confirmed in the prerendered HTML. → performance F1.
@@ -44,8 +44,8 @@ First run — no trend data. Skipped, with reasons: `storybook-audit` (no Storyb
 16. **HIGH — the structured-data graph is disconnected.** No `Organization`/`WebSite` node and no `@id` anywhere; the home page renders zero JSON-LD, so every block is an island — and no `alternateName` teaches Google about the rebrand from "Tools by Timonwa". → seo F2.
 17. **HIGH — thin content marked up as articles.** Four of the five new content files are 120–170 words yet are sitemapped and typed `BlogPosting`/`Article`. → seo F3.
 18. **HIGH — invisible authorship.** Post and issue pages render no byline and no date (no `<time>` element on any detail page) while their JSON-LD asserts `author`, `datePublished`, and `dateModified`. → seo F4.
-19. **HIGH — the character budget has two sources of truth.** `DEFAULT_MAX_CHARS = 15000` in `ArticleSourceInput` shadows `MAX_ARTICLE_INPUT_CHARS = 15_000`, so the on-screen counter and the server's `ARTICLE_TOO_LONG` guard can drift apart. → conventions F3.
-20. **HIGH — a factory was hand-rolled and has already diverged.** `useSeoMetaHistory` reimplements `createToolHistory` (which its social-posts sibling calls in five lines) and is missing the `!!result` entry guard. → conventions F4.
+19. ~~**HIGH — the character budget has two sources of truth.**~~ **FIXED** — `DEFAULT_MAX_CHARS` deleted; the component defaults to `MAX_ARTICLE_INPUT_CHARS`. Original detail: `DEFAULT_MAX_CHARS = 15000` in `ArticleSourceInput` shadows `MAX_ARTICLE_INPUT_CHARS = 15_000`, so the on-screen counter and the server's `ARTICLE_TOO_LONG` guard can drift apart. → conventions F3.
+20. ~~**HIGH — a factory was hand-rolled and has already diverged.**~~ **FIXED** in the codebase pass — `useSeoMetaHistory` calls `createToolHistory`, restoring the lost entry guard. Original detail: `useSeoMetaHistory` reimplements `createToolHistory` (which its social-posts sibling calls in five lines) and is missing the `!!result` entry guard. → conventions F4.
 
 ## Action items
 
@@ -69,8 +69,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 11. Give `PostFigure` real intrinsic dimensions. [P14]
 12. Debounce or idle-defer the article `localStorage` write. [P15]
 13. Stop the root-layout footer re-parsing all content on every route, and declare cache tiers now that `cacheComponents` is on. [frontend caching 4/10, performance]
-14. Point the nine tool layouts at `ROUTES.tool()` and extract the shared metadata + JSON-LD builder. [P11]
-15. Collapse the character cap to one constant; replace `useSeoMetaHistory`'s hand-rolled store with `createToolHistory`. [P19, P20]
+14. ~~Point the nine tool layouts at `ROUTES.tool()` and extract the shared builder.~~ **DONE** (conventions pass) [P11]
+15. ~~Collapse the character cap to one constant; replace `useSeoMetaHistory`'s hand-rolled store.~~ **DONE** (conventions + codebase passes) [P19, P20]
 16. Add `Organization` + `WebSite` JSON-LD with `@id` wiring and `alternateName`, and render visible author/date on posts and issues. [P16, P18]
 17. Fix the PR template's nonexistent `pnpm check` and list the gates CI actually runs. [docs F4]
 
@@ -94,6 +94,8 @@ Phase `production` → **Fix Now** / **Next Release** / **Backlog**.
 ## Resolved since last run
 
 **Also fixed en route:** `ci.yml`'s `paths-filter` quantifier (`codebase F2` / `docs F5`) — it lived in the same file as environment F7, so it shipped in that commit rather than waiting for its own pass.
+
+**conventions-audit — complete (7/10 → 9/10).** Twenty-two of twenty-five findings fixed. The nine tool route layouts went from 99 lines each to 18, with their SEO copy centralized and metadata/JSON-LD generated — built HTML verified unchanged. Also: an OG colour palette, shared `ItemList`/OG-URL builders, one `IconComponent` type instead of six, a `config/` barrel that deliberately excludes the server-only `env`, and an import cycle removed. One finding was **rejected**: nested folders inside a kind (`utils/text/`) are what the standard prescribes, not a violation of it.
 
 **codebase-audit — complete (7/10 → 9/10).** Seventeen of twenty-one findings fixed. `noUncheckedIndexedAccess` is now on, with all eleven resulting errors fixed by encoding invariants as non-empty tuples rather than asserting past them. Blind catch blocks now log and classify instead of blaming the network, BYOK storage reports whether a write landed, the duplicated history factory is gone, and dead code/config removed. Deferred by decision: test infrastructure (own branch) and local branch cleanup. Routed to `frontend-audit`: the four oversized components.
 

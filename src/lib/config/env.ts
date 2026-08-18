@@ -13,7 +13,7 @@ const emptyAsAbsent = (value: unknown) => (value === "" ? undefined : value);
 
 const secret = () => z.preprocess(emptyAsAbsent, z.string().min(1).optional());
 
-const schema = z.object({
+const EnvSchema = z.object({
 	// Gates production-only integrations (rate limiting, analytics). Set on deploy.
 	APP_ENV: z.enum(["development", "production"]).default("development"),
 	// Hub-level Gemini key; per-tool keys fall back to this one.
@@ -36,7 +36,7 @@ const schema = z.object({
 });
 
 /** Validated environment variables — all optional so the app builds without them; features degrade gracefully when unset. */
-export const env = schema.parse({
+export const env = EnvSchema.parse({
 	APP_ENV: process.env.APP_ENV,
 	GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
 	GOOGLE_API_KEY_ARTICLE_TO_SEO_META:

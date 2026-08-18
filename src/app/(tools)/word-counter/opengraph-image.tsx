@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -25,7 +26,6 @@ export default function Image() {
 		subtitle:
 			"Words, characters, sentences, and reading time — with live limits for SEO, X, Bluesky, and LinkedIn.",
 		pills: ["Live counts", "Reading time", "Platform limits"],
-		accent: "#2dd4bf",
-		backgroundTint: "#042f2e",
+		...OG_PALETTES.teal,
 	});
 }

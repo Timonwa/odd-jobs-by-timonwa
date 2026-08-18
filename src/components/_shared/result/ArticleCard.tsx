@@ -11,7 +11,7 @@ import {
 } from "@/components/ui";
 import type { ArticleMeta, TokenUsage } from "@/lib/types";
 
-type Props = {
+type ArticleCardProps = {
 	article: ArticleMeta;
 	usage: TokenUsage | null;
 	copied: boolean;
@@ -37,7 +37,7 @@ export function ArticleCard({
 	copied,
 	onCopyAll,
 	copyLabel,
-}: Props) {
+}: ArticleCardProps) {
 	const linkUrl = safeHttpUrl(article.url);
 	return (
 		<Card>

@@ -31,7 +31,7 @@ function status(len: number, min: number, max: number): RangeStatus {
 	return delta <= 5 ? "close" : "out";
 }
 
-type Props = {
+type SeoMetaResultsProps = {
 	variations: SeoMetaVariation[];
 	regeneratingIndex: number | null;
 	busy: boolean;
@@ -50,7 +50,7 @@ export function SeoMetaResults({
 	busy,
 	onVariationChange,
 	onRegenerate,
-}: Props) {
+}: SeoMetaResultsProps) {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 			{variations.map((v, i) => (

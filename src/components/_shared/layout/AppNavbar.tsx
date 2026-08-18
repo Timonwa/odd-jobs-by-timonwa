@@ -1,10 +1,9 @@
 import type { Route } from "next";
-import type { ComponentType, ReactNode, SVGProps } from "react";
+import type { ReactNode } from "react";
 
 import { Navbar } from "@/components/ui";
 import { NavActions } from "./NavActions";
-
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+import type { IconComponent } from "@/lib/types";
 
 type AppNavbarProps = {
 	brand: {

@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -23,7 +24,6 @@ export default function Image() {
 		subtitle:
 			"Placeholder paragraphs, sentences, or words in one click — pick how much, regenerate, and copy.",
 		pills: ["Paragraphs", "Sentences", "Words"],
-		accent: "#34d399",
-		backgroundTint: "#022c22",
+		...OG_PALETTES.green,
 	});
 }

@@ -26,7 +26,7 @@ type HistoryItem = {
 	meta?: ReactNode;
 };
 
-type Props = {
+type HistorySidebarProps = {
 	items: HistoryItem[];
 	onLoad: (id: string) => void;
 	onRemove: (id: string) => void;
@@ -45,7 +45,7 @@ export function HistorySidebar({
 	onRemove,
 	description = DEFAULT_DESCRIPTION,
 	emptyText = DEFAULT_EMPTY,
-}: Props) {
+}: HistorySidebarProps) {
 	// Two-step remove: the first click arms the confirm, the second removes.
 	const [confirmingId, setConfirmingId] = useState<string | null>(null);
 

@@ -1,9 +1,8 @@
-import type { ComponentType, ReactNode, SVGProps } from "react";
+import type { ReactNode } from "react";
 import { useId } from "react";
 
 import { cn } from "@/lib/utils";
-
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+import type { IconComponent } from "@/lib/types";
 
 type PageHeroProps = {
 	eyebrow?: { icon?: IconComponent; label: string };

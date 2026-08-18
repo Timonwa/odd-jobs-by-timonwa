@@ -32,7 +32,7 @@ const charCountClass = (count: number, limit: number): string =>
 			? TINT_TEXT[2]
 			: "text-muted-foreground";
 
-type Props = {
+type PostCardProps = {
 	post: SocialPost;
 	isRegenerating: boolean;
 	busy: boolean;
@@ -52,7 +52,7 @@ export function PostCard({
 	onThreadPostChange,
 	onCopy,
 	onRegenerate,
-}: Props) {
+}: PostCardProps) {
 	const isThread = post.thread && post.thread.length > 1;
 	const regenLabel = isThread
 		? "Regenerate this thread"

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { OPEN_BYOK_EVENT } from "@/lib/constants";
 import { cn, subscribeHostedUsage } from "@/lib/utils";
-type Props = {
+type HostedUsagePillProps = {
 	perUserDaily: number;
 	getUsage: () => Promise<{ configured: boolean }>;
 };
@@ -14,7 +14,10 @@ type Props = {
 const LOW_REMAINING = 2;
 
 /** A hosted-usage pill shown once the daily quota is confirmed — starts as the "N free/day" cap, then updates in place to "X of N left" after each run (`getUsage` runs from an effect, not `use()`, to avoid a waterfall). */
-export function HostedUsagePill({ perUserDaily, getUsage }: Props) {
+export function HostedUsagePill({
+	perUserDaily,
+	getUsage,
+}: HostedUsagePillProps) {
 	const [configured, setConfigured] = useState<boolean | null>(null);
 	const [remaining, setRemaining] = useState<number | null>(null);
 

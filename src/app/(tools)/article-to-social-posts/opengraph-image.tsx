@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -21,7 +22,6 @@ export default function Image() {
 		subtitle:
 			"Turn an article into a post tailored to each network — with tone, hashtag rules, and threads.",
 		pills: ["6 platforms", "URL or text", "Multi-post threads"],
-		accent: "#34d399",
-		backgroundTint: "#052e1e",
+		...OG_PALETTES.emerald,
 	});
 }

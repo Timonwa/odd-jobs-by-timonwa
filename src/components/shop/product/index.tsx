@@ -2,7 +2,8 @@ import { JsonLdScript, Newsletter } from "@/components/_shared/content";
 import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import { SITE_NAME, SITE_URL } from "@/lib/config/site";
+import { ogImageUrl } from "@/lib/utils";
+import { SITE_NAME } from "@/lib/config/site";
 import { getAllProducts } from "@/lib/server";
 import type { ProductMeta } from "@/lib/schemas";
 
@@ -18,7 +19,7 @@ export async function ProductPageContent({
 	product: ProductMeta;
 }) {
 	const { default: ProductBody } = await import(
-		`@/content/shop/${product.slug}.mdx`
+		`@/content/shop/${product.contentPath}.mdx`
 	);
 
 	const related = getAllProducts()
@@ -31,7 +32,7 @@ export async function ProductPageContent({
 		name: product.title,
 		description: product.description,
 		category: product.category,
-		image: `${SITE_URL}${ROUTES.product(product.slug)}/opengraph-image`,
+		image: ogImageUrl(ROUTES.product(product.slug)),
 		url: product.canonicalUrl,
 		brand: { "@type": "Brand", name: SITE_NAME },
 		offers: {

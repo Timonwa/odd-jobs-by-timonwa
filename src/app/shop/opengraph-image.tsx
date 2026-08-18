@@ -3,24 +3,25 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { SITE_NAME } from "@/lib/config/site";
+import { OG_PALETTES } from "@/lib/constants";
+import { SHOP_PAGE_COPY } from "@/lib/data";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
 // NOT copy it — they read MDX with node:fs, which the edge runtime lacks.
 export const runtime = "edge";
-export const alt = "Shop — The Productivity Bug";
+export const alt = `Shop — ${SITE_NAME}`;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "Shop · The Productivity Bug",
+		eyebrow: `Shop · ${SITE_NAME}`,
 		titleLead: "Products that get",
 		titleAccent: "things done",
-		subtitle:
-			"Notion templates and digital products — built and used by me to help you get things done.",
+		subtitle: SHOP_PAGE_COPY.description,
 		pills: ["Notion", "Templates", "Digital"],
-		accent: "#818cf8",
-		backgroundTint: "#1e1b4b",
+		...OG_PALETTES.brand,
 	});
 }

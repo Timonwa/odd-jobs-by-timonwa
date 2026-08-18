@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { env } from "@env";
 
-import { SENDER_GROUP_IDS } from "@/lib/config/site";
+import { SENDER_GROUP_IDS, SENDER_SUBSCRIBERS_URL } from "@/lib/config/site";
 import {
 	NEWSLETTER_BURST_CAP,
 	NEWSLETTER_DAILY_SHARED_POOL,
@@ -12,9 +12,6 @@ import {
 	NEWSLETTER_HONEYPOT_FIELD,
 } from "@/lib/constants";
 import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
-
-// Sender.net REST endpoint — requires SENDER_API_TOKEN; missing token surfaces an error to the user rather than silently dropping the address.
-const SENDER_API_BASE_URL = "https://api.sender.net/v2/subscribers";
 
 // One message for "subscribed" and "already subscribed". Distinguishing them
 // turned the form into a membership oracle: anyone could test whether an address
@@ -82,7 +79,7 @@ export async function subscribeNewsletter(
 	}
 
 	try {
-		const response = await fetch(SENDER_API_BASE_URL, {
+		const response = await fetch(SENDER_SUBSCRIBERS_URL, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,

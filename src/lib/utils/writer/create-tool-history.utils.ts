@@ -3,11 +3,11 @@
 
 import { MAX_HISTORY_ENTRIES } from "@/lib/constants";
 import type { ArticleSource } from "@/lib/types";
-import {
-	articleSourceIdentity,
-	createHistoryStore,
-	createLocalStorageJson,
-} from "@/lib/utils";
+// Sibling modules directly, not the kind barrel: a util importing `@/lib/utils`
+// pulls its own kind back through itself, which is an import cycle.
+import { articleSourceIdentity } from "../article-source.utils";
+import { createHistoryStore } from "../storage/create-history-store.utils";
+import { createLocalStorageJson } from "../storage/local-storage-json.utils";
 
 /** Builds a deduped, localStorage-backed history hook under `key`, so each tool keeps its own separate run history (default: last 10). */
 export function createToolHistory<

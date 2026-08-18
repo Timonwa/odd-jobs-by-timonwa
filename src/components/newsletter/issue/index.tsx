@@ -6,6 +6,7 @@ import {
 import { HubNavbar } from "@/components/_shared/layout";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
+import { ogImageUrl } from "@/lib/utils";
 import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 import type { IssueMeta } from "@/lib/schemas";
 import { getAllIssues } from "@/lib/server";
@@ -15,7 +16,7 @@ import { IssuePageFooter } from "./IssuePageFooter";
 
 export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 	const { default: IssueBody } = await import(
-		`@/content/issues/${issue.slug}.mdx`
+		`@/content/issues/${issue.contentPath}.mdx`
 	);
 
 	// Issues are newest-first, so the newer issue sits before this one in the list.
@@ -39,7 +40,7 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 		datePublished: issue.publishedAt,
 		dateModified: issue.updatedAt ?? issue.publishedAt,
 		inLanguage: "en",
-		image: `${SITE_URL}${ROUTES.issue(issue.slug)}/opengraph-image`,
+		image: ogImageUrl(ROUTES.issue(issue.slug)),
 		mainEntityOfPage: `${SITE_URL}${ROUTES.issue(issue.slug)}`,
 		author: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
 		publisher: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },

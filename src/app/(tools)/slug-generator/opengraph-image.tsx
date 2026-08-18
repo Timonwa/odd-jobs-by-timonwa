@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -24,7 +25,6 @@ export default function Image() {
 		subtitle:
 			"Turn any title, heading, or text into a clean, URL-safe slug — accents stripped, separator your call.",
 		pills: ["URL-safe", "Stop words", "One-click copy"],
-		accent: "#c084fc",
-		backgroundTint: "#2e1065",
+		...OG_PALETTES.violet,
 	});
 }

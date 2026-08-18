@@ -1,4 +1,5 @@
 import { HubNavbar } from "@/components/_shared/layout";
+import { PageMain } from "@/components/ui";
 import { Newsletter } from "@/components/_shared/content";
 import { BrowseByCategory } from "./BrowseByCategory";
 import { HomeHero } from "./HomeHero";
@@ -13,7 +14,7 @@ export function HubHomePageContent() {
 	return (
 		<>
 			<HubNavbar />
-			<main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-20 max-w-6xl">
+			<PageMain>
 				<HomeHero />
 				<ToolsPreview />
 				<WhatItIs />
@@ -23,7 +24,7 @@ export function HubHomePageContent() {
 				<LatestPosts />
 				<ShopPreview />
 				<Newsletter className="mt-20 sm:mt-24" />
-			</main>
+			</PageMain>
 		</>
 	);
 }

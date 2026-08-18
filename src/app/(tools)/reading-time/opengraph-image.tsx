@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
 // requirement (these routes build fine on Node). Content-backed OG routes must
@@ -25,7 +26,6 @@ export default function Image() {
 		subtitle:
 			"Reading and speaking time at your pace — plus a copy-ready min-read label for your blog.",
 		pills: ["Reading & speaking", "Adjustable WPM", "Min-read label"],
-		accent: "#60a5fa",
-		backgroundTint: "#172554",
+		...OG_PALETTES.sky,
 	});
 }

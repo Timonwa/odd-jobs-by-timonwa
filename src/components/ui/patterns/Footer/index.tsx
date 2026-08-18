@@ -1,10 +1,9 @@
 import type { Route } from "next";
 import Link from "next/link";
-import type { ComponentType, ReactNode, SVGProps } from "react";
+import type { ReactNode } from "react";
 
 import { Tooltip } from "../../base/Tooltip";
-
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+import type { IconComponent } from "@/lib/types";
 
 type FooterLink = { label: string } & (
 	{ href: Route; isExternal?: false } | { href: string; isExternal: true }

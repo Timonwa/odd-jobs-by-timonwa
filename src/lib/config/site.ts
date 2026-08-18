@@ -7,6 +7,11 @@
 export const SITE_URL = "https://tools.timonwa.com";
 export const SITE_DOMAIN = SITE_URL.replace(/^https?:\/\//, "");
 export const SITE_NAME = "The Productivity Bug";
+/** Short name for home-screen icons, where the full name is truncated. */
+export const SITE_SHORT_NAME = "The Prod Bug";
+/** PWA theme colour. Literal rather than a CSS token: the manifest is JSON, with no access to the stylesheet. */
+export const SITE_THEME_COLOR = "#4472e3";
+export const SITE_BACKGROUND_COLOR = "#ffffff";
 export const SITE_TITLE = `${SITE_NAME} — Free, focused tools for writers, developers, and creators`;
 export const SITE_DESCRIPTION =
 	"Free, focused web tools that handle the busywork of writing and code — turn an article into social posts, convert SVG to JSX, size SEO titles, generate slugs, and more. No sign-up, open source.";
@@ -54,6 +59,9 @@ export const SHOP_CANONICAL_BASE = `${CREATOR_SITE_URL}/shop`;
 export const UMAMI_WEBSITE_ID = "4550710a-0c5e-462a-8012-5d3ee2f3769e";
 /** Sender.net groups a new subscriber joins: "All customers" (account-wide) and "The Productivity Bug" (this site's list). */
 export const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
+
+/** Sender.net subscribers endpoint — the newsletter action's only outbound call. Versioned path, so a v3 migration is one edit here. */
+export const SENDER_SUBSCRIBERS_URL = "https://api.sender.net/v2/subscribers";
 
 /** Google AI Studio — where users create a free Gemini API key for BYOK. */
 export const AI_STUDIO_URL = "https://aistudio.google.com";

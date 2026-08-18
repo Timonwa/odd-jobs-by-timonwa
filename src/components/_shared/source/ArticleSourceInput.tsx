@@ -5,12 +5,11 @@ import { useId } from "react";
 import { SourceReuseControls } from "./SourceReuseControls";
 import { SourceKindTabs } from "./SourceKindTabs";
 import { Input, Textarea } from "@/components/ui";
+import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
 import type { ArticleSourceKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_MAX_CHARS = 15000;
-
-type Props = {
+type ArticleSourceInputProps = {
 	sourceKind: ArticleSourceKind;
 	onSourceKindChange: (kind: ArticleSourceKind) => void;
 	url: string;
@@ -42,10 +41,10 @@ export function ArticleSourceInput({
 	onToggleTextReuse,
 	onClearText,
 	disabled,
-	maxChars = DEFAULT_MAX_CHARS,
+	maxChars = MAX_ARTICLE_INPUT_CHARS,
 	urlPlaceholder = "https://your-blog.com/post-slug",
 	textPlaceholder = "Paste the full article, or a near-final draft…",
-}: Props) {
+}: ArticleSourceInputProps) {
 	const urlId = useId();
 	const textId = useId();
 	const counterId = useId();
