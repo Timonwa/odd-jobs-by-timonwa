@@ -1,9 +1,9 @@
 import { PilcrowIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import LoremIpsumTool from "./LoremIpsumTool";
+import { ClientToolPage } from "@/components/_shared/page";
+import { LoremIpsumTool } from "./LoremIpsumTool";
 
-export default function LoremIpsumPageContent() {
+export function LoremIpsumPageContent() {
 	return (
 		<ClientToolPage
 			slug="lorem-ipsum"

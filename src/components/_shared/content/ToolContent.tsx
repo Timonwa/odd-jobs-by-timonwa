@@ -1,20 +1,17 @@
 import { PlusIcon } from "lucide-react";
 import type { ComponentType } from "react";
 
-import MoreTools from "./MoreTools";
-import Newsletter from "./Newsletter";
+import { assertToolSlug, parseToolFaq } from "@/lib/utils";
 
-type ToolFaqType = { question: string; answer: string };
+import { MoreTools } from "./MoreTools";
+import { Newsletter } from "./Newsletter";
 
-/** The SEO content block below a tool — MDX article, FAQ (FAQPage JSON-LD), and a "more tools" grid; copy from `content/tools/<slug>.mdx`. */
-export default async function ToolContent({
-	currentSlug,
-}: {
-	currentSlug: string;
-}) {
-	const mod = await import(`@/content/tools/${currentSlug}.mdx`);
+/** The SEO content block below a tool — MDX article, FAQ (FAQPage JSON-LD — machine-readability and AI answer engines; Google restricted FAQ rich results to government and health sites in 2023), and a "more tools" grid; copy from `content/tools/<slug>.mdx`. */
+export async function ToolContent({ currentSlug }: { currentSlug: string }) {
+	const slug = assertToolSlug(currentSlug);
+	const mod = await import(`@/content/tools/${slug}.mdx`);
 	const Article = mod.default as ComponentType;
-	const faq = (mod as { faq: ToolFaqType[] }).faq;
+	const faq = parseToolFaq(slug, (mod as { faq?: unknown }).faq);
 
 	const faqJsonLd = {
 		"@context": "https://schema.org",

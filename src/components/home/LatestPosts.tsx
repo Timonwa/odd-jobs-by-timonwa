@@ -3,9 +3,9 @@ import Link from "next/link";
 
 import { buttonClasses, LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-import { getAllPosts } from "@/lib/blog/loader";
+import { getAllPosts } from "@/lib/server";
 
-export default function LatestPosts() {
+export function LatestPosts() {
 	const posts = getAllPosts().slice(0, 3);
 	if (posts.length === 0) return null;
 

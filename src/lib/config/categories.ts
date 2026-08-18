@@ -9,38 +9,33 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
-import {
-	type TintType,
-	TINT_HOVER_BORDER,
-	TINT_ICON,
-	TINT_SURFACE,
-} from "./tints";
+import { type Tint, TINT_HOVER_BORDER, TINT_ICON, TINT_SURFACE } from "./tints";
 
-export type CategoryIdType = "writing" | "ai" | "seo" | "developer" | "media";
+export type CategoryId = "writing" | "ai" | "seo" | "developer" | "media";
 
-export type CategoryColorType = {
+export type CategoryColor = {
 	badge: string;
 	chip: string;
 	border: string;
 };
 
-const colorForTint = (tint: TintType): CategoryColorType => ({
+const colorForTint = (tint: Tint): CategoryColor => ({
 	badge: TINT_SURFACE[tint],
 	chip: TINT_ICON[tint],
 	border: TINT_HOVER_BORDER[tint],
 });
 
-export type CategoryType = {
-	id: CategoryIdType;
+export type Category = {
+	id: CategoryId;
 	label: string;
 	description: string;
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
-	tint: TintType;
-	color: CategoryColorType;
+	tint: Tint;
+	color: CategoryColor;
 };
 
 /** Display order for filter chips and the browse-by-category grid. */
-export const TOOL_CATEGORIES: CategoryType[] = [
+export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "writing",
 		label: "Writing",
@@ -87,7 +82,7 @@ export const TOOL_CATEGORIES: CategoryType[] = [
 const BY_ID = new Map(TOOL_CATEGORIES.map((c) => [c.id, c]));
 
 /** Look up a category by ID, throwing if the ID isn't registered. */
-export const getCategory = (id: CategoryIdType): CategoryType => {
+export const getCategory = (id: CategoryId): Category => {
 	const category = BY_ID.get(id);
 	if (!category) throw new Error(`Unknown tool category: ${id}`);
 	return category;

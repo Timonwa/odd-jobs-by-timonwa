@@ -2,24 +2,26 @@
 
 import { FilePlus2Icon, Loader2Icon, RefreshCwIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
-import ArticleCard from "@/components/_shared/result/ArticleCard";
-import HistorySidebar from "@/components/_shared/result/HistorySidebar";
-import type { SocialPostHistoryType } from "@/lib/types";
-import type { WriterRuntimeType } from "@/lib/types";
+import {
+	ArticleCard,
+	GenerationStatus,
+	HistorySidebar,
+} from "@/components/_shared/result";
+import type { SocialPostHistory, WriterRuntime } from "@/lib/types";
 import { useWriter } from "@/lib/hooks";
 import { Button } from "@/components/ui";
-import PostCard from "./PostCard";
-import GenerateForm from "./GenerateForm";
+import { PostCard } from "./PostCard";
+import { GenerateForm } from "./GenerateForm";
 
 /** History row headline: the article title, else the URL, else a text snippet. */
-const historyLabel = (h: SocialPostHistoryType): string => {
+const historyLabel = (h: SocialPostHistory): string => {
 	if (h.result.article.title) return h.result.article.title;
 	if (h.source.kind === "url") return h.source.url;
 	const firstLine = h.source.text.trim().split("\n")[0] ?? "";
 	return firstLine.slice(0, 80) || "Untitled";
 };
 
-export default function Writer({ runtime }: { runtime: WriterRuntimeType }) {
+export function Writer({ runtime }: { runtime: WriterRuntime }) {
 	const w = useWriter(runtime);
 	const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +37,11 @@ export default function Writer({ runtime }: { runtime: WriterRuntimeType }) {
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
 			<div className="flex flex-col gap-6 min-w-0">
+				<GenerationStatus
+					isGenerating={w.isGenerating}
+					error={w.error}
+					hasResult={Boolean(w.result)}
+				/>
 				<GenerateForm
 					sourceKind={w.sourceKind}
 					onSourceKindChange={w.setSourceKind}

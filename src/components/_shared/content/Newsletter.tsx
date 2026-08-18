@@ -1,37 +1,17 @@
-"use client";
+// The newsletter section's shell — heading, copy, and decoration. A Server
+// Component: it renders on nearly every page, and only the form inside it needs
+// a client boundary (see NewsletterForm).
 
 import { MailIcon } from "lucide-react";
-import { useActionState, useId } from "react";
-import { useFormStatus } from "react-dom";
 
-import { Button, Input } from "@/components/ui";
-import {
-	type NewsletterFormStateType,
-	subscribeNewsletter,
-} from "@/lib/actions";
 import { cn } from "@/lib/utils";
+import { NewsletterForm } from "./NewsletterForm";
 
-const INITIAL: NewsletterFormStateType = { status: "idle" };
-
-function SubmitButton() {
-	const { pending } = useFormStatus();
-	return (
-		<Button type="submit" disabled={pending} className="shrink-0">
-			{pending ? "Subscribing…" : "Notify me"}
-		</Button>
-	);
-}
-
-/** "New tools in your inbox" signup — posts to the Sender.net server action. */
-export default function Newsletter({ className }: { className?: string }) {
-	const [state, formAction] = useActionState(subscribeNewsletter, INITIAL);
-	const headingId = useId();
-	const emailId = useId();
-	const errorId = useId();
-
+/** "Productivity, in your inbox" signup section. */
+export function Newsletter({ className }: { className?: string }) {
 	return (
 		<section
-			aria-labelledby={headingId}
+			aria-labelledby="newsletter-heading"
 			className={cn(
 				"relative overflow-hidden rounded-2xl border border-primary/20 bg-linear-to-br from-primary/15 via-card to-card px-6 py-10 text-center sm:px-10",
 				className,
@@ -52,7 +32,10 @@ export default function Newsletter({ className }: { className?: string }) {
 				>
 					<MailIcon className="h-6 w-6" />
 				</span>
-				<h2 id={headingId} className="text-2xl font-semibold tracking-tight">
+				<h2
+					id="newsletter-heading"
+					className="text-2xl font-semibold tracking-tight"
+				>
 					Productivity, in your inbox
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
@@ -60,45 +43,7 @@ export default function Newsletter({ className }: { className?: string }) {
 					unsubscribe anytime.
 				</p>
 
-				{state.status === "success" ? (
-					<p
-						role="status"
-						className="mx-auto mt-6 max-w-md rounded-lg bg-primary/10 px-4 py-3 text-sm font-medium text-primary"
-					>
-						{state.message}
-					</p>
-				) : (
-					<form action={formAction} className="mx-auto mt-6 max-w-md">
-						<div className="flex flex-col gap-2 sm:flex-row">
-							<label htmlFor={emailId} className="sr-only">
-								Email address
-							</label>
-							<Input
-								id={emailId}
-								type="email"
-								name="email"
-								required
-								autoComplete="email"
-								inputMode="email"
-								placeholder="you@example.com"
-								aria-describedby={
-									state.status === "error" ? errorId : undefined
-								}
-								className="flex-1"
-							/>
-							<SubmitButton />
-						</div>
-						{state.status === "error" && (
-							<p
-								id={errorId}
-								role="alert"
-								className="mt-2 text-sm text-destructive"
-							>
-								{state.message}
-							</p>
-						)}
-					</form>
-				)}
+				<NewsletterForm />
 			</div>
 		</section>
 	);

@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui";
 import { TOOL_CATEGORIES } from "@/lib/config/categories";
-import type { TintType } from "@/lib/config/tints";
+import type { Tint } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-const AUDIENCES: { label: string; tint: TintType }[] = [
+const AUDIENCES: { label: string; tint: Tint }[] = [
 	{ label: "Writers", tint: 1 },
 	{ label: "Developers", tint: 2 },
 	{ label: "Creators", tint: 3 },
@@ -19,7 +19,7 @@ const TILE_POSITIONS = [
 	"right-2 bottom-6 h-16 w-16 -rotate-3",
 ];
 
-export default function WhatItIs() {
+export function WhatItIs() {
 	return (
 		<section
 			aria-labelledby="about-heading"

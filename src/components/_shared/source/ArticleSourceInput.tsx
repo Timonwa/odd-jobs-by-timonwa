@@ -2,17 +2,16 @@
 
 import { useId } from "react";
 
-import SourceReuseControls from "./SourceReuseControls";
-import SourceKindTabs from "./SourceKindTabs";
+import { SourceReuseControls } from "./SourceReuseControls";
+import { SourceKindTabs } from "./SourceKindTabs";
 import { Input, Textarea } from "@/components/ui";
-import type { ArticleSourceKindType } from "@/lib/types";
+import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
+import type { ArticleSourceKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_MAX_CHARS = 15000;
-
-type Props = {
-	sourceKind: ArticleSourceKindType;
-	onSourceKindChange: (kind: ArticleSourceKindType) => void;
+type ArticleSourceInputProps = {
+	sourceKind: ArticleSourceKind;
+	onSourceKindChange: (kind: ArticleSourceKind) => void;
 	url: string;
 	onUrlChange: (value: string) => void;
 	urlReuse: boolean;
@@ -29,7 +28,7 @@ type Props = {
 };
 
 /** Article-source section for the AI tools: URL/paste tabs, field + counter, and reuse controls. */
-export default function ArticleSourceInput({
+export function ArticleSourceInput({
 	sourceKind,
 	onSourceKindChange,
 	url,
@@ -42,10 +41,10 @@ export default function ArticleSourceInput({
 	onToggleTextReuse,
 	onClearText,
 	disabled,
-	maxChars = DEFAULT_MAX_CHARS,
+	maxChars = MAX_ARTICLE_INPUT_CHARS,
 	urlPlaceholder = "https://your-blog.com/post-slug",
 	textPlaceholder = "Paste the full article, or a near-final draft…",
-}: Props) {
+}: ArticleSourceInputProps) {
 	const urlId = useId();
 	const textId = useId();
 	const counterId = useId();
@@ -95,9 +94,12 @@ export default function ArticleSourceInput({
 						<label htmlFor={textId} className="text-sm font-medium">
 							Your text
 						</label>
+						{/* No aria-live: this updated on every keystroke, so a screen reader
+						    announced the character count instead of the user's typing. The
+						    textarea's aria-describedby points here, so it is read on focus
+						    and on demand. */}
 						<span
 							id={counterId}
-							aria-live="polite"
 							className={cn(
 								"text-xs tabular-nums",
 								over ? "text-destructive font-medium" : "text-muted-foreground",

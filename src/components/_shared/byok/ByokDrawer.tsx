@@ -3,14 +3,14 @@
 import { KeyRoundIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button, Drawer } from "@/components/ui";
-import ByokSection from "./ByokSection";
+import { ByokSection } from "./ByokSection";
 
-import { type ByokModelType, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
+import { type ByokModel, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
 import { OPEN_BYOK_EVENT } from "@/lib/constants";
 import { byokModelStorage, byokStorage, subscribeByok } from "@/lib/utils";
 
 /** Hub-level BYOK drawer (one instance in the Navbar); open it by dispatching `OPEN_BYOK_EVENT`. */
-export default function ByokDrawer() {
+export function ByokDrawer() {
 	const [open, setOpen] = useState(false);
 	// BYOK key + model live in sessionStorage — read them as an external store so
 	// same-tab writes and cross-tab storage events keep every reader in sync
@@ -51,16 +51,32 @@ export default function ByokDrawer() {
 				message:
 					"That doesn't look like a full API key. Copy the entire key from Google AI Studio and paste it again.",
 			};
-		byokStorage.set(trimmed);
+		// Only claim success if the write actually landed — sessionStorage can be
+		// unavailable, and telling someone their key is saved when it isn't sends
+		// them back to the hosted quota with no explanation.
+		if (!byokStorage.set(trimmed))
+			return {
+				type: "error" as const,
+				message:
+					"Your browser blocked storing the key for this tab. Check your privacy settings, or try a normal (non-private) window.",
+			};
 		return { type: "success" as const, message: "Key saved for this tab." };
 	};
 
 	const handleClear = () => {
-		byokStorage.clear();
+		const cleared = byokStorage.clear();
 		byokModelStorage.clear();
+		// The worse direction to get wrong: saying a key was removed when it wasn't.
+		return cleared
+			? { type: "success" as const, message: "Key cleared." }
+			: {
+					type: "error" as const,
+					message:
+						"Your browser blocked clearing the key. Close this tab to end the session.",
+				};
 	};
 
-	const handleModelChange = (model: ByokModelType) => {
+	const handleModelChange = (model: ByokModel) => {
 		byokModelStorage.set(model);
 	};
 
@@ -71,7 +87,9 @@ export default function ByokDrawer() {
 				size="sm"
 				onClick={() => setOpen(true)}
 				aria-label={saved ? "API key — your own key is active" : "API key"}
-				aria-expanded={open}
+				// A drawer is a modal dialog, not an expandable region: `aria-expanded`
+				// describes in-place disclosure, so a dialog trigger uses haspopup instead.
+				aria-haspopup="dialog"
 				className="w-full justify-start"
 			>
 				<KeyRoundIcon aria-hidden className="w-4 h-4" />

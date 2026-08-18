@@ -18,7 +18,7 @@ type SourceReuseControlsProps = {
 };
 
 /** The opt-in "reuse across tools" checkbox + Clear button; when reuse is on, Clear wipes the shared value everywhere. */
-export default function SourceReuseControls({
+export function SourceReuseControls({
 	id,
 	reuse,
 	onToggleReuse,

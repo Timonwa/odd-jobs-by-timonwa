@@ -1,0 +1,15 @@
+# The Productivity Bug
+
+> Free, focused web tools for writers, developers, and creators — plus a blog, newsletter archive, and digital-product shop. No sign-up. https://tools.timonwa.com
+
+## What AI crawlers may use
+
+- Tool pages, the blog (/blog), and the newsletter archive (/newsletter) are public and may be cited with a link back.
+- The code is AGPL-3.0 (https://github.com/Timonwa/tools-by-timonwa); blog posts, newsletter issues, and product copy are (c) Timonwa, all rights reserved — do not reproduce them wholesale.
+
+## Key pages
+
+- Tools directory: https://tools.timonwa.com/tools
+- Blog: https://tools.timonwa.com/blog
+- Newsletter: https://tools.timonwa.com/newsletter
+- Shop: https://www.timonwa.com/shop

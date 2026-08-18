@@ -7,9 +7,20 @@
 export const SITE_URL = "https://tools.timonwa.com";
 export const SITE_DOMAIN = SITE_URL.replace(/^https?:\/\//, "");
 export const SITE_NAME = "The Productivity Bug";
-export const SITE_TITLE = `${SITE_NAME} — Free, focused tools for writers, developers, and creators`;
+/** Short name for home-screen icons, where the full name is truncated. */
+export const SITE_SHORT_NAME = "The Prod Bug";
+/** PWA theme colour. Literal rather than a CSS token: the manifest is JSON, with no access to the stylesheet. */
+export const SITE_THEME_COLOR = "#4472e3";
+export const SITE_BACKGROUND_COLOR = "#ffffff";
+// 63 chars, so search results show it whole. All three audiences stay — the
+// character budget was met by dropping "Free, focused", which the description
+// still carries, not by dropping an audience.
+export const SITE_TITLE = `${SITE_NAME} — tools for writers, developers & creators`;
+// 168 chars. Search results cut around 155, so the very tail may clip — the
+// trade was made against the example list, not against "No sign-up, open
+// source", which is positioning worth keeping at the end.
 export const SITE_DESCRIPTION =
-	"Free, focused web tools that handle the busywork of writing and code — turn an article into social posts, convert SVG to JSX, size SEO titles, generate slugs, and more. No sign-up, open source.";
+	"Free, focused web tools for the busywork of writing and code — turn an article into social posts, convert SVG to JSX, generate slugs, and more. No sign-up, open source.";
 /** Short one-liner for tight spots like the footer, where SITE_DESCRIPTION runs long. */
 export const SITE_TAGLINE =
 	"Free, focused productivity tools for writers, developers, and creators. No sign-up, open source.";
@@ -25,8 +36,6 @@ export const CREATOR_TWITTER = "@timonwa_";
 export const CREATOR_SITE_URL = "https://www.timonwa.com";
 export const CREATOR_TWITTER_URL = `https://x.com/${CREATOR_TWITTER.slice(1)}`;
 export const CREATOR_LINKEDIN_URL = "https://linkedin.com/in/timonwa";
-/** Creator's shop — linked from the footer. */
-export const CREATOR_SHOP_URL = `${CREATOR_SITE_URL}/shop`;
 /** Creator's dev blog (Timonwa's Notes) — a separate property from this site's blog. */
 export const CREATOR_BLOG_URL = "https://tech.timonwa.com/blog";
 export const CREATOR_SAME_AS = [
@@ -48,6 +57,17 @@ export const PRIVACY_URL = `${CREATOR_SITE_URL}/privacy`;
 /** Base for product canonicals — each shop product declares the equivalent
  * www.timonwa.com/shop/<slug> as its canonical (the authoritative listing). */
 export const SHOP_CANONICAL_BASE = `${CREATOR_SITE_URL}/shop`;
+
+/** Third-party destination ids. Committed, not env-held — none is a secret, and
+ * a value that differs per tier belongs in reviewed config rather than a
+ * dashboard. Both currently point at the production property in every tier;
+ * split them here if a separate staging destination is ever wanted. */
+export const UMAMI_WEBSITE_ID = "4550710a-0c5e-462a-8012-5d3ee2f3769e";
+/** Sender.net groups a new subscriber joins: "All customers" (account-wide) and "The Productivity Bug" (this site's list). */
+export const SENDER_GROUP_IDS = ["b6VOlQ", "dw5jLr"];
+
+/** Sender.net subscribers endpoint — the newsletter action's only outbound call. Versioned path, so a v3 migration is one edit here. */
+export const SENDER_SUBSCRIBERS_URL = "https://api.sender.net/v2/subscribers";
 
 /** Google AI Studio — where users create a free Gemini API key for BYOK. */
 export const AI_STUDIO_URL = "https://aistudio.google.com";

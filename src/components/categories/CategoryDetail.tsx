@@ -1,31 +1,25 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import Newsletter from "@/components/_shared/content/Newsletter";
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
+import { Newsletter } from "@/components/_shared/content";
+import { ToolGrid } from "@/components/_shared/tool";
 import {
+	PageMain,
 	Breadcrumbs,
 	buttonClasses,
 	EmptyState,
 	PageHero,
 } from "@/components/ui";
-import type { CategoryType } from "@/lib/config/categories";
+import type { Category } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
 import { getToolsInCategory } from "@/lib/config/tools";
 
 /** A single category's page: its tools, with a link back to the full directory. */
-export default function CategoryDetail({
-	category,
-}: {
-	category: CategoryType;
-}) {
+export function CategoryDetail({ category }: { category: Category }) {
 	const tools = getToolsInCategory(category.id);
 
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<Breadcrumbs
 					items={[

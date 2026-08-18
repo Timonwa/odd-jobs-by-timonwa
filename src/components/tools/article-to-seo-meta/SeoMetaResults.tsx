@@ -8,7 +8,7 @@ import {
 	SEO_META_TITLE_MAX,
 	SEO_META_TITLE_MIN,
 } from "@/lib/constants";
-import type { SeoMetaVariationType } from "@/lib/types";
+import type { SeoMetaVariation } from "@/lib/types";
 import {
 	Button,
 	Card,
@@ -23,16 +23,16 @@ import {
 import { TINT_SURFACE } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-type RangeStatusType = "in-range" | "close" | "out";
+type RangeStatus = "in-range" | "close" | "out";
 
-function status(len: number, min: number, max: number): RangeStatusType {
+function status(len: number, min: number, max: number): RangeStatus {
 	if (len >= min && len <= max) return "in-range";
 	const delta = len < min ? min - len : len - max;
 	return delta <= 5 ? "close" : "out";
 }
 
-type Props = {
-	variations: SeoMetaVariationType[];
+type SeoMetaResultsProps = {
+	variations: SeoMetaVariation[];
 	regeneratingIndex: number | null;
 	busy: boolean;
 	onVariationChange: (
@@ -44,13 +44,13 @@ type Props = {
 };
 
 /** Grid of editable SEO variation cards with per-card regenerate and copy actions. */
-export default function SeoMetaResults({
+export function SeoMetaResults({
 	variations,
 	regeneratingIndex,
 	busy,
 	onVariationChange,
 	onRegenerate,
-}: Props) {
+}: SeoMetaResultsProps) {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 			{variations.map((v, i) => (
@@ -78,7 +78,7 @@ function VariationCard({
 	onRegenerate,
 }: {
 	index: number;
-	variation: SeoMetaVariationType;
+	variation: SeoMetaVariation;
 	isRegenerating: boolean;
 	canRegenerate: boolean;
 	onChange: (field: "title" | "description", value: string) => void;
@@ -163,7 +163,7 @@ function Field({
 	value: string;
 	min: number;
 	max: number;
-	status: RangeStatusType;
+	status: RangeStatus;
 	onChange: (value: string) => void;
 }) {
 	const over = value.length > max;
@@ -195,6 +195,8 @@ function Field({
 				aria-label={label}
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
+				// Not colour alone: aria-invalid states it for assistive tech (WCAG 1.4.1).
+				aria-invalid={over || under || undefined}
 				className={cn(
 					"resize-none text-sm min-h-0",
 					(over || under) && "border-destructive focus:ring-destructive",

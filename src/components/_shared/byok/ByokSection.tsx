@@ -12,29 +12,29 @@ import Link from "next/link";
 import { useId, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
-import { BYOK_MODELS, type ByokModelType } from "@/lib/config/byok";
+import { BYOK_MODELS, type ByokModel } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
 import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
-import { POST_SLUGS } from "@/lib/blog/blog";
+import { POST_SLUGS } from "@/lib/constants";
 
-type StatusType =
+type Status =
 	| { type: "success"; message: string }
 	| { type: "error"; message: string }
 	| null;
 
 type ByokSectionProps = {
 	savedKey: string | null;
-	byokModel: ByokModelType;
-	onSave: (key: string) => StatusType;
-	onClear: () => void;
-	onModelChange: (model: ByokModelType) => void;
+	byokModel: ByokModel;
+	onSave: (key: string) => Status;
+	onClear: () => Status;
+	onModelChange: (model: ByokModel) => void;
 };
 
 const mask = (k: string) =>
 	k.length > 10 ? `${k.slice(0, 6)}…${k.slice(-4)}` : "•••";
 
 /** The BYOK form: Gemini key input (masked reveal + format check), model picker, and save/clear. */
-export default function ByokSection({
+export function ByokSection({
 	savedKey,
 	byokModel,
 	onSave,
@@ -43,15 +43,16 @@ export default function ByokSection({
 }: ByokSectionProps) {
 	const [input, setInput] = useState(savedKey ?? "");
 	const [reveal, setReveal] = useState(false);
-	const [status, setStatus] = useState<StatusType>(null);
+	const [status, setStatus] = useState<Status>(null);
 	const keyInputId = useId();
 	const modelLabelId = useId();
 
 	const handleSave = () => setStatus(onSave(input.trim()));
 	const handleClear = () => {
-		onClear();
+		const result = onClear();
 		setInput("");
-		setStatus({ type: "success", message: "Key cleared." });
+		// Report what actually happened rather than assuming the clear landed.
+		setStatus(result);
 	};
 
 	return (

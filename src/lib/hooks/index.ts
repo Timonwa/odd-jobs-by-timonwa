@@ -1,10 +1,9 @@
-// Barrel — re-exports the app's hooks.
-
-export * from "./use-article-source";
-export * from "./use-theme";
-export * from "./use-seo-meta-history";
-export * from "./writer/use-writer";
-export * from "./writer/create-tool-history";
-export * from "./writer/create-social-posts-style-templates";
-export * from "./writer/use-social-posts-history";
-export * from "./writer/use-social-posts-style-templates";
+// Barrel — the app's hooks, one line per file.
+export { useArticleSource } from "./use-article-source";
+export { useSeoMetaHistory, type SeoMetaHistory } from "./use-seo-meta-history";
+export { useTheme, type Theme } from "./use-theme";
+export { useSocialPostsHistory } from "./writer/use-social-posts-history";
+export { useSocialPostsStyleTemplates } from "./writer/use-social-posts-style-templates";
+export { useWriter } from "./writer/use-writer";
+export { useCopyFeedback } from "./use-copy-feedback";
+export { useSeoMetaTool } from "./use-seo-meta-tool";

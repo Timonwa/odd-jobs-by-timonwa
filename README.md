@@ -4,19 +4,9 @@
   <br/><br/>
 
 <a href="https://tools.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Ftools.timonwa.com&style=flat-square&label=tools.timonwa.com&up_message=online&down_message=offline" /></a>
-<a href="https://github.com/Timonwa/tools-by-timonwa/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Timonwa/tools-by-timonwa?style=flat-square&logo=github&label=stars&color=f5c518" /></a>
 <a href="./LICENSE"><img alt="License: AGPL v3.0" src="https://img.shields.io/badge/License-AGPL%20v3.0-blue?style=flat-square" /></a>
 <a href="./CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" /></a>
-<a href="https://www.timonwa.com/coc"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.1-7c3aed?style=flat-square" /></a>
 <a href="https://www.timonwa.com/support"><img alt="Support" src="https://img.shields.io/badge/Support-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white" /></a>
-
-<br/>
-
-<a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000?style=flat-square&logo=nextdotjs&logoColor=white" /></a>
-<a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?style=flat-square&logo=react&logoColor=white" /></a>
-<a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" /></a>
-<a href="https://tailwindcss.com"><img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white" /></a>
-<a href="https://ai-sdk.dev"><img alt="Vercel AI SDK" src="https://img.shields.io/badge/Vercel_AI_SDK-000?style=flat-square&logo=vercel&logoColor=white" /></a>
 </div>
 
 ---
@@ -57,13 +47,13 @@ _More on the way._
 
 ## Run locally
 
-**Prerequisites:** Node.js 20.9+, [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys).
+**Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc)), [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys) if you want the AI tools.
 
 ```bash
 git clone https://github.com/Timonwa/tools-by-timonwa.git
 cd tools-by-timonwa
 pnpm install
-cp .env.example .env      # add at least GOOGLE_API_KEY
+cp .env.example .env      # GOOGLE_API_KEY for the AI tools; the rest are optional locally
 pnpm dev
 ```
 
@@ -71,13 +61,33 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment variables
 
-| Variable                                | Required | Purpose                                                |
-| --------------------------------------- | -------- | ------------------------------------------------------ |
-| `GOOGLE_API_KEY`                        | ✅       | Gemini key powering the tools                          |
-| `GOOGLE_API_KEY_ARTICLE_TO_SEO_META`    | —        | Optional per-tool key (falls back to `GOOGLE_API_KEY`) |
-| `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —        | Optional per-tool key                                  |
-| `LLM_MODEL`                             | —        | Server model (default `gemini-flash-lite-latest`)      |
-| `UPSTASH_REDIS_REST_URL` / `..._TOKEN`  | —        | Enables hosted daily rate limiting                     |
+| Variable                                | Required                  | Purpose                                                                                                                                                      |
+| --------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `APP_ENV`                               | on deploy                 | `production` or `development` (the default when unset). Gates analytics, and makes `IP_HASH_SECRET` mandatory                                                |
+| `GOOGLE_API_KEY`                        | for hosted AI             | Gemini key behind the free quota. Without it the AI tools are bring-your-own-key only                                                                        |
+| `UPSTASH_REDIS_REST_URL` / `..._TOKEN`  | for hosted AI             | Rate-limit counters. A built app that can't meter **refuses** hosted AI rather than spending the key unmetered                                               |
+| `IP_HASH_SECRET`                        | when `APP_ENV=production` | Pepper for hashed IPs. The app **throws at boot** without it in production — an unkeyed IP hash is brute-forceable. Generate one with `openssl rand -hex 32` |
+| `GOOGLE_API_KEY_ARTICLE_TO_SEO_META`    | —                         | Per-tool key override (falls back to `GOOGLE_API_KEY`)                                                                                                       |
+| `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —                         | Per-tool key override                                                                                                                                        |
+| `SENDER_API_TOKEN`                      | —                         | Sender.net token for newsletter signups                                                                                                                      |
+
+The app builds and the instant tools work with nothing set. **Hosted AI needs `GOOGLE_API_KEY` _and_ the two Upstash variables** — a build that can't meter refuses to spend the platform key, so one without the other leaves the AI tools BYOK-only. The dev server is exempt from metering, so local work needs no Upstash account. [`.env.example`](./.env.example) is the source of truth.
+
+The model is not an environment variable: it's `HOSTED_LLM_MODEL` in [`src/lib/config/byok.ts`](./src/lib/config/byok.ts), committed and constrained to an allowlist so environments can't silently drift onto different models.
+
+### Scripts
+
+| Command             | What it does             |
+| ------------------- | ------------------------ |
+| `pnpm dev`          | Dev server (Turbopack)   |
+| `pnpm build`        | Production build         |
+| `pnpm start`        | Run the production build |
+| `pnpm typecheck`    | `tsc --noEmit`           |
+| `pnpm lint`         | ESLint                   |
+| `pnpm format`       | Prettier — write         |
+| `pnpm format:check` | Prettier — check         |
+
+CI gates four of these, in order: `lint`, `format:check`, `typecheck`, `build`.
 
 Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK](https://ai-sdk.dev/) + Gemini, and Upstash Redis.
 

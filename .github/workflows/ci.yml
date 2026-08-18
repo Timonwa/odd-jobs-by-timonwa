@@ -28,15 +28,18 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          # `every` is essential: the default `some` marks a PR docs-only when
+          # ANY file matches, so one .md alongside 100 .ts files skipped every gate.
+          predicate-quantifier: every
           filters: |
             docs-only:
               - '**/*.md'
               - '**/*.mdx'
               - 'LICENSE'
+              - 'LICENSE-content'
               - '.github/labeler.yml'
+              - '.github/release-notes.yml'
               - '.github/workflows/label.yml'
-              - '.github/workflows/stale.yml'
-              - '.github/workflows/pr-title.yml'
               - '.github/pull_request_template.md'
               - '.github/ISSUE_TEMPLATE/**'
               - '.github/FUNDING.yml'
@@ -75,10 +78,9 @@ jobs:
     needs: [changes, lint-and-typecheck]
     if: needs.changes.outputs.should-skip != 'true'
     env:
-      # env.ts validates required vars at module load via Zod.
-      # Missing GOOGLE_API_KEY fails the build with a Zod error.
-      # Optional vars (Upstash, Cloudflare Analytics) are left unset — the
-      # app gracefully skips rate limiting / analytics when absent.
+      # Every env var is optional in env.ts, so the build passes with none set.
+      # A placeholder key is still supplied so the build exercises the same
+      # configured-key path production takes rather than the unset branch.
       GOOGLE_API_KEY: ci-placeholder-key
 
     steps:
@@ -91,21 +93,30 @@ jobs:
       - name: Build
         run: pnpm build
 
-  # ──────────────────────────────────────────────
-  # Test (enable when tests are configured)
-  # ──────────────────────────────────────────────
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: [changes, lint-and-typecheck]
-    if: false # Enable when tests are configured
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup environment
-        uses: ./.github/actions/setup
-
-      - name: Test
-        run: pnpm test
+      # Next 16 no longer prints First Load JS, so a regression in client bundle
+      # size is otherwise invisible in review. Measured, not analyzed: no extra
+      # dependency, and the number is the one users actually download.
+      #
+      # Baseline 1584 KB (measured on a clean build of this branch; `dev` is
+      # 1432 KB). Raised from 1500 once, deliberately: the +152 KB is breadcrumbs
+      # on six more pages, share menus on three more, and the accessibility work
+      # — feature growth, not an eager dependency. The budget keeps ~7% headroom
+      # so it still catches the latter.
+      #
+      # One thing measured but NOT explained: a client chunk contains Zod, which
+      # `dev` has none of. Every component consuming `lib/schemas` uses
+      # `import type`, all three actions carry file-level "use server", and no
+      # client module imports zod directly. Tracked as performance F15 — if that
+      # turns out to be a boundary leak, closing it should claw back most of the
+      # raise, so lower the budget again when it does.
+      #
+      # Raise it deliberately, with a note saying what grew.
+      - name: Client bundle budget
+        run: |
+          BUDGET_KB=1700
+          SIZE_KB=$(du -sk .next/static/chunks | cut -f1)
+          echo "Client chunks: ${SIZE_KB} KB (budget ${BUDGET_KB} KB)"
+          if [ "$SIZE_KB" -gt "$BUDGET_KB" ]; then
+            echo "::error::Client chunks grew to ${SIZE_KB} KB, over the ${BUDGET_KB} KB budget. Check for a newly-eager dependency, or raise the budget deliberately."
+            exit 1
+          fi

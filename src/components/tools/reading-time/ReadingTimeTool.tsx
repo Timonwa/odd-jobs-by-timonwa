@@ -1,8 +1,8 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 
-import SourceReuseControls from "@/components/_shared/source/SourceReuseControls";
+import { SourceReuseControls } from "@/components/_shared/source";
 import { useArticleSource } from "@/lib/hooks";
 import {
 	Card,
@@ -12,17 +12,16 @@ import {
 	Textarea,
 	ToggleButton,
 } from "@/components/ui";
-import { countWords } from "@/lib/utils";
 import {
+	countWords,
 	durationSeconds,
 	formatDuration,
 	READING_WPM,
 	readingMinutes,
-	type ReadingSpeedType,
+	type ReadingSpeed,
 	SPEAKING_WPM,
 } from "@/lib/utils";
-
-const SPEEDS: { id: ReadingSpeedType; label: string }[] = [
+const SPEEDS: { id: ReadingSpeed; label: string }[] = [
 	{ id: "slow", label: "Slow" },
 	{ id: "average", label: "Average" },
 	{ id: "fast", label: "Fast" },
@@ -30,13 +29,13 @@ const SPEEDS: { id: ReadingSpeedType; label: string }[] = [
 
 const numberFmt = new Intl.NumberFormat("en-US");
 
-export default function ReadingTimeTool() {
+export function ReadingTimeTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
-	const [speed, setSpeed] = useState<ReadingSpeedType>("average");
+	const [speed, setSpeed] = useState<ReadingSpeed>("average");
 	const reuseId = useId();
 
-	const words = useMemo(() => countWords(text), [text]);
+	const words = countWords(text);
 	const wpm = READING_WPM[speed];
 	const readLabel = `${readingMinutes(words, wpm)} min read`;
 

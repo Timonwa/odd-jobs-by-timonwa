@@ -40,7 +40,7 @@ function seededRandom() {
 	};
 }
 
-export default function LoremIpsumTool() {
+export function LoremIpsumTool() {
 	const [unit, setUnit] = useState<LoremUnit>(DEFAULTS.unit);
 	const [count, setCount] = useState(DEFAULTS.count);
 	const [startWithLorem, setStartWithLorem] = useState(DEFAULTS.startWithLorem);

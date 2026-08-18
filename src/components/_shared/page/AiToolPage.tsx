@@ -1,17 +1,16 @@
-import type { ComponentType, ReactNode, SVGProps } from "react";
+import type { ReactNode } from "react";
 
-import ToolContent from "../content/ToolContent";
-import ToolBreadcrumbs from "../tool/ToolBreadcrumbs";
-import Navbar from "@/components/layout/Navbar";
-import PageMain from "@/components/layout/PageMain";
+import { ToolContent } from "../content/ToolContent";
+import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
+import { AppNavbar } from "@/components/_shared/layout";
+import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
-
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+import type { IconComponent } from "@/lib/types";
 
 type AiToolPageProps = {
 	slug: string;
 	name: string;
-	icon: IconComponentType;
+	icon: IconComponent;
 	usageNotice: ReactNode;
 	settings?: ReactNode;
 	menuSlot?: ReactNode;
@@ -21,7 +20,7 @@ type AiToolPageProps = {
 };
 
 /** Page shell for the AI tools: navbar with usage notice, BYOK, optional settings drawer, then the tool + (optional) SEO content. */
-export default function AiToolPage({
+export function AiToolPage({
 	slug,
 	name,
 	icon,
@@ -33,7 +32,7 @@ export default function AiToolPage({
 }: AiToolPageProps) {
 	return (
 		<>
-			<Navbar
+			<AppNavbar
 				brand={{
 					href: ROUTES.tool(slug),
 					name,

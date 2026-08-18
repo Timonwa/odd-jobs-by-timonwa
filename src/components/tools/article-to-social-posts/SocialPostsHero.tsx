@@ -2,7 +2,7 @@ import { Share2Icon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
 
-export default function SocialPostsHero() {
+export function SocialPostsHero() {
 	return (
 		<PageHero
 			className="mb-10"

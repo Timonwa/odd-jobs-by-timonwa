@@ -9,11 +9,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui";
-import type { ArticleMetaType, TokenUsageType } from "@/lib/types";
+import type { ArticleMeta, TokenUsage } from "@/lib/types";
 
-type Props = {
-	article: ArticleMetaType;
-	usage: TokenUsageType | null;
+type ArticleCardProps = {
+	article: ArticleMeta;
+	usage: TokenUsage | null;
 	copied: boolean;
 	onCopyAll: () => void;
 	copyLabel: string;
@@ -31,13 +31,13 @@ function safeHttpUrl(url: string | undefined): string | undefined {
 }
 
 /** Results header for the draft-based AI tools: source title/author/link, token usage, copy-all. */
-export default function ArticleCard({
+export function ArticleCard({
 	article,
 	usage,
 	copied,
 	onCopyAll,
 	copyLabel,
-}: Props) {
+}: ArticleCardProps) {
 	const linkUrl = safeHttpUrl(article.url);
 	return (
 		<Card>

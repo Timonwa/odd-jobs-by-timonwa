@@ -5,19 +5,15 @@ import { useId } from "react";
 import { ToggleButton } from "@/components/ui";
 
 import { SOCIAL_POST_TONES } from "@/lib/constants";
-import type { SocialPostToneType } from "@/lib/constants";
+import type { SocialPostTone } from "@/lib/constants";
 
 type TonePickerProps = {
-	value: SocialPostToneType;
-	onChange: (tone: SocialPostToneType) => void;
+	value: SocialPostTone;
+	onChange: (tone: SocialPostTone) => void;
 	disabled?: boolean;
 };
 
-export default function TonePicker({
-	value,
-	onChange,
-	disabled,
-}: TonePickerProps) {
+export function TonePicker({ value, onChange, disabled }: TonePickerProps) {
 	const labelId = useId();
 	return (
 		<div className="flex flex-col gap-2">

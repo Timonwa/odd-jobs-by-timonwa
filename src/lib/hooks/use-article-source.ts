@@ -10,7 +10,7 @@ import {
 } from "react";
 
 import { STORAGE_KEYS } from "@/lib/constants";
-import type { ArticleSourceKindType } from "@/lib/types";
+import type { ArticleSourceKind } from "@/lib/types";
 import { createLocalStore } from "@/lib/utils";
 
 const TEXT_KEY = STORAGE_KEYS.sourceText;
@@ -35,6 +35,10 @@ const stringStore = (key: string) =>
 			} catch {}
 		},
 		serverValue: "",
+		// These hold the article text and URL, so they are written on every
+		// keystroke — coalesce them rather than serializing a whole article per
+		// keypress. Flushed on tab hide, so nothing is lost.
+		writeDelayMs: 300,
 	});
 
 const flagStore = (key: string) =>
@@ -63,10 +67,10 @@ const urlEnabledStore = flagStore(URL_ENABLED_KEY);
 // tab you last used. A view pointer, not content — not gated by either reuse.
 const kindStore = stringStore(KIND_KEY);
 
-type ArticleSourceSeedType =
-	string | { text?: string; url?: string; kind?: ArticleSourceKindType };
+type ArticleSourceSeed =
+	string | { text?: string; url?: string; kind?: ArticleSourceKind };
 
-type ArticleSourceStateType = {
+type ArticleSourceState = {
 	text: string;
 	setText: (value: string) => void;
 	textReuse: boolean;
@@ -75,19 +79,19 @@ type ArticleSourceStateType = {
 	setUrl: (value: string) => void;
 	urlReuse: boolean;
 	toggleUrlReuse: (next: boolean) => void;
-	sourceKind: ArticleSourceKindType;
-	setSourceKind: (kind: ArticleSourceKindType) => void;
+	sourceKind: ArticleSourceKind;
+	setSourceKind: (kind: ArticleSourceKind) => void;
 	clear: () => void;
 };
 
 /** Article-source state for one tool's source field(s); two opt-in shared channels (text + URL) backed by localStorage external stores so every tool stays in sync. */
 export function useArticleSource(
-	seed: ArticleSourceSeedType = "",
-): ArticleSourceStateType {
+	seed: ArticleSourceSeed = "",
+): ArticleSourceState {
 	const seedObj = typeof seed === "string" ? { text: seed } : seed;
 	const seedText = seedObj.text ?? "";
 	const seedUrl = seedObj.url ?? "";
-	const seedKind: ArticleSourceKindType = seedObj.kind ?? "url";
+	const seedKind: ArticleSourceKind = seedObj.kind ?? "url";
 
 	const textReuse = useSyncExternalStore(
 		textEnabledStore.subscribe,
@@ -117,7 +121,7 @@ export function useArticleSource(
 
 	const [localText, setLocalText] = useState(seedText);
 	const [localUrl, setLocalUrl] = useState(seedUrl);
-	const [localKind, setLocalKind] = useState<ArticleSourceKindType>(seedKind);
+	const [localKind, setLocalKind] = useState<ArticleSourceKind>(seedKind);
 
 	// A non-empty seed on mount (history restore) adopts into the matching shared
 	// channel when its reuse is on. Writes the external stores only — never React
@@ -134,10 +138,10 @@ export function useArticleSource(
 
 	const text = textReuse ? sharedText : localText;
 	const url = urlReuse ? sharedUrl : localUrl;
-	const sourceKind: ArticleSourceKindType =
+	const sourceKind: ArticleSourceKind =
 		sharedKind === "url" || sharedKind === "text" ? sharedKind : localKind;
 
-	const setSourceKind = useCallback((kind: ArticleSourceKindType) => {
+	const setSourceKind = useCallback((kind: ArticleSourceKind) => {
 		kindStore.set(kind);
 		setLocalKind(kind);
 	}, []);

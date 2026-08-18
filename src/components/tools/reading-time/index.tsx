@@ -1,9 +1,9 @@
 import { ClockIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import ReadingTimeTool from "./ReadingTimeTool";
+import { ClientToolPage } from "@/components/_shared/page";
+import { ReadingTimeTool } from "./ReadingTimeTool";
 
-export default function ReadingTimePageContent() {
+export function ReadingTimePageContent() {
 	return (
 		<ClientToolPage
 			slug="reading-time"

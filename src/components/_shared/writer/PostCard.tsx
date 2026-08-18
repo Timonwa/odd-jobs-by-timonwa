@@ -10,9 +10,9 @@ import {
 	SOCIAL_POST_PLATFORM_COLORS,
 	SOCIAL_POST_PLATFORM_LABELS,
 } from "@/lib/constants";
-import type { SocialPostType } from "@/lib/types";
-import { PLATFORM_ICONS } from "@/components/ui/logos";
+import type { SocialPost } from "@/lib/types";
 import {
+	PLATFORM_ICONS,
 	Badge,
 	Button,
 	Card,
@@ -32,8 +32,8 @@ const charCountClass = (count: number, limit: number): string =>
 			? TINT_TEXT[2]
 			: "text-muted-foreground";
 
-type Props = {
-	post: SocialPostType;
+type PostCardProps = {
+	post: SocialPost;
 	isRegenerating: boolean;
 	busy: boolean;
 	copied: boolean;
@@ -43,7 +43,7 @@ type Props = {
 	onRegenerate: () => void;
 };
 
-export default function PostCard({
+export function PostCard({
 	post,
 	isRegenerating,
 	busy,
@@ -52,7 +52,7 @@ export default function PostCard({
 	onThreadPostChange,
 	onCopy,
 	onRegenerate,
-}: Props) {
+}: PostCardProps) {
 	const isThread = post.thread && post.thread.length > 1;
 	const regenLabel = isThread
 		? "Regenerate this thread"

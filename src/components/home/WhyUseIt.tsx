@@ -8,18 +8,18 @@ import {
 } from "lucide-react";
 
 import { IconBadge, Section, SectionHeader } from "@/components/ui";
-import { TINT_BORDER, type TintType } from "@/lib/config/tints";
+import { TINT_BORDER, type Tint } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-type FeatureType = {
+type Feature = {
 	icon: typeof ShieldCheckIcon;
 	title: string;
 	body: string;
 	big?: boolean;
-	tint?: TintType;
+	tint?: Tint;
 };
 
-const FEATURES: FeatureType[] = [
+const FEATURES: Feature[] = [
 	{
 		icon: ShieldCheckIcon,
 		title: "Private by default",
@@ -58,7 +58,7 @@ const FEATURES: FeatureType[] = [
 	},
 ];
 
-export default function WhyUseIt() {
+export function WhyUseIt() {
 	return (
 		<Section aria-labelledby="why-heading">
 			<SectionHeader

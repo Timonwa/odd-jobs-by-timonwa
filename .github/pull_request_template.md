@@ -12,5 +12,5 @@ Closes #
 
 ## Checklist
 
-- [ ] `pnpm check` and `pnpm typecheck` pass
+- [ ] `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, and `pnpm build` pass (the same gates CI runs)
 - [ ] I tested my change locally

@@ -3,7 +3,7 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
 
-export type RelatedItemType = {
+export type RelatedItem = {
 	href: Route;
 	eyebrow: string;
 	title: string;
@@ -11,12 +11,12 @@ export type RelatedItemType = {
 };
 
 /** A "more like this" grid shown at the foot of a blog post or shop product. */
-export default function RelatedGrid({
+export function RelatedGrid({
 	heading,
 	items,
 }: {
 	heading: string;
-	items: RelatedItemType[];
+	items: RelatedItem[];
 }) {
 	if (items.length === 0) return null;
 

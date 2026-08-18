@@ -1,12 +1,12 @@
 import { Share2Icon } from "lucide-react";
 
-import AiToolPage from "@/components/_shared/page/AiToolPage";
-import SocialPostsHero from "./SocialPostsHero";
-import SocialPostsHostedUsageNotice from "./SocialPostsHostedUsageNotice";
-import SocialPostsSettingsDrawer from "./SocialPostsSettingsDrawer";
-import SocialPostsWriter from "./SocialPostsWriter";
+import { AiToolPage } from "@/components/_shared/page";
+import { SocialPostsHero } from "./SocialPostsHero";
+import { SocialPostsHostedUsageNotice } from "./SocialPostsHostedUsageNotice";
+import { SocialPostsSettingsDrawer } from "./SocialPostsSettingsDrawer";
+import { SocialPostsWriter } from "./SocialPostsWriter";
 
-export default function ArticleToSocialPostsPageContent() {
+export function ArticleToSocialPostsPageContent() {
 	return (
 		<AiToolPage
 			slug="article-to-social-posts"

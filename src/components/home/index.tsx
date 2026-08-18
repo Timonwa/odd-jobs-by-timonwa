@@ -1,20 +1,22 @@
-import HubNavbar from "@/components/layout/HubNavbar";
-import Newsletter from "@/components/_shared/content/Newsletter";
-import BrowseByCategory from "./BrowseByCategory";
-import Hero from "./Hero";
-import HowItWorks from "./HowItWorks";
-import LatestPosts from "./LatestPosts";
-import ShopPreview from "./ShopPreview";
-import ToolsPreview from "./ToolsPreview";
-import WhatItIs from "./WhatItIs";
-import WhyUseIt from "./WhyUseIt";
+import { PageMain } from "@/components/ui";
+import { Newsletter } from "@/components/_shared/content";
+import { BrowseByCategory } from "./BrowseByCategory";
+import { HomeHero } from "./HomeHero";
+import { HowItWorks } from "./HowItWorks";
+import { LatestPosts } from "./LatestPosts";
+import { ShopPreview } from "./ShopPreview";
+import { ToolsPreview } from "./ToolsPreview";
+import { WhatItIs } from "./WhatItIs";
+import { WhyUseIt } from "./WhyUseIt";
+import { JsonLdScript } from "@/components/_shared/content";
+import { buildSiteGraphJsonLd } from "@/lib/utils";
 
-export default function HubHomePageContent() {
+export function HubHomePageContent() {
 	return (
 		<>
-			<HubNavbar />
-			<main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-20 max-w-6xl">
-				<Hero />
+			<JsonLdScript data={buildSiteGraphJsonLd()} />
+			<PageMain>
+				<HomeHero />
 				<ToolsPreview />
 				<WhatItIs />
 				<BrowseByCategory />
@@ -23,7 +25,7 @@ export default function HubHomePageContent() {
 				<LatestPosts />
 				<ShopPreview />
 				<Newsletter className="mt-20 sm:mt-24" />
-			</main>
+			</PageMain>
 		</>
 	);
 }

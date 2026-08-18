@@ -7,14 +7,14 @@ import {
 } from "lucide-react";
 
 import { IconBadge, Section, SectionHeader } from "@/components/ui";
-import { TINT_TEXT, type TintType } from "@/lib/config/tints";
+import { TINT_TEXT, type Tint } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
 const STEPS: {
 	icon: typeof MousePointerClickIcon;
 	title: string;
 	body: string;
-	tint: TintType;
+	tint: Tint;
 }[] = [
 	{
 		icon: MousePointerClickIcon,
@@ -36,7 +36,7 @@ const STEPS: {
 	},
 ];
 
-export default function HowItWorks() {
+export function HowItWorks() {
 	return (
 		<Section aria-labelledby="how-heading">
 			<SectionHeader

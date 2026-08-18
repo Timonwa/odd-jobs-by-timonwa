@@ -6,22 +6,22 @@ import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { STORAGE_KEYS, THEME_EVENT } from "@/lib/constants";
 
 /** User theme preference — an explicit choice, or "system" to follow the OS. */
-export type ThemeType = "light" | "dark" | "system";
-type ResolvedThemeType = "light" | "dark";
+export type Theme = "light" | "dark" | "system";
+type ResolvedTheme = "light" | "dark";
 
-const readStoredTheme = (): ThemeType => {
+const readStoredTheme = (): Theme => {
 	const v = window.localStorage.getItem(STORAGE_KEYS.theme);
 	return v === "dark" || v === "light" ? v : "system";
 };
 
-const resolveTheme = (theme: ThemeType): ResolvedThemeType => {
+const resolveTheme = (theme: Theme): ResolvedTheme => {
 	if (theme !== "system") return theme;
 	return window.matchMedia("(prefers-color-scheme: dark)").matches
 		? "dark"
 		: "light";
 };
 
-const applyThemeClass = (resolved: ResolvedThemeType) => {
+const applyThemeClass = (resolved: ResolvedTheme) => {
 	document.documentElement.classList.toggle("dark", resolved === "dark");
 };
 
@@ -37,13 +37,12 @@ function subscribe(onStoreChange: () => void) {
 }
 
 // Encodes pref + resolved value so an OS preference change (leaving pref as "system") still yields a new snapshot; a string return keeps it Object.is-stable.
-const getSnapshot = (): `${ThemeType}:${ResolvedThemeType}` => {
+const getSnapshot = (): `${Theme}:${ResolvedTheme}` => {
 	const pref = readStoredTheme();
 	return `${pref}:${resolveTheme(pref)}`;
 };
 
-const getServerSnapshot = (): `${ThemeType}:${ResolvedThemeType}` =>
-	"system:light";
+const getServerSnapshot = (): `${Theme}:${ResolvedTheme}` => "system:light";
 
 /** A hook for reading and setting the app theme — returns the stored preference, the resolved value, and a setter that persists to localStorage and syncs across instances. */
 export function useTheme() {
@@ -52,17 +51,14 @@ export function useTheme() {
 		getSnapshot,
 		getServerSnapshot,
 	);
-	const [theme, resolvedTheme] = snapshot.split(":") as [
-		ThemeType,
-		ResolvedThemeType,
-	];
+	const [theme, resolvedTheme] = snapshot.split(":") as [Theme, ResolvedTheme];
 
 	// Keeps <html> in sync on both user action and OS preference change.
 	useEffect(() => {
 		applyThemeClass(resolvedTheme);
 	}, [resolvedTheme]);
 
-	const setTheme = useCallback((next: ThemeType) => {
+	const setTheme = useCallback((next: Theme) => {
 		if (next === "system") window.localStorage.removeItem(STORAGE_KEYS.theme);
 		else window.localStorage.setItem(STORAGE_KEYS.theme, next);
 		applyThemeClass(resolveTheme(next));
