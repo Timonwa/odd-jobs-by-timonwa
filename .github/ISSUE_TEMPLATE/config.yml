@@ -1,5 +1,4 @@
 blank_issues_enabled: true
-contact_links:
-  - name: Ask a Question
-    url: https://github.com/Timonwa/tools-by-timonwa/discussions
-    about: Ask questions and discuss with the community
+# No Discussions contact link: the feature is disabled on this repo, so linking
+# it sent every question to a dead end. Questions go through the issue tracker,
+# which is what CONTRIBUTING.md points at.

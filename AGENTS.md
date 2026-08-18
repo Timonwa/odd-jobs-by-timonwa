@@ -27,7 +27,7 @@ Language / framework standards (bucket A — enforced everywhere, detail in the 
 
 ## What this is (two kinds of tool)
 
-- **AI tools** (Article to SEO Meta, Article to Social Posts) — a `"use server"` action calls Gemini. Action in `lib/server/actions/<slug>.action.ts`, agent in `lib/server/services/<name>.service.ts`.
+- **AI tools** (Article to SEO Meta, Article to Social Posts) — a `"use server"` action calls Gemini. Action in `lib/server/actions/<domain>.action.ts`, agent in `lib/server/services/<domain>.service.ts` — the domain is the short name (`seo-meta`), not the route slug (`article-to-seo-meta`).
 - **Client-only tools** (Word Counter, Case Converter, Slug Generator, Reading Time, …) — run entirely in the browser; no server code.
 
 `TOOLS` in `lib/config/tools.ts` is the single registry — one entry wires a tool into the home grid, navbar, and sitemap.
@@ -35,17 +35,25 @@ Language / framework standards (bucket A — enforced everywhere, detail in the 
 ## Repository Structure
 
 ```txt
-app/                       thin routes only: metadata, static params, guards → render a …PageContent
-  (tools)/<slug>/          grouping-only route group; tools live at root URLs (/word-counter)
-  blog/ newsletter/ shop/  content sections; /guides 308-redirects to /blog
-src/styles/                globals.css + tokens/theme/base partials, imported in order
+src/app/                   thin routes only: metadata, static params, guards → render a …PageContent
+  layout.tsx               root shell: fonts, metadata base, pre-hydration theme script, SiteLayout
+  (hub)/                   layout-bearing group — renders HubNavbar once for everything inside it
+    page.tsx               home
+    tools/ categories/     tools directory + category pages
+    blog/ newsletter/ shop/  content sections; /guides 308-redirects to /blog
+  (tools)/<slug>/          grouping-only group, no layout of its own; tools live at root URLs (/word-counter)
+  sitemap.ts robots.ts manifest.ts      metadata routes
+  opengraph-image.tsx twitter-image.tsx  site-level social cards
+  error.tsx not-found.tsx global-error.tsx loading.tsx
+src/mdx-components.tsx     MDX element mapping — the file @next/mdx requires
+src/styles/                globals.css imports these in order: tokens, theme, base, components, utilities, animations
 src/components/
   ui/                      app-agnostic reusables in 4 tiers: base/ blocks/ patterns/ layouts/ (one folder per component, index.tsx is the component; tier + root barrels)
   _shared/                 cross-feature app-specific: writer/ (engine), category/, result/, source/, page/, byok/, content/, tool/, layout/ (navbar, footer, shell)
   errors/                  framework boundaries: ErrorContent, NotFoundContent, GlobalErrorContent
   home/ categories/ tools/<slug>/ blog/ newsletter/ shop/   feature folders mirroring routes
-src/lib/                   kind-first, flat inside each kind; barrel per kind, one explicit export line per file (never export *)
-  config/                  bare names: env, routes, site, tools, byok, categories, tints, social-posts-writer
+src/lib/                   kind-first, flat inside each kind; barrel per kind, one explicit export line per file
+  config/                  bare names: env, routes, site, tools, byok, categories, tints, social-posts-writer (barrel excludes env — it is server-only)
   constants/               <domain>.constant.ts — frozen values + their inferred types
   data/                    <domain>.data.ts — static page copy
   hooks/                   use-<subject>.ts (+ writer/ concern group); hooks only — factories live in utils
@@ -55,7 +63,7 @@ src/lib/                   kind-first, flat inside each kind; barrel per kind, o
   server/                  server-only boundary; @/lib/server barrel (marked server-only) exports services only
     actions/               <domain>.action.ts — barrel importable from client components
     services/              <domain>.service.ts — content loaders + AI agents
-    clients/               <service>.client.ts — configured SDK singletons (gemini)
+    clients/               <service>.client.ts (gemini), or <service>/ when a client needs more than a singleton (redis/: client, keys, ttl)
     utils/                 ai/ (*.utils.ts), rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.utils.ts
 src/content/               MDX: blog/, issues/, shop/, tools/ (all rights reserved — see LICENSE-content)
 public/                    assets: logo.png, blog/ images, PWA icons
@@ -66,7 +74,8 @@ Conventions (full detail in `code-structure`):
 - **Thin entries.** `page.tsx` holds only framework surface (metadata, `generateStaticParams`, guards) and renders a named `…PageContent` composed in `components/<feature>/<page>/index.tsx` from one-file-per-section components. Boundary entries (`error.tsx`, `not-found.tsx`, `global-error.tsx`) render from `components/errors/`.
 - **Components hold `.tsx` only** — hooks/constants/types live in `lib/`. Named exports everywhere.
 - **`schemas/` owns Zod schemas and their inferred types together** (`post.schema.ts` → `PostMeta`) — never re-declare an inferred type in `types/`.
-- **Never share a barrel between server-only and client-safe code.** Everything outside `lib/server/` is client-safe.
+- **Never share a barrel between server-only and client-safe code.** Everything outside `lib/server/` is client-safe. `lib/config/index.ts` deliberately omits `env.ts` for this reason — it keeps the separate `@env` alias.
+- **Barrels list one explicit export line per file.** The one exception is `components/ui/index.ts`, which re-exports its four tier barrels with `export *`; every `lib/` barrel is explicit.
 - **Reuse the shared layer.** Before adding plumbing, check `lib/server/` — `utils/ai/` holds **`parseActionInput` (required: every action's first statement)**, `assertSafeArticleUrl` (the SSRF guard), `resolvePlatformApiKey`, `enforceDailyQuota`, `getHostedQuotaStatus`, `generateSchemaOutputFromArticle`, `withResolvedArticleUrl`, `resolveArticleSource`, `toUserMessage`; `clients/` holds `createGeminiClient` and the `redis/` module; `utils/rate-limit.utils.ts` holds `canServeHostedAi`. Then `lib/utils/` (client-safe: `isBrowser`, `articleSourceIdentity`, `assertToolSlug`/`parseToolFaq`, the `createLocalStore`/`createHistoryStore`/`createWriterStorage` factories in `storage/`), and `components/_shared/` (incl. the `writer/` engine — `Writer`, `useWriter`, `WriterRuntime` — plus `JsonLdScript`, `ContentBreadcrumbs`, `ContentByline`).
 - Path alias `@/*` (and `@env` for `lib/config/env.ts`).
 
@@ -85,11 +94,17 @@ pnpm format:check    # prettier --check
 # no tests
 ```
 
-**Verify before you claim done — run all three; never report success on an unverified change:** `pnpm typecheck && pnpm lint && pnpm build`. Prettier and the pre-commit hook handle formatting.
+**Verify before you claim done — never report success on an unverified change.** Run the exact set CI gates, in order:
+
+```bash
+pnpm lint && pnpm format:check && pnpm typecheck && pnpm build
+```
+
+Full script table: [README.md](./README.md#scripts) — one home for it, linked from here and CONTRIBUTING.
 
 ## Git
 
-- **Default / base branch**: `main`; active integration branch: `dev` (feature PRs target `dev`).
+- **Branch model**: `main` is the default branch and tracks what's deployed; `dev` is the integration branch and all PRs target it. Stated once in [CONTRIBUTING.md](./CONTRIBUTING.md#workflow) — if these ever disagree, that file wins.
 - **Branch naming**: `type/short-kebab-description` (`feat/…`, `fix/…`, `docs/…`).
 - **Protected branches** (never push directly): `main`, `dev`.
 - **Never commit, push, or open a PR unless the user explicitly asks.** Staging to show a diff is fine; committing is not.
@@ -114,11 +129,11 @@ Import order: React first, then external packages, then internal (`@/*`), then r
 
 ## Styling
 
-Tailwind v4, CSS-first. `src/styles/` is one entry (`globals.css`) importing layered partials (tokens, theme, base) in order. Dark mode is class-toggled (`.dark` on `<html>`) with a pre-hydration script in the root layout to avoid FOUC. Semantic tokens over literals. Detail: `tailwind-css`.
+Tailwind v4, CSS-first. `src/styles/` is one entry (`globals.css`) importing six layered partials in order: tokens, theme, base, components, utilities, animations. Repeated class strings belong in `components.css`; one-off helpers in `utilities.css`. Dark mode is class-toggled (`.dark` on `<html>`) with a pre-hydration script in the root layout to avoid FOUC. Semantic tokens over literals. Detail: `tailwind-css`.
 
 ## Routing
 
-App Router. `(tools)` is a grouping-only route group — tool URLs sit at the root (`/word-counter`). Content sections are plain segments: `/blog`, `/newsletter`, `/shop`, `/categories`. `/guides` and `/guides/:slug` 308-redirect to `/blog` (in `next.config.ts`). All page paths come from `ROUTES` in `lib/config/routes.ts` — never hardcode a path. There is no API/route-handler layer, so no `endpoints.ts`.
+App Router, with two route groups that differ in kind. `(hub)` is **layout-bearing**: its `layout.tsx` renders `HubNavbar` once for home, `/tools`, `/categories`, `/blog`, `/newsletter`, and `/shop` — a new content section created outside it silently loses the navbar. `(tools)` is **grouping-only** and has no layout, so tool URLs sit at the root (`/word-counter`). Neither group name appears in a URL. `/guides` and `/guides/:slug` 308-redirect to `/blog` (in `next.config.ts`). All page paths come from `ROUTES` in `lib/config/routes.ts` — never hardcode a path. There is no API/route-handler layer, so no `endpoints.ts`.
 
 ## Data Fetching
 
@@ -158,7 +173,7 @@ None — no accounts. The only gating is the hosted daily quota (see Backend / A
 - **SSRF**: article URLs pass `assertSafeArticleUrl` (blocks loopback, link-local/metadata endpoint, RFC 1918, IPv6 local ranges).
 - **Rate limiting**: three tiers in Upstash Redis — per-user daily, per-user burst, and a shared daily pool — charged atomically by one Lua script, keyed on an HMAC-SHA256 IP hash peppered by `IP_HASH_SECRET`. **Metering follows the Upstash credentials, not the tier**: only the dev server is exempt, so every built deploy meters (previews included). An unreachable Redis **fails closed** — `canServeHostedAi()` returns false and hosted generations are refused rather than spending the platform key unmetered. BYOK requests skip all of it.
 - **Security headers**: a `Content-Security-Policy` plus five others, served on every path from `headers()` in `next.config.ts` (no middleware — there's no other dynamic surface). A new external script, font, or frame source needs a CSP edit in the same PR, or it is blocked in the browser.
-- **JSON-LD** is escaped via `JsonLdScript` (`<` → `<`).
+- **JSON-LD** is escaped via `JsonLdScript`: `<` becomes `\u003c`, so a `</script>` inside content can't break out of the tag.
 - No secrets in the client bundle; no `NEXT_PUBLIC_*` vars are used.
 
 ## Backend / API
@@ -177,7 +192,12 @@ The `<APP_ENV>` scope is load-bearing: one Upstash database serves every environ
 
 ## Data Store (Firebase / other)
 
-None. Content is MDX under `src/content/` (`blog/`, `issues/`, `shop/`, `tools/`), loaded by `lib/server/services/` through `create-mdx-loader.utils.ts` (slug allowlist `^[a-z0-9-]+$`, frontmatter validated at build, reading time derived). Unpublished drafts go in `src/content/**/_drafts/` (gitignored). Tool input is request-scoped — not logged or cached.
+None. Content is MDX under `src/content/`, in two shapes:
+
+- **`blog/`, `issues/`, `shop/`** — YAML frontmatter, loaded by `lib/server/services/` through `create-mdx-loader.utils.ts`: slug allowlist `^[a-z0-9-]+$`, frontmatter validated against `lib/schemas/` at build, reading time derived.
+- **`tools/`** — no frontmatter; each file exports a `faq` const, so there is nothing for the loader to parse and these get no loader. `ToolContent` imports them directly, guarded by `assertToolSlug` (checks the `TOOLS` registry before the slug reaches a dynamic import) and `parseToolFaq` (Zod, because the FAQ becomes FAQPage JSON-LD). Both live in `lib/utils/tool-content.utils.ts`.
+
+Unpublished drafts go in `src/content/**/_drafts/` (gitignored), read only by the dev server — gated on `NODE_ENV`, not `APP_ENV`, so no build can emit one. Tool input is request-scoped — not logged or cached.
 
 ## Monorepo / Workspace
 
@@ -226,7 +246,7 @@ type(scope): subject
 
 - Title follows conventional-commit format
 - PR template: `.github/pull_request_template.md`
-- Run `pnpm lint && pnpm typecheck && pnpm format:check` before submitting
+- Run the same four gates as CI: `pnpm lint && pnpm format:check && pnpm typecheck && pnpm build`
 
 ## Boundaries
 
@@ -243,7 +263,7 @@ type(scope): subject
 
 ### Always
 
-- Run `pnpm typecheck && pnpm lint && pnpm build` before claiming done
+- Run `pnpm lint && pnpm format:check && pnpm typecheck && pnpm build` before claiming done — the CI set
 - Validate inputs with Zod (frontmatter via `lib/schemas/`, env via `@env`, action inputs in the action)
 - Keep semantic HTML + a11y intact — real elements, labels, focus order, keyboard paths; jsx-a11y gates CI
 - Specific, self-contained copy — name the subject; no vague headings or deixis
@@ -252,7 +272,21 @@ type(scope): subject
 
 ## Documentation
 
-README.md (user-facing) + CONTRIBUTING.md (tool anatomy, dev setup, PR workflow). The local `docs/` folder is private and gitignored. Licensing is split: code AGPL-3.0 (`LICENSE`), content reserved (`LICENSE-content`), brand reserved (`TRADEMARK.md`).
+The full committed surface, with what each owns:
+
+| File                          | Owns                                                                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `README.md`                   | User-facing: tool list, quickstart, env table, privacy. The env table is the source of truth readers use — keep it exact |
+| `CONTRIBUTING.md`             | Dev setup, the scripts table, codebase layout, tool anatomy, branch + PR workflow                                        |
+| `AGENTS.md`                   | This file — agent-facing conventions. `CLAUDE.md` is a one-line `@AGENTS.md` import                                      |
+| `SECURITY.md`                 | Disclosure policy, in/out of scope, what is stored where                                                                 |
+| `TRADEMARK.md`                | Brand reservation (names and logos are outside the code licence)                                                         |
+| `LICENSE` / `LICENSE-content` | Code AGPL-3.0; `src/content/**` all rights reserved                                                                      |
+| `.github/`                    | Issue templates, PR template, workflow comments                                                                          |
+| `public/llms.txt`             | AI-crawler policy + key-page list — **update it whenever a section or a key URL changes**                                |
+| `_reports/`                   | Committed audit reports, one per domain plus `audit-all.md`. A fix pass updates its report in the same commit as the fix |
+
+The local `docs/` folder is private and gitignored.
 
 ## Troubleshooting
 

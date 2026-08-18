@@ -51,7 +51,7 @@ Please include:
 
 ## Out of scope
 
-- Prompt injection of the LLM — tool agents' output is schema-validated and prompts are not treated as a secret (see `CONTRIBUTING.md`)
+- Prompt injection of the LLM — agent prompts are public by design (they live in `src/lib/server/services/` and PRs to improve them are welcome), and every agent's output is validated against a Zod schema before it reaches the page
 - Rate-limit evasion — a known limitation of the hosted daily quota
 - Vulnerabilities in third-party services (Google AI Studio, Upstash, Vercel) — please report those directly to the respective vendors
 - Missing best-practice HTTP headers that have no concrete impact
