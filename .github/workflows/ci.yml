@@ -70,12 +70,31 @@ jobs:
         run: pnpm typecheck
 
   # ──────────────────────────────────────────────
+  # Unit tests (Vitest)
+  # ──────────────────────────────────────────────
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: needs.changes.outputs.should-skip != 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
+
+      - name: Test (Vitest)
+        run: pnpm test
+
+  # ──────────────────────────────────────────────
   # Build
   # ──────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [changes, lint-and-typecheck]
+    needs: [changes, lint-and-typecheck, test]
     if: needs.changes.outputs.should-skip != 'true'
     env:
       # Every env var is optional in env.ts, so the build passes with none set.
