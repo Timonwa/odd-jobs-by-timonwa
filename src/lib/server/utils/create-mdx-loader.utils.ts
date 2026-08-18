@@ -10,7 +10,7 @@ import path from "node:path";
 
 import { cache } from "react";
 
-import matter from "gray-matter";
+import { parse as parseYaml } from "yaml";
 import type { ZodType } from "zod";
 
 import { countWords } from "@/lib/utils/text/counts.utils";
@@ -22,6 +22,30 @@ import {
 // A slug is a filename minus `.mdx`; restrict it to a URL-safe allowlist so a
 // stray file can never flow into an href as anything but a clean segment.
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
+
+// Leading `---` block, up to the closing `---` on its own line. Non-greedy so a
+// `---` inside the body (a markdown rule) can't be mistaken for the terminator.
+const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
+
+/**
+ * Splits an MDX file into its YAML frontmatter and body.
+ *
+ * Hand-rolled over `gray-matter`, which is unmaintained and reaches
+ * `js-yaml@3` through a range that resolved a vulnerable version — keeping it
+ * meant pinning js-yaml below 4 across the whole tree, including ESLint's copy.
+ * The format here is a plain leading `---` block, so the parser is a regex plus
+ * the maintained `yaml` package.
+ */
+function splitFrontmatter(raw: string): { data: unknown; content: string } {
+	// Strip a UTF-8 BOM: it would sit before the opening `---` and break the match.
+	const text = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
+	const match = FRONTMATTER_PATTERN.exec(text);
+	if (!match?.[1]) return { data: {}, content: text };
+	return {
+		data: parseYaml(match[1]) ?? {},
+		content: text.slice(match[0].length),
+	};
+}
 
 // Work-in-progress lives in `<dir>/_drafts/`, which is gitignored — it never
 // reaches the public repo, so it can't be indexed or sitemapped. Reading it
@@ -106,7 +130,7 @@ export function createMdxLoader<T extends { publishedAt: string }>(
 		const resolved = resolveFile(slug);
 		if (!resolved) throw new Error(`No content file for ${dir}/${slug}.mdx`);
 		const raw = fs.readFileSync(resolved.file, "utf8");
-		const { data, content } = matter(raw);
+		const { data, content } = splitFrontmatter(raw);
 		const parsed = schema.safeParse(data);
 		if (!parsed.success) {
 			throw new Error(

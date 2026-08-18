@@ -15,12 +15,6 @@ overrides:
   # (path traversal via source-map auto-loading, 8.5.18), GHSA-fxqj-rqcc-2cmp
   # (8.5.23). Also lifts nanoid, which only reaches the tree via postcss.
   postcss: ">=8.5.23"
-  # gray-matter depends on js-yaml ^3.13.1, which resolves 3.15.0 —
-  # GHSA-5p4m-2wfm-xmqj (quadratic CPU in !!omap), patched in both 3.15.1 and
-  # 4.3.1. The `<4` ceiling is required, not tidiness: js-yaml 4 dropped
-  # `safeLoad`, which gray-matter calls, so forcing 4.x breaks frontmatter
-  # parsing at build time (verified).
-  js-yaml: ">=3.15.1 <4"
   # Next ranges sharp ^0.34.5 as an optional dep; <0.35.0 bundles a libvips
   # with CVE-2026-33327/33328/35590/35591 (GHSA-f88m-g3jw-g9cj).
   sharp: ">=0.35.0"
