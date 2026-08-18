@@ -28,4 +28,6 @@ export const IssueFrontmatterSchema = z.object({
 export type IssueMeta = z.infer<typeof IssueFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
+	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
+	contentPath: string;
 };

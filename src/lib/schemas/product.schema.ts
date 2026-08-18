@@ -39,4 +39,6 @@ export const ProductFrontmatterSchema = z.object({
 export type ProductMeta = z.infer<typeof ProductFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
+	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
+	contentPath: string;
 };

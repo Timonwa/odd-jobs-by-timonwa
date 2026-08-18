@@ -22,4 +22,6 @@ export const PostFrontmatterSchema = z.object({
 export type PostMeta = z.infer<typeof PostFrontmatterSchema> & {
 	slug: string;
 	readingMinutes: number;
+	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
+	contentPath: string;
 };
