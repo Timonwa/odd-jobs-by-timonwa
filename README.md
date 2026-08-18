@@ -89,8 +89,9 @@ The model is not an environment variable: it's `HOSTED_LLM_MODEL` in [`src/lib/c
 | `pnpm test`          | Unit tests (Vitest)      |
 | `pnpm test:watch`    | Unit tests, watch mode   |
 | `pnpm test:coverage` | Unit tests with coverage |
+| `pnpm test:e2e`      | E2E tests (Playwright)   |
 
-CI gates five of these, in order: `lint`, `format:check`, `typecheck`, `test`, `build`.
+CI gates five of these, in order: `lint`, `format:check`, `typecheck`, `test`, `build`. E2E runs on demand, not in CI — it needs `pnpm build` and a one-time `pnpm exec playwright install chromium` first.
 
 Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK](https://ai-sdk.dev/) + Gemini, and Upstash Redis.
 
