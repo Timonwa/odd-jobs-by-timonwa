@@ -97,7 +97,7 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 	// The AI SDK couldn't produce a valid object; finishReason says why.
 	if (NoObjectGeneratedError.isInstance(error)) {
 		if (error.finishReason === "content-filter")
-			return "Google blocked this text for safety reasons. Change the wording and try again.";
+			return "Gemini blocked this text for safety reasons. Change the wording and try again.";
 		if (error.finishReason === "length")
 			return "The reply got cut off before it finished. Try again, or shorten your input a little.";
 		return "The AI's reply didn't come through properly. Please try again — this almost always works the second time.";
@@ -120,7 +120,7 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 
 	// Google's AI is momentarily overloaded — transient, and on their side.
 	if (/\b503\b|UNAVAILABLE|overload|high demand/i.test(raw))
-		return "Google's AI is busy right now. Wait a few seconds and try again.";
+		return "Gemini is busy right now. Wait a few seconds and try again.";
 
 	// Google itself throttled the key in use (its own 429 / free-tier quota) —
 	// distinct from our per-user cap above. Transient: wait a moment and retry.
@@ -139,9 +139,9 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 			? "Google didn't accept your API key. Open “Set API key” and paste it again, or create a new free key. New to this? The 2-minute guide walks you through it."
 			: "Something went wrong on our end. Please try again in a moment, or add your own free Google key to keep going.";
 
-	// Content tripped Google's safety filter.
+	// Content tripped Gemini's safety filter.
 	if (/SAFETY|safety.?filter|blocked.*safety/i.test(raw))
-		return "Google blocked this text for safety reasons. Change the wording and try again.";
+		return "Gemini blocked this text for safety reasons. Change the wording and try again.";
 
 	// Malformed / unreadable output that wasn't a typed NoObjectGeneratedError.
 	if (
