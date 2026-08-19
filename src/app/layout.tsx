@@ -13,6 +13,7 @@ import {
 	UMAMI_WEBSITE_ID,
 	SITE_URL,
 } from "@/lib/config/site";
+import { STORAGE_KEYS } from "@/lib/constants";
 import "@/styles/globals.css";
 import { isProduction } from "@env";
 
@@ -57,7 +58,10 @@ export const metadata: Metadata = {
 	category: "technology",
 };
 
-const themeInit = `document.documentElement.classList.toggle("dark", localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches));`;
+// Runs before paint, so it can't import anything — the key is interpolated from
+// STORAGE_KEYS rather than written out, since a mismatch here reads as no stored
+// preference and repaints once `useTheme` hydrates.
+const themeInit = `(function(){var k=${JSON.stringify(STORAGE_KEYS.theme)},v=localStorage.getItem(k);document.documentElement.classList.toggle("dark",v==="dark"||(v===null&&window.matchMedia("(prefers-color-scheme: dark)").matches));})();`;
 
 export default function RootLayout({
 	children,
