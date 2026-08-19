@@ -3,7 +3,7 @@
 
 import { ROUTES } from "@/lib/config/routes";
 import {
-	CREATOR_BLOG_URL,
+	CREATOR_BUILDING_URL,
 	CREATOR_SITE_URL,
 	CREATOR_URL,
 	PRIVACY_URL,
@@ -37,7 +37,7 @@ export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
 /** Creator cross-links — a compact row in the footer's bottom area. */
 export const FOOTER_META_LINKS = [
 	{ href: CREATOR_SITE_URL, label: "Main site" },
-	{ href: CREATOR_BLOG_URL, label: "Dev blog" },
+	{ href: CREATOR_BUILDING_URL, label: "Building" },
 	{ href: CREATOR_URL, label: "All my links" },
 ] as const;
 
