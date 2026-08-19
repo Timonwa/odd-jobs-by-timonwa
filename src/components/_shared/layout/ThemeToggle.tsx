@@ -42,13 +42,16 @@ export function ThemeToggle({
 	}
 
 	return (
-		<NavIconButton
-			label={label}
-			tooltipAlign="end"
-			onClick={() => setTheme(NEXT[theme])}
-			className="hidden md:block"
-		>
-			<Icon aria-hidden className="w-4 h-4" />
-		</NavIconButton>
+		// A wrapper, not the button's className: a display utility there overrides
+		// the inline-flex that centres the icon.
+		<span className="hidden md:inline-flex">
+			<NavIconButton
+				label={label}
+				tooltipAlign="end"
+				onClick={() => setTheme(NEXT[theme])}
+			>
+				<Icon aria-hidden className="w-4 h-4" />
+			</NavIconButton>
+		</span>
 	);
 }

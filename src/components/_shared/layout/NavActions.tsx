@@ -103,8 +103,10 @@ export function NavActions({
 				onNavigate={close}
 			/>
 
-			{/* Tool action (e.g. writing preferences) — kept on the bar at every width. */}
-			<div className="hidden md:block">{actionsSlot}</div>
+			{/* Tool action (e.g. writing preferences) — kept on the bar at every width.
+			    Guarded because an empty wrapper is still a flex item, collecting the
+			    row's gap on both sides. */}
+			{actionsSlot && <div className="hidden md:block">{actionsSlot}</div>}
 
 			{/* Theme toggle — kept on the bar, between the tool action and GitHub. */}
 			<ThemeToggle />
