@@ -1,17 +1,12 @@
-import type { Route } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { Navbar } from "@/components/ui";
+import { ROUTES } from "@/lib/config/routes";
+import { SITE_NAME } from "@/lib/config/site";
+import { BrandLockup } from "./BrandLockup";
 import { NavActions } from "./NavActions";
-import type { IconComponent } from "@/lib/types";
 
 type AppNavbarProps = {
-	brand: {
-		href: Route;
-		name: string;
-		icon: IconComponent;
-		ariaLabel?: string;
-	};
 	centerSlot?: ReactNode;
 	actionsSlot?: ReactNode;
 	menuSlot?: ReactNode;
@@ -19,9 +14,8 @@ type AppNavbarProps = {
 	showByok?: boolean;
 };
 
-/** The Navbar shell with this app's NavActions cluster slotted in — tools switcher, theme, support, GitHub, and the nav menu. */
+/** The app's navbar — one brand lockup on every page (tool routes included, where the breadcrumb carries the tool's own identity), an optional centre slot, and the NavActions cluster. */
 export function AppNavbar({
-	brand,
 	centerSlot,
 	actionsSlot,
 	menuSlot,
@@ -29,17 +23,31 @@ export function AppNavbar({
 	showByok,
 }: AppNavbarProps) {
 	return (
-		<Navbar
-			brand={brand}
-			centerSlot={centerSlot}
-			endSlot={
-				<NavActions
-					actionsSlot={actionsSlot}
-					menuSlot={menuSlot}
-					repoUrl={repoUrl}
-					showByok={showByok}
-				/>
-			}
-		/>
+		<nav
+			aria-label="Primary"
+			className="border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-40"
+		>
+			{/* The bar is full-bleed for its border and blur; this row carries
+			    PageMain's width so the two align. `relative` anchors the dropdowns. */}
+			<div className="container relative mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+				<Link
+					href={ROUTES.home}
+					aria-label={`${SITE_NAME} — home`}
+					className="flex min-w-0 items-center pr-1"
+				>
+					<BrandLockup />
+				</Link>
+
+				<div className="flex shrink-0 items-center gap-1 sm:gap-2">
+					{centerSlot}
+					<NavActions
+						actionsSlot={actionsSlot}
+						menuSlot={menuSlot}
+						repoUrl={repoUrl}
+						showByok={showByok}
+					/>
+				</div>
+			</div>
+		</nav>
 	);
 }

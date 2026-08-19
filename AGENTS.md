@@ -66,7 +66,7 @@ src/lib/                   kind-first, flat inside each kind; barrel per kind, o
     clients/               <service>.client.ts (gemini), or <service>/ when a client needs more than a singleton (redis/: client, keys, ttl)
     utils/                 ai/ (*.utils.ts), rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.utils.ts
 src/content/               MDX: blog/, issues/, shop/, tools/ (all rights reserved — see LICENSE-content)
-public/                    assets: logo.png, blog/ images, PWA icons
+public/                    assets: logo/brand SVGs, blog/ images, PWA + maskable icons
 ```
 
 Conventions (full detail in `code-structure`):
@@ -152,7 +152,7 @@ Server Actions only, in `lib/server/actions/<domain>.action.ts` (`generateSeoMet
 
 ## Brand & Voice
 
-**Odd Jobs** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.png` (PNG only today; an SVG with the standard `logo.svg` stem is the desired end state). Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
+**Odd Jobs** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.svg` + `logo-dark.svg` (outlined type, so no font dependency) and `brand-icon.svg` for the mark alone; every raster is generated from them by `scripts/generate-logo.cjs`. Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
 
 ## SEO
 
