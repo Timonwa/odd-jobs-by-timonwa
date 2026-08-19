@@ -15,7 +15,7 @@ export function CaseConverterPageContent() {
 					Fix the <span className="hero-gradient-text">case</span> in one click
 				</>
 			}
-			subtitle="Switch text between UPPERCASE, Title Case, Sentence case, camelCase, snake_case, and more — instantly, then copy. Nothing leaves your browser."
+			subtitle="Switch text between UPPERCASE, Title Case, Sentence case, camelCase, snake_case, and more — instantly, then copy. Your text stays on this page."
 		>
 			<CaseConverterTool />
 		</ClientToolPage>

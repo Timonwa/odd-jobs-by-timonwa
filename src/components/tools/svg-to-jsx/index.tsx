@@ -16,7 +16,7 @@ export function SvgToJsxPageContent() {
 					SVG into a <span className="hero-gradient-text">React component</span>
 				</>
 			}
-			subtitle="Paste raw SVG and get clean JSX — attributes renamed to their React names, inline styles turned into objects, and optionally wrapped in a typed component. Nothing leaves your browser."
+			subtitle="Paste raw SVG and get clean JSX — attributes renamed to their React names, inline styles turned into objects, and optionally wrapped in a typed component. Your markup never leaves the page."
 		>
 			<SvgToJsxTool />
 		</ClientToolPage>

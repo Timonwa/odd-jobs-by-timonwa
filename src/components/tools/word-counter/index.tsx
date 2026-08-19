@@ -16,7 +16,7 @@ export function WordCounterPageContent() {
 					type
 				</>
 			}
-			subtitle="Live word, character, sentence, and paragraph counts — plus reading time and the character limits that matter for SEO and social. Nothing leaves your browser."
+			subtitle="Live word, character, sentence, and paragraph counts — plus reading time and the character limits that matter for SEO and social. Counted on this page, never uploaded."
 		>
 			<WordCounterTool />
 		</ClientToolPage>

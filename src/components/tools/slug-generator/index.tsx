@@ -16,7 +16,7 @@ export function SlugGeneratorPageContent() {
 					<span className="hero-gradient-text">URL slugs</span>
 				</>
 			}
-			subtitle="Paste a title, product name, or any text and get a tidy, URL-safe slug — accents and punctuation stripped, separator and stop words your call. Nothing leaves your browser."
+			subtitle="Paste a title, product name, or any text and get a tidy, URL-safe slug — accents and punctuation stripped, separator and stop words your call. It all happens on this page."
 			constrained
 		>
 			<SlugGeneratorTool />

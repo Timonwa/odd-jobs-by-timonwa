@@ -15,7 +15,7 @@ export function LoremIpsumPageContent() {
 					Instant <span className="hero-gradient-text">placeholder text</span>
 				</>
 			}
-			subtitle="Generate lorem ipsum by the paragraph, sentence, or word — choose how much, regenerate for a fresh batch, and copy it into your mockup. Runs entirely in your browser."
+			subtitle="Generate lorem ipsum by the paragraph, sentence, or word — choose how much, regenerate for a fresh batch, and copy it straight into your mockup."
 			constrained
 		>
 			<LoremIpsumTool />
