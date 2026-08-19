@@ -55,9 +55,6 @@ const nextConfig: NextConfig = {
 	cacheComponents: true,
 	typedRoutes: true,
 	reactCompiler: true,
-	// Pinned because root inference walks up and can land outside the project: a
-	// stray lockfile in a parent directory wins over this one.
-	turbopack: { root: import.meta.dirname },
 	pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
 	images: {
 		// AVIF first, WebP second: Next negotiates per request, so older browsers
