@@ -121,7 +121,7 @@ export function Footer({
 						</div>
 					</div>
 
-					<div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 lg:col-span-8">
+					<div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:col-span-8">
 						{columns.map((column) => (
 							<FooterColumn
 								key={column.heading}
