@@ -14,6 +14,7 @@ export {
 } from "./svg-to-jsx.constant";
 export {
 	NAV_LINKS,
+	NAV_PILLARS,
 	FOOTER_META_LINKS,
 	FOOTER_LEGAL_LINKS,
 	type NavLinkLabel,

@@ -3,6 +3,7 @@
 // client-safe components would pull server code into the client bundle —
 // import it directly from "./HubFooter".
 export { AppNavbar } from "./AppNavbar";
+export { HubNav } from "./HubNav";
 export { HubNavbar } from "./HubNavbar";
 export { NavActions } from "./NavActions";
 export { NavIconButton } from "./NavIconButton";

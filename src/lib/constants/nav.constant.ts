@@ -22,6 +22,18 @@ export const NAV_LINKS = [
 
 export type NavLinkLabel = (typeof NAV_LINKS)[number]["label"];
 
+const PILLAR_LABELS: readonly NavLinkLabel[] = [
+	"Tools",
+	"Blog",
+	"Shop",
+	"Newsletter",
+];
+
+/** The site's four sections, for the desktop navbar. Home is the brand mark and Categories belongs to the tools directory, so neither is one. */
+export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
+	PILLAR_LABELS.includes(navLink.label),
+);
+
 /** Creator cross-links — a compact row in the footer's bottom area. */
 export const FOOTER_META_LINKS = [
 	{ href: CREATOR_SITE_URL, label: "Main site" },
