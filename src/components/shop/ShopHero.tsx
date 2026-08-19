@@ -10,8 +10,7 @@ export function ShopHero() {
 			eyebrow={{ icon: ShoppingBagIcon, label: "Shop" }}
 			title={
 				<>
-					Digital products that{" "}
-					<span className="hero-gradient-text">get things done</span>
+					Templates <span className="hero-gradient-text">worth keeping</span>
 				</>
 			}
 			subtitle={SHOP_PAGE_COPY.description}

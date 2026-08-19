@@ -7,7 +7,7 @@ import { MailIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NewsletterForm } from "./NewsletterForm";
 
-/** "Productivity, in your inbox" signup section. */
+/** "New tools, in your inbox" signup section. */
 export function Newsletter({ className }: { className?: string }) {
 	return (
 		<section
@@ -36,7 +36,7 @@ export function Newsletter({ className }: { className?: string }) {
 					id="newsletter-heading"
 					className="text-2xl font-semibold tracking-tight"
 				>
-					Productivity, in your inbox
+					New tools, in your inbox
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
 					New tools, new posts, and the occasional issue on working better. No

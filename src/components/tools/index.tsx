@@ -21,11 +21,11 @@ export function ToolsDirectoryPageContent() {
 					eyebrow={{ icon: LayoutGridIcon, label: "All tools" }}
 					title={
 						<>
-							Every tool in{" "}
-							<span className="hero-gradient-text">one place</span>
+							Every <span className="hero-gradient-text">odd job</span>, one
+							place
 						</>
 					}
-					subtitle="Browse the full collection, or filter by category to find exactly what you need. New tools land here as they ship."
+					subtitle="Each tool does one thing. Browse them all, or filter by category to find the one you came for. New ones land here as they ship."
 				/>
 
 				{/* useSearchParams needs a Suspense boundary; the fallback shows the

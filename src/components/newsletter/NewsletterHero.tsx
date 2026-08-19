@@ -10,8 +10,7 @@ export function NewsletterHero() {
 			eyebrow={{ icon: MailIcon, label: "Newsletter" }}
 			title={
 				<>
-					Productivity, in your{" "}
-					<span className="hero-gradient-text">inbox</span>
+					New tools, in your <span className="hero-gradient-text">inbox</span>
 				</>
 			}
 			subtitle={NEWSLETTER_PAGE_COPY.description}

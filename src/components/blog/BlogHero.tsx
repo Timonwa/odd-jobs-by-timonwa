@@ -10,8 +10,8 @@ export function BlogHero() {
 			eyebrow={{ icon: BookOpenTextIcon, label: "Blog" }}
 			title={
 				<>
-					Getting things done,{" "}
-					<span className="hero-gradient-text">made simpler</span>
+					How the work{" "}
+					<span className="hero-gradient-text">actually gets done</span>
 				</>
 			}
 			subtitle={BLOG_PAGE_COPY.description}
