@@ -263,6 +263,7 @@ type(scope): subject
 - Remove existing comments unless factually wrong
 - Pull anything under `lib/server/` into a client bundle
 - Accept content PRs — `src/content/**` is the maintainer's editorial material (see LICENSE-content)
+- Edit `src/content/shop/**` copy — the same product text is published across every storefront, so a change here becomes a manual sync chore in all of them. Propose it, don't apply it
 
 ### Always
 
