@@ -1,10 +1,10 @@
 {
-	"name": "tools-by-timonwa",
+	"name": "odd-jobs",
 	"version": "0.1.0",
 	"engines": {
 		"node": ">=22"
 	},
-	"description": "A growing collection of small, focused, open-source tools by Timonwa.",
+	"description": "Free tools for the repetitive parts of writing and code, plus a blog, newsletter, and shop.",
 	"license": "AGPL-3.0-only",
 	"private": true,
 	"scripts": {

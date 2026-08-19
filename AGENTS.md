@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# AGENTS.md — The Productivity Bug
+# AGENTS.md — Odd Jobs
 
 A productivity hub for writers, developers, and creators — free single-purpose web tools (AI-assisted and client-only), plus a blog, newsletter archive, and digital-product shop. Keep the block above intact — it's auto-managed. For the full tool anatomy and dev setup, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
@@ -152,11 +152,11 @@ Server Actions only, in `lib/server/actions/<domain>.action.ts` (`generateSeoMet
 
 ## Brand & Voice
 
-**The Productivity Bug** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.png` (PNG only today; an SVG with the standard `logo.svg` stem is the desired end state). Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
+**Odd Jobs** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.png` (PNG only today; an SVG with the standard `logo.svg` stem is the desired end state). Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
 
 ## SEO
 
-Site: `https://tools.timonwa.com` (`SITE_URL`). Per-route `metadata` exports; per-page OG/Twitter images via `renderOgImage` (`lib/server/utils/og-image.utils.tsx`); JSON-LD via the shared `JsonLdScript`. `sitemap.ts` covers home, the tools directory, categories, live tools ("soon" tools are excluded), blog, newsletter, and the shop index; **shop product pages canonicalize to `www.timonwa.com/shop/<slug>`** (`SHOP_CANONICAL_BASE`) and are omitted from the sitemap.
+Site: `https://odd-jobs.timonwa.com` (`SITE_URL`). Per-route `metadata` exports; per-page OG/Twitter images via `renderOgImage` (`lib/server/utils/og-image.utils.tsx`); JSON-LD via the shared `JsonLdScript`. `sitemap.ts` covers home, the tools directory, categories, live tools ("soon" tools are excluded), blog, newsletter, and the shop index; **shop product pages canonicalize to `www.timonwa.com/shop/<slug>`** (`SHOP_CANONICAL_BASE`) and are omitted from the sitemap.
 
 ## DevRel
 

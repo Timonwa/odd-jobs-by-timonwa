@@ -1,6 +1,6 @@
-# The Productivity Bug
+# Odd Jobs
 
-> Free, focused web tools for writers, developers, and creators — plus a blog, newsletter archive, and digital-product shop. No sign-up. https://tools.timonwa.com
+> Free tools for the repetitive parts of writing and code — plus a blog, newsletter archive, and digital-product shop. No sign-up. https://odd-jobs.timonwa.com
 
 ## What AI crawlers may use
 
@@ -9,7 +9,7 @@
 
 ## Key pages
 
-- Tools directory: https://tools.timonwa.com/tools
-- Blog: https://tools.timonwa.com/blog
-- Newsletter: https://tools.timonwa.com/newsletter
+- Tools directory: https://odd-jobs.timonwa.com/tools
+- Blog: https://odd-jobs.timonwa.com/blog
+- Newsletter: https://odd-jobs.timonwa.com/newsletter
 - Shop: https://www.timonwa.com/shop

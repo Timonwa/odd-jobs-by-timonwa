@@ -4,26 +4,26 @@
  */
 
 /** Canonical hub URL and display name. */
-export const SITE_URL = "https://tools.timonwa.com";
+export const SITE_URL = "https://odd-jobs.timonwa.com";
 export const SITE_DOMAIN = SITE_URL.replace(/^https?:\/\//, "");
-export const SITE_NAME = "The Productivity Bug";
+// Two words, always plural: "Oddjob" is Goldfinger's henchman, a character read
+// as an Asian stereotype. The plural phrase carries none of that.
+export const SITE_NAME = "Odd Jobs";
 /** Short name for home-screen icons, where the full name is truncated. */
-export const SITE_SHORT_NAME = "The Prod Bug";
+export const SITE_SHORT_NAME = SITE_NAME;
 /** PWA theme colour. Literal rather than a CSS token: the manifest is JSON, with no access to the stylesheet. */
 export const SITE_THEME_COLOR = "#4472e3";
 export const SITE_BACKGROUND_COLOR = "#ffffff";
-// 63 chars, so search results show it whole. All three audiences stay — the
-// character budget was met by dropping "Free, focused", which the description
-// still carries, not by dropping an audience.
-export const SITE_TITLE = `${SITE_NAME} — tools for writers, developers & creators`;
-// 168 chars. Search results cut around 155, so the very tail may clip — the
-// trade was made against the example list, not against "No sign-up, open
-// source", which is positioning worth keeping at the end.
+// 42 chars, inside the ~60 search results show whole. "writing" covers the blog
+// and newsletter, "templates" the shop.
+export const SITE_TITLE = `${SITE_NAME} — free tools, writing & templates`;
+// 145 chars, inside the ~155 search results cut at, so none of it clips. Avoids
+// "jobs", which the name already spends.
 export const SITE_DESCRIPTION =
-	"Free, focused web tools for the busywork of writing and code — turn an article into social posts, convert SVG to JSX, generate slugs, and more. No sign-up, open source.";
+	"Free tools for the repetitive parts of writing and code, writing on workflow, and templates worth keeping. For writers, developers, and creators.";
 /** Short one-liner for tight spots like the footer, where SITE_DESCRIPTION runs long. */
 export const SITE_TAGLINE =
-	"Free, focused productivity tools for writers, developers, and creators. No sign-up, open source.";
+	"Free tools, writing, and templates for writers, developers, and creators. No sign-up, open source.";
 
 /** Creator / author — referenced from metadata, JSON-LD, and the footer. */
 export const CREATOR_NAME = "Timonwa Akintokun";

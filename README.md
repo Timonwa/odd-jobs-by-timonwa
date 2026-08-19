@@ -1,9 +1,9 @@
 <div align="center">
-  <h1>The Productivity Bug</h1>
-  <b>Free, focused tools that skip the busywork of writing and code — for writers, developers, and creators.</b>
+  <h1>Odd Jobs</h1>
+  <b>Free tools for the repetitive parts of writing and code — plus writing on workflow and templates worth keeping.</b>
   <br/><br/>
 
-<a href="https://tools.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Ftools.timonwa.com&style=flat-square&label=tools.timonwa.com&up_message=online&down_message=offline" /></a>
+<a href="https://odd-jobs.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Fodd-jobs.timonwa.com&style=flat-square&label=odd-jobs.timonwa.com&up_message=online&down_message=offline" /></a>
 <a href="./LICENSE"><img alt="License: AGPL v3.0" src="https://img.shields.io/badge/License-AGPL%20v3.0-blue?style=flat-square" /></a>
 <a href="./CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" /></a>
 <a href="https://www.timonwa.com/support"><img alt="Support" src="https://img.shields.io/badge/Support-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white" /></a>
@@ -11,30 +11,30 @@
 
 ---
 
-The Productivity Bug is a growing set of free, focused web tools — AI tools that turn an article into SEO metadata or social posts, plus instant browser-side utilities for counting, converting, and slugifying text. A blog and newsletter share the workflows behind them, and a shop offers digital products when you want more. The tools are free to use, no sign-up, with an optional bring-your-own-key for unlimited AI runs.
+Odd Jobs is a growing set of free, focused web tools — AI tools that turn an article into SEO metadata or social posts, plus instant browser-side utilities for counting, converting, and slugifying text. A blog and newsletter share the workflows behind them, and a shop offers digital products when you want more. The tools are free to use, no sign-up, with an optional bring-your-own-key for unlimited AI runs.
 
-**[tools.timonwa.com →](https://tools.timonwa.com)**
+**[odd-jobs.timonwa.com →](https://odd-jobs.timonwa.com)**
 
 ## Tools
 
 **AI tools** — powered by Gemini; use the daily free quota or bring your own key.
 
-| Tool                                                                             | What it does                                                                                                                                                           |
-| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[Article to SEO Meta](https://tools.timonwa.com/article-to-seo-meta)**         | Generate SEO title and description variations sized to Google's display limits (50–60 / 150–160 chars), with an optional primary keyword in each.                      |
-| **[Article to Social Posts](https://tools.timonwa.com/article-to-social-posts)** | Turn an article URL or draft into platform-optimized posts for X, LinkedIn, Threads, Bluesky, Mastodon, and Substack — with tone, voice, hashtag rules, and X threads. |
+| Tool                                                                                | What it does                                                                                                                                                           |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[Article to SEO Meta](https://odd-jobs.timonwa.com/article-to-seo-meta)**         | Generate SEO title and description variations sized to Google's display limits (50–60 / 150–160 chars), with an optional primary keyword in each.                      |
+| **[Article to Social Posts](https://odd-jobs.timonwa.com/article-to-social-posts)** | Turn an article URL or draft into platform-optimized posts for X, LinkedIn, Threads, Bluesky, Mastodon, and Substack — with tone, voice, hashtag rules, and X threads. |
 
 **Instant tools** — run entirely in your browser, no key, no account, nothing sent to a server.
 
-| Tool                                                                   | What it does                                                                                 |
-| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **[Case Converter](https://tools.timonwa.com/case-converter)**         | Switch text between UPPERCASE, Title Case, camelCase, snake_case, and more.                  |
-| **[Hash Generator](https://tools.timonwa.com/hash-generator)**         | Hash text with SHA-1, SHA-256, SHA-384, and SHA-512, right in your browser.                  |
-| **[Lorem Ipsum Generator](https://tools.timonwa.com/lorem-ipsum)**     | Generate placeholder paragraphs, sentences, or words in one click.                           |
-| **[Reading Time Estimator](https://tools.timonwa.com/reading-time)**   | Estimate reading and speaking time, with a copy-ready “X min read” label.                    |
-| **[Slug Generator](https://tools.timonwa.com/slug-generator)**         | Turn any title or headline into a clean, URL-safe slug.                                      |
-| **[SVG to JSX Converter](https://tools.timonwa.com/svg-to-jsx)**       | Convert raw SVG markup into a clean React/JSX component.                                     |
-| **[Word & Character Counter](https://tools.timonwa.com/word-counter)** | Live word, character, sentence, and reading-time counts, with per-platform character limits. |
+| Tool                                                                      | What it does                                                                                 |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **[Case Converter](https://odd-jobs.timonwa.com/case-converter)**         | Switch text between UPPERCASE, Title Case, camelCase, snake_case, and more.                  |
+| **[Hash Generator](https://odd-jobs.timonwa.com/hash-generator)**         | Hash text with SHA-1, SHA-256, SHA-384, and SHA-512, right in your browser.                  |
+| **[Lorem Ipsum Generator](https://odd-jobs.timonwa.com/lorem-ipsum)**     | Generate placeholder paragraphs, sentences, or words in one click.                           |
+| **[Reading Time Estimator](https://odd-jobs.timonwa.com/reading-time)**   | Estimate reading and speaking time, with a copy-ready “X min read” label.                    |
+| **[Slug Generator](https://odd-jobs.timonwa.com/slug-generator)**         | Turn any title or headline into a clean, URL-safe slug.                                      |
+| **[SVG to JSX Converter](https://odd-jobs.timonwa.com/svg-to-jsx)**       | Convert raw SVG markup into a clean React/JSX component.                                     |
+| **[Word & Character Counter](https://odd-jobs.timonwa.com/word-counter)** | Live word, character, sentence, and reading-time counts, with per-platform character limits. |
 
 _More on the way._
 

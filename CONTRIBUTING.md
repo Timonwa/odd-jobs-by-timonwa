@@ -1,6 +1,6 @@
-# Contributing to The Productivity Bug
+# Contributing to Odd Jobs
 
-Thanks for your interest. **The Productivity Bug** is a productivity site (tools, blog, newsletter, and shop) whose **tools and code** are open source. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
+Thanks for your interest. **Odd Jobs** is a productivity site (tools, blog, newsletter, and shop) whose **tools and code** are open source. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
 
 - 🐛 Bug fixes
 - ✨ UX / accessibility polish on existing tools
