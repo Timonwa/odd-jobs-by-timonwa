@@ -8,14 +8,16 @@ type PageHeroProps = {
 	eyebrow?: { icon?: IconComponent; label: string };
 	title: ReactNode;
 	subtitle?: ReactNode;
+	actions?: ReactNode;
 	className?: string;
 };
 
-/** Centered page hero — optional shimmer eyebrow pill, a title, and a subtitle. */
+/** Centered page hero — optional shimmer eyebrow pill, a title, a subtitle, and an optional actions row. */
 export function PageHero({
 	eyebrow,
 	title,
 	subtitle,
+	actions,
 	className,
 }: PageHeroProps) {
 	const headingId = useId();
@@ -55,6 +57,11 @@ export function PageHero({
 				<p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
 					{subtitle}
 				</p>
+			)}
+			{actions && (
+				<div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+					{actions}
+				</div>
 			)}
 		</section>
 	);
