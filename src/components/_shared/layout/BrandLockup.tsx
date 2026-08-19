@@ -12,14 +12,14 @@ export function BrandLockup() {
 				alt=""
 				width={214}
 				height={49}
-				className="h-9 w-auto sm:block dark:hidden"
+				className="h-9 w-auto block dark:hidden"
 			/>
 			<img
 				src="/logo-dark.svg"
 				alt=""
 				width={214}
 				height={49}
-				className="h-9 w-auto dark:block"
+				className="hidden h-9 w-auto dark:block"
 			/>
 		</>
 	);
