@@ -63,7 +63,7 @@ export function ToolsMenu({ open, onToggle, onNavigate }: ToolsMenuProps) {
 			<div
 				id={menuId}
 				className={cn(
-					"absolute right-4 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-border bg-popover shadow-lg sm:right-6 lg:right-10",
+					"absolute right-4 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-border bg-popover shadow-lg sm:right-6 lg:right-8",
 					open ? "block" : "hidden",
 				)}
 			>

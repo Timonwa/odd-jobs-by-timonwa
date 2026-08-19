@@ -20,25 +20,29 @@ export function Navbar({ brand, centerSlot, endSlot }: NavbarProps) {
 	return (
 		<nav
 			aria-label="Primary"
-			className="flex items-center justify-between gap-2 border-b border-border/50 bg-background/80 px-4 py-3 backdrop-blur-md sticky top-0 z-40 sm:px-6 sm:py-4 lg:px-10"
+			className="border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-40"
 		>
-			<Link
-				href={brand.href}
-				aria-label={brand.ariaLabel ?? brand.name}
-				className="flex min-w-0 items-center gap-2 pr-1 text-base font-semibold sm:text-lg"
-			>
-				<span
-					aria-hidden
-					className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+			{/* The bar is full-bleed for its border and blur; this row carries
+			    PageMain's width so the two align. `relative` anchors the dropdowns. */}
+			<div className="container relative mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+				<Link
+					href={brand.href}
+					aria-label={brand.ariaLabel ?? brand.name}
+					className="flex min-w-0 items-center gap-2 pr-1 text-base font-semibold sm:text-lg"
 				>
-					<BrandIcon className="w-5 h-5" />
-				</span>
-				<span className="truncate">{brand.name}</span>
-			</Link>
+					<span
+						aria-hidden
+						className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+					>
+						<BrandIcon className="w-5 h-5" />
+					</span>
+					<span className="truncate">{brand.name}</span>
+				</Link>
 
-			<div className="flex shrink-0 items-center gap-1 sm:gap-2">
-				{centerSlot}
-				{endSlot}
+				<div className="flex shrink-0 items-center gap-1 sm:gap-2">
+					{centerSlot}
+					{endSlot}
+				</div>
 			</div>
 		</nav>
 	);

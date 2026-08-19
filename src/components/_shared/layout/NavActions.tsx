@@ -157,7 +157,7 @@ export function NavActions({
 				id={menuId}
 				className={cn(
 					openMenu === "nav"
-						? "absolute right-4 top-full z-50 mt-2 flex max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] flex-col gap-1 overflow-y-auto no-scrollbar rounded-lg border border-border bg-popover p-2 shadow-lg sm:right-6 lg:right-10"
+						? "absolute right-4 top-full z-50 mt-2 flex max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] flex-col gap-1 overflow-y-auto no-scrollbar rounded-lg border border-border bg-popover p-2 shadow-lg sm:right-6 lg:right-8"
 						: "hidden",
 				)}
 			>
