@@ -49,7 +49,7 @@ export async function ToolContent({ currentSlug }: { currentSlug: string }) {
 										className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-45"
 									/>
 								</summary>
-								<p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
+								<p className="px-4 pb-4 leading-relaxed text-muted-foreground">
 									{item.answer}
 								</p>
 							</details>
