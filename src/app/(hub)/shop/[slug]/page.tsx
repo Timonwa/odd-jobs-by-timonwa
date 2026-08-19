@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { NOT_FOUND_METADATA } from "@/lib/constants";
+
 import { ProductPageContent } from "@/components/shop/product";
 import { ROUTES } from "@/lib/config/routes";
 import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
 import { getProduct, getProductSlugs } from "@/lib/server";
 
 // Known product slugs are prerendered; an unknown slug falls through to the
-// notFound() below. (`dynamicParams` can't be set alongside cacheComponents.)
+// notFound() below (`dynamicParams` can't be set alongside cacheComponents).
+// That renders the 404 UI but still answers 200, so generateMetadata marks the
+// response noindex — see NOT_FOUND_METADATA.
 export function generateStaticParams() {
 	return getProductSlugs().map((slug) => ({ slug }));
 }
@@ -19,7 +23,7 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
 	const { slug } = await params;
 	const product = getProduct(slug);
-	if (!product) return {};
+	if (!product) return NOT_FOUND_METADATA;
 
 	const title = product.title;
 
