@@ -39,8 +39,8 @@ export function Newsletter({ className }: { className?: string }) {
 					Productivity, in your inbox
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					New tools, posts, and the occasional newsletter issue — no spam,
-					unsubscribe anytime.
+					New tools, new posts, and the occasional issue on working better. No
+					spam, unsubscribe in one click.
 				</p>
 
 				<NewsletterForm />

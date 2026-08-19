@@ -1,6 +1,8 @@
-import { WrenchIcon } from "lucide-react";
+import { ArrowRightIcon, WrenchIcon } from "lucide-react";
+import Link from "next/link";
 
-import { PageHero } from "@/components/ui";
+import { buttonClasses, PageHero } from "@/components/ui";
+import { ROUTES } from "@/lib/config/routes";
 
 export function HomeHero() {
 	return (
@@ -15,18 +17,31 @@ export function HomeHero() {
 
 			<PageHero
 				className="mb-12 sm:mb-16"
-				eyebrow={{ icon: WrenchIcon, label: "Open source · no sign-up" }}
+				eyebrow={{ icon: WrenchIcon, label: "Free · no sign-up · open source" }}
 				title={
 					<>
-						Free tools that{" "}
-						<span className="hero-gradient-text">get it done</span>
+						The <span className="hero-gradient-text">odd jobs</span> in writing
+						and code
 					</>
 				}
 				subtitle={
 					<>
-						Free, focused tools that knock out the tedious parts of writing and
-						code — turn an article into social posts, convert an SVG to JSX,
-						size up SEO titles, generate a slug. No sign-up, nothing to install.
+						Free tools that each do one of them, plus writing on workflow and
+						templates worth keeping.
+					</>
+				}
+				actions={
+					<>
+						<Link href={ROUTES.tools} className={buttonClasses()}>
+							Browse the tools
+							<ArrowRightIcon aria-hidden className="h-4 w-4" />
+						</Link>
+						<Link
+							href={ROUTES.blog}
+							className={buttonClasses({ variant: "outline" })}
+						>
+							Read the blog
+						</Link>
 					</>
 				}
 			/>

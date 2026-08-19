@@ -39,7 +39,7 @@ export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "writing",
 		label: "Writing",
-		description: "Draft, edit, and shape words — from counts to clean copy.",
+		description: "For drafting, editing, and shaping words before they go out.",
 		icon: PenLineIcon,
 		tint: 1,
 		color: colorForTint(1),
@@ -47,8 +47,7 @@ export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "ai",
 		label: "AI",
-		description:
-			"AI generators that turn an article into ready-to-use content.",
+		description: "AI tools that turn an article into content you can publish.",
 		icon: SparklesIcon,
 		tint: 3,
 		color: colorForTint(3),
@@ -56,7 +55,7 @@ export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "seo",
 		label: "SEO",
-		description: "Get found: titles, slugs, and metadata sized for search.",
+		description: "Titles, slugs, and metadata sized for search results.",
 		icon: SearchIcon,
 		tint: 4,
 		color: colorForTint(4),
@@ -64,7 +63,7 @@ export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "developer",
 		label: "Developer",
-		description: "Quick, dependable utilities for everyday coding tasks.",
+		description: "Small, dependable utilities for everyday coding jobs.",
 		icon: CodeIcon,
 		tint: 2,
 		color: colorForTint(2),
@@ -72,7 +71,7 @@ export const TOOL_CATEGORIES: Category[] = [
 	{
 		id: "media",
 		label: "Media",
-		description: "Images, share cards, and assets for publishing a post.",
+		description: "Images, share cards, and the visual bits a post needs.",
 		icon: ImageIcon,
 		tint: 5,
 		color: colorForTint(5),

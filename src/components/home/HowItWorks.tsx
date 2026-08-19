@@ -19,19 +19,19 @@ const STEPS: {
 	{
 		icon: MousePointerClickIcon,
 		title: "Pick a tool",
-		body: "Choose from the collection — an AI writing helper or an instant text tool.",
+		body: "Browse by category or search — an AI tool for drafting, an instant tool for the quick stuff.",
 		tint: 3,
 	},
 	{
 		icon: ClipboardPasteIcon,
 		title: "Paste or type",
-		body: "Drop in your article, a URL, or any text. No account, no upload, no waiting.",
+		body: "Drop in your article, a link, or any text. It starts working straight away.",
 		tint: 1,
 	},
 	{
 		icon: CopyCheckIcon,
 		title: "Copy the result",
-		body: "Grab the output — meta tags, posts, counts, or clean text — and get back to work.",
+		body: "Take the output — meta tags, posts, counts, clean text — and get back to what you were doing.",
 		tint: 4,
 	},
 ];
@@ -42,7 +42,7 @@ export function HowItWorks() {
 			<SectionHeader
 				id="how-heading"
 				title="How it works"
-				subtitle="Three steps, a few seconds — nothing to set up."
+				subtitle="Three steps, a few seconds. That's the whole thing."
 			/>
 			<ol className="grid gap-8 sm:grid-cols-3 sm:gap-6">
 				{STEPS.map((step, i) => (
