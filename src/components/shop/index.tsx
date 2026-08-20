@@ -1,7 +1,7 @@
 import {
 	ContentBreadcrumbs,
 	JsonLdScript,
-	Newsletter,
+	SupportBlock,
 } from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
@@ -28,7 +28,11 @@ export function ShopPageContent() {
 				<ContentBreadcrumbs section="shop" />
 				<ShopHero />
 				<ProductGrid products={products} />
-				<Newsletter className="mt-16" />
+				<SupportBlock
+					className="mt-16"
+					heading="Another way to help"
+					body="Buying a template supports the work directly. If you'd rather not, the tools and guides are free either way."
+				/>
 				<JsonLdScript data={jsonLd} />
 			</PageMain>
 		</>

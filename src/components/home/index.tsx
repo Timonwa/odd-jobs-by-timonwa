@@ -1,5 +1,5 @@
 import { PageMain } from "@/components/ui";
-import { Newsletter } from "@/components/_shared/content";
+import { SupportBlock } from "@/components/_shared/content";
 import { BrowseByCategory } from "./BrowseByCategory";
 import { HomeHero } from "./HomeHero";
 import { HowItWorks } from "./HowItWorks";
@@ -24,7 +24,11 @@ export function HubHomePageContent() {
 				<WhatItIs />
 				<LatestPosts />
 				<ShopPreview />
-				<Newsletter className="mt-20 sm:mt-24" />
+				<SupportBlock
+					className="mt-20 sm:mt-24"
+					heading="Keep it free?"
+					body="The tools, the guides, and most of the templates cost nothing, with no ads and no account. Support helps keep it that way."
+				/>
 			</PageMain>
 		</>
 	);

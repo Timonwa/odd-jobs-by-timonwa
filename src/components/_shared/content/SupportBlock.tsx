@@ -10,8 +10,17 @@ import { EXTERNAL_ROUTES, ROUTES } from "@/lib/config/routes";
 import { siteConfig } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
 
-/** Support ask for tool and directory pages, where the visitor just got something free. */
-export function SupportBlock({ className }: { className?: string }) {
+/** Support ask for every page that isn't the blog or newsletter — those ask for a signup instead. */
+export function SupportBlock({
+	heading = "Found this useful?",
+	body = "Every tool here is free, with no ads and no account. If one saved you a few minutes, you can help keep them coming.",
+	className,
+}: {
+	heading?: string;
+	/** Override where "every tool here is free" wouldn't be true — the home page, the shop. */
+	body?: string;
+	className?: string;
+}) {
 	return (
 		<section
 			aria-labelledby="support-heading"
@@ -39,11 +48,10 @@ export function SupportBlock({ className }: { className?: string }) {
 					id="support-heading"
 					className="text-2xl font-semibold tracking-tight"
 				>
-					Found this useful?
+					{heading}
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					Every tool here is free, with no ads and no account. If one saved you
-					a few minutes, you can help keep them coming.
+					{body}
 				</p>
 
 				<div className="mt-6 flex flex-wrap items-center justify-center gap-3">

@@ -1,7 +1,7 @@
 import {
 	ContentBreadcrumbs,
 	JsonLdScript,
-	Newsletter,
+	SupportBlock,
 	RelatedAside,
 } from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
@@ -115,7 +115,11 @@ export async function ProductPageContent({
 					)}
 				</div>
 
-				<Newsletter className="mt-16" />
+				<SupportBlock
+					className="mt-16"
+					heading="Another way to help"
+					body="Buying this supports the work directly. The tools and guides stay free either way."
+				/>
 
 				<StickyCheckout label="Get it now" />
 
