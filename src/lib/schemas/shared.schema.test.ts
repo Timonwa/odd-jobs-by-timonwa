@@ -66,9 +66,20 @@ describe("ByokInputSchema", () => {
 	it.each([
 		["too short", "shortkey"],
 		["too long", "A".repeat(201)],
-		["payload characters", "AIza key with spaces and $(injection)"],
+		["spaced out", "AIza key with spaces and $(injection)"],
+		["newline-carrying", "AIzaSyFakeUserKey123456789012\nX-Injected: 1"],
 	])("rejects a key that is %s", (_label, byokApiKey) => {
 		expect(ByokInputSchema.safeParse({ byokApiKey }).success).toBe(false);
+	});
+
+	// The provider owns the key format, so unusual-but-whitespace-free characters
+	// must pass — an allowlist here would reject valid keys after a format change.
+	it.each([
+		["dots", "AIzaSy.Fake.User.Key.1234567890123"],
+		["equals padding", "AIzaSyFakeUserKey12345678901234=="],
+		["tildes and plus", "AIzaSy~Fake+User+Key+123456789012"],
+	])("accepts a key with %s", (_label, byokApiKey) => {
+		expect(ByokInputSchema.safeParse({ byokApiKey }).success).toBe(true);
 	});
 
 	// Only allowlisted models are honored — an arbitrary model id could point

@@ -27,13 +27,10 @@ const BYOK_MODEL_VALUES = BYOK_MODELS.map((model) => model.value) as [
 
 /** The two BYOK fields every AI action accepts. The model is allowlisted again downstream; bounding the key here keeps an oversized body from reaching the provider. */
 export const ByokInputSchema = z.object({
-	// Google API keys are ~39 chars of URL-safe base64; the bound is generous
-	// without admitting a payload.
-	byokApiKey: z
-		.string()
-		.min(20)
-		.max(200)
-		.regex(/^[A-Za-z0-9_-]+$/)
-		.optional(),
+	// Bounded, not pattern-matched: the provider owns this format and can change
+	// it, so an allowlist here would reject valid keys. Length stops a payload;
+	// rejecting whitespace keeps it a single-line credential (no header
+	// smuggling) and catches the copy-paste slips that actually happen.
+	byokApiKey: z.string().min(20).max(200).regex(/^\S+$/).optional(),
 	byokModel: z.enum(BYOK_MODEL_VALUES).optional(),
 });

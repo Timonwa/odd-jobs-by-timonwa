@@ -65,10 +65,13 @@ export function toUserMessage(error: unknown, opts: ToolErrorOptions): string {
 	// so matching it here is what stops a used-up daily allowance from being
 	// mis-reported as a transient "we're busy right now".
 
-	// The action's own input schema rejected the request. A real UI can't produce
-	// this, so it means a hand-made call — say little, and don't echo the input.
+	// The action's own input schema rejected the request. On the BYOK path the
+	// likeliest cause is the saved key itself, and telling someone to refresh
+	// sends them nowhere — point at the key instead. Never echo the input.
 	if (/INVALID_INPUT/.test(message))
-		return "That request wasn't something we could process. Refresh the page and try again.";
+		return byok
+			? "That request wasn't something we could process. Re-paste your API key — if it was copied with anything extra, saving it again usually fixes this."
+			: "That request wasn't something we could process. Refresh the page and try again.";
 
 	// No Gemini key configured on the server at all — only the hosted path hits
 	// this (BYOK always sends a key). Not transient, so no "try again".

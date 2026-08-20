@@ -36,8 +36,9 @@ export function ByokDrawer() {
 
 	const handleSave = (input: string) => {
 		const trimmed = input.trim();
-		// Catch the common copy-paste slips before the key fails mid-generation
-		// with a confusing error. Kept permissive so a valid key is never rejected.
+		// Mirrors `ByokInputSchema` exactly. Anything this accepts but the action
+		// rejects fails later as an opaque INVALID_INPUT, with no hint that the key
+		// was the problem — so the two must agree.
 		if (!trimmed)
 			return { type: "error" as const, message: "Paste your API key first." };
 		if (/\s/.test(trimmed))
@@ -46,7 +47,7 @@ export function ByokDrawer() {
 				message:
 					"That key has a space in it. Copy the whole key again, with no spaces before or after.",
 			};
-		if (trimmed.length < 20)
+		if (trimmed.length < 20 || trimmed.length > 200)
 			return {
 				type: "error" as const,
 				message:
