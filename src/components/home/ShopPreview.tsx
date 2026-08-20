@@ -39,9 +39,9 @@ export function ShopPreview() {
 									</span>
 									<DraftBadge isDraft={product.isDraft} />
 								</span>
-								{product.price && (
+								{product.variants[0] && (
 									<span className="text-xs font-semibold text-foreground">
-										{product.price}
+										{product.variants[0].price}
 									</span>
 								)}
 							</span>

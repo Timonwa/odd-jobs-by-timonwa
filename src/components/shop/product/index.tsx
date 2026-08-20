@@ -27,9 +27,9 @@ import { StickyCheckout } from "./StickyCheckout";
  * exactly one "$N", or nothing.
  */
 function parseOfferPrice(
-	display: string | undefined,
+	display: string,
 ): { price: string; priceCurrency: string } | Record<string, never> {
-	const value = display?.trim();
+	const value = display.trim();
 	if (!value) return {};
 	if (/^free$/i.test(value)) return { price: "0", priceCurrency: "USD" };
 	const exact = value.match(/^\$(\d+(?:\.\d{1,2})?)$/);
@@ -54,7 +54,7 @@ export async function ProductPageContent({
 			eyebrow: p.category,
 			title: p.title,
 			isDraft: p.isDraft,
-			metaRight: p.price,
+			metaRight: p.variants[0]?.price,
 		}));
 
 	const jsonLd = {
@@ -66,15 +66,15 @@ export async function ProductPageContent({
 		image: ogImageUrl(ROUTES.product(product.slug)),
 		url: product.canonicalUrl,
 		brand: { "@type": "Brand", name: siteConfig.name },
-		offers: {
+		// One offer per variant, so a tiered product publishes every price rather
+		// than none — a display string that isn't "Free" or "$N" claims no price.
+		offers: product.variants.map((variant) => ({
 			"@type": "Offer",
-			url: product.checkoutUrl,
+			name: variant.name,
+			url: variant.checkoutUrl,
 			availability: "https://schema.org/InStock",
-			// `price` is required for a Product rich result. The frontmatter carries a
-			// display string ("Free", "$10"), so parse the number out and only claim a
-			// price when there is one to claim.
-			...parseOfferPrice(product.price),
-		},
+			...parseOfferPrice(variant.price),
+		})),
 	};
 
 	return (
@@ -85,7 +85,7 @@ export async function ProductPageContent({
 					title={product.title}
 					action={
 						<ShareBar
-							url={product.canonicalUrl}
+							url={`${siteConfig.url}${ROUTES.product(product.slug)}`}
 							title={product.title}
 							shareText={product.description}
 							subject="product"
@@ -117,10 +117,7 @@ export async function ProductPageContent({
 
 				<Newsletter className="mt-16" />
 
-				<StickyCheckout
-					checkoutUrl={product.checkoutUrl}
-					price={product.price}
-				/>
+				<StickyCheckout label="Get it now" />
 
 				<JsonLdScript data={jsonLd} />
 			</PageMain>

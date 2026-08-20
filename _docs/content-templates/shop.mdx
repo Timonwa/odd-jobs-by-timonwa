@@ -11,8 +11,11 @@ category: Groups the product on cards and listings. Free text, so reuse an exist
 publishedAt: "2026-01-01" # required; a future date hides it from any build
 updatedAt: "2026-01-15" # optional — drop the line unless the product materially changed
 canonicalUrl: "https://www.timonwa.com/shop/<the-matching-www-listing>" # required
-price: 'Optional. Display text only — "Free" or "$10" reach the JSON-LD offer as USD; anything else (tiers, other currencies) publishes no price'
-checkoutUrl: "https://buymeacoffee.com/timonwa/e/<id>" # required
+# required, cheapest first. One entry for a single-price product.
+variants:
+  - name: Tier name shown in the selector, e.g. Free or Pro
+    price: 'Display text. "Free" or "$10" also become the JSON-LD offer, as USD; anything else publishes no price for that tier'
+    checkoutUrl: "https://buymeacoffee.com/timonwa/e/<id>"
 checkoutLabel: Optional CTA label naming the storefront, e.g. Get it on Buy Me a Coffee
 ogSubtitle: One line for the social card, read at thumbnail size. Max 100 characters. Required
 ogPills: # required

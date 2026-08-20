@@ -22,10 +22,16 @@ export const ProductFrontmatterSchema = z.object({
 			(url) => url.startsWith(`${EXTERNAL_ROUTES.shopCanonicalBase}/`),
 			`canonicalUrl must start with ${EXTERNAL_ROUTES.shopCanonicalBase}/`,
 		),
-	/** Display price, e.g. "Free" or "$5". */
-	price: z.string().optional(),
-	/** External checkout link (Buy Me a Coffee / Selar). */
-	checkoutUrl: z.string().url(),
+	/** Buyable versions, cheapest first — a single-price product has one entry. */
+	variants: z
+		.array(
+			z.object({
+				name: z.string(),
+				price: z.string(),
+				checkoutUrl: z.string().url(),
+			}),
+		)
+		.min(1),
 	/** CTA label, e.g. "Get it on Buy Me a Coffee". */
 	checkoutLabel: z.string().optional(),
 	ogSubtitle: z.string(),
