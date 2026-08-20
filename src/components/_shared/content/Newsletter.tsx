@@ -36,11 +36,11 @@ export function Newsletter({ className }: { className?: string }) {
 					id="newsletter-heading"
 					className="text-2xl font-semibold tracking-tight"
 				>
-					New tools, in your inbox
+					Get the next issue
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					New tools, new posts, and the occasional issue on working better. No
-					spam, unsubscribe in one click.
+					New tools and guides on working better, by email. No spam, unsubscribe
+					in one click.
 				</p>
 
 				<NewsletterForm />
