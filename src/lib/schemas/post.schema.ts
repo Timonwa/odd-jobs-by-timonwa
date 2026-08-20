@@ -14,8 +14,6 @@ export const PostFrontmatterSchema = z.object({
 	updatedAt: z.string().optional(),
 	ogSubtitle: z.string(),
 	ogPills: z.array(z.string()),
-	ogAccent: z.string(),
-	ogBackgroundTint: z.string(),
 });
 
 /** A loaded post — frontmatter plus the slug and derived reading time. */

@@ -5,12 +5,6 @@ import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import type { IssueMeta } from "@/lib/schemas";
 
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-	year: "numeric",
-	month: "short",
-	day: "numeric",
-});
-
 export function IssueGrid({ issues }: { issues: IssueMeta[] }) {
 	if (issues.length === 0) return null;
 	return (
@@ -22,9 +16,7 @@ export function IssueGrid({ issues }: { issues: IssueMeta[] }) {
 						<LinkCard href={ROUTES.issue(issue.slug)}>
 							<span className="flex items-center gap-2">
 								<span className="text-xs font-medium uppercase tracking-wide text-primary">
-									{issue.issueNumber != null
-										? `Issue #${issue.issueNumber}`
-										: dateFormat.format(new Date(issue.publishedAt))}
+									{`Issue #${issue.issueNumber}`}
 								</span>
 								<DraftBadge isDraft={issue.isDraft} />
 							</span>

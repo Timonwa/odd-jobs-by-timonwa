@@ -19,10 +19,7 @@ export function IssueHero({ issue }: { issue: IssueMeta }) {
 			<PageHero
 				eyebrow={{
 					icon: MailIcon,
-					label:
-						issue.issueNumber != null
-							? `Issue #${issue.issueNumber}`
-							: issue.eyebrow,
+					label: `Issue #${issue.issueNumber}`,
 				}}
 				title={
 					lead ? (

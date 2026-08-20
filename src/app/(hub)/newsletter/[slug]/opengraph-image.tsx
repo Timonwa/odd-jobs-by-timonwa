@@ -1,4 +1,3 @@
-import { splitTitle } from "@/lib/utils";
 import { getIssue, getIssueSlugs } from "@/lib/server";
 import {
 	OG_CONTENT_TYPE,
@@ -6,6 +5,7 @@ import {
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
 import { siteConfig } from "@/lib/config/site";
+import { OG_PALETTES } from "@/lib/constants";
 
 // Deliberately NOT `runtime = "edge"`: this route loads MDX through
 // createMdxLoader, which uses node:fs and is unavailable on the edge.
@@ -29,17 +29,12 @@ export default async function Image({
 	const issue = getIssue(slug);
 	if (!issue) return new Response("Not found", { status: 404 });
 
-	const { lead, accent } = splitTitle(issue);
 	return renderOgImage({
-		eyebrow:
-			issue.issueNumber != null
-				? `Issue #${issue.issueNumber} · ${siteConfig.name}`
-				: `${issue.eyebrow} · ${siteConfig.name}`,
-		titleLead: lead.trim(),
-		titleAccent: accent,
-		subtitle: issue.ogSubtitle,
-		pills: issue.ogPills,
-		accent: issue.ogAccent,
-		backgroundTint: issue.ogBackgroundTint,
+		eyebrow: `${siteConfig.name} Newsletter`,
+		titleLead: "Issue",
+		titleAccent: `#${issue.issueNumber}`,
+		subtitle: issue.description,
+		pills: [],
+		...OG_PALETTES.brand,
 	});
 }

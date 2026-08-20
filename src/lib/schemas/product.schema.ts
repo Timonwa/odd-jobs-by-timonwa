@@ -30,8 +30,6 @@ export const ProductFrontmatterSchema = z.object({
 	checkoutLabel: z.string().optional(),
 	ogSubtitle: z.string(),
 	ogPills: z.array(z.string()),
-	ogAccent: z.string(),
-	ogBackgroundTint: z.string(),
 });
 
 /** A loaded product — frontmatter plus the slug and derived reading time. */

@@ -5,6 +5,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { OG_PALETTES } from "@/lib/constants";
 import { siteConfig } from "@/lib/config/site";
 
 // Deliberately NOT `runtime = "edge"`: this route loads MDX through
@@ -36,7 +37,6 @@ export default async function Image({
 		titleAccent: accent,
 		subtitle: post.ogSubtitle,
 		pills: post.ogPills,
-		accent: post.ogAccent,
-		backgroundTint: post.ogBackgroundTint,
+		...OG_PALETTES.brand,
 	});
 }
