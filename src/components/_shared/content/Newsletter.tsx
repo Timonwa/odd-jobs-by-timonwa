@@ -7,7 +7,7 @@ import { MailIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NewsletterForm } from "./NewsletterForm";
 
-/** "New tools, in your inbox" signup section. */
+/** The newsletter signup section, rendered on nearly every page. */
 export function Newsletter({ className }: { className?: string }) {
 	return (
 		<section

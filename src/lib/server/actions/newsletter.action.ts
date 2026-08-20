@@ -18,7 +18,7 @@ import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
 // turned the form into a membership oracle: anyone could test whether an address
 // was on the list by submitting it.
 const SIGNUP_CONFIRMATION =
-	"You're on the list — expect new tools, posts, and the occasional issue.";
+	"You're on the list — new tools and guides, once a month.";
 
 const EmailSchema = z.email();
 

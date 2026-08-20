@@ -75,7 +75,7 @@ export function ByokSection({
 						Stored in <code className="text-foreground">sessionStorage</code> —
 						cleared when you close this tab
 					</li>
-					<li>Sent to our server only to call Gemini, never logged or saved</li>
+					<li>Sent to the server only to call Gemini, never logged or saved</li>
 					<li>Not shared across other tabs or devices</li>
 				</ul>
 			</div>

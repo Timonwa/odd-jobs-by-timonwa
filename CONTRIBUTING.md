@@ -1,6 +1,6 @@
 # Contributing to Odd Jobs
 
-Thanks for your interest. **Odd Jobs** is a productivity site (tools, blog, newsletter, and shop) whose **tools and code** are open source. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
+Thanks for your interest. **Odd Jobs** is free tools, guides, and templates for writers, developers, and creators (tools, blog, newsletter, and shop) whose **tools and code** are open source. New tools are added selectively to keep the collection focused, but the code is open and help is very welcome:
 
 - 🐛 Bug fixes
 - ✨ UX / accessibility polish on existing tools
@@ -8,6 +8,8 @@ Thanks for your interest. **Odd Jobs** is a productivity site (tools, blog, news
 - 📝 Docs
 - 💡 **New-tool suggestions** — open an issue; if it fits, it may get built
 - 🔧 Code toward a new or existing tool — coordinate via an issue first
+
+One exception: `src/content/**` (blog posts, newsletter issues, product copy) is editorial work and doesn't take PRs. Spotted an error or have a topic idea? Open an issue instead.
 
 By participating, you agree to the [Code of Conduct](https://www.timonwa.com/coc).
 

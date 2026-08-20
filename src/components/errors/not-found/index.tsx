@@ -24,14 +24,14 @@ export function NotFoundContent({ withNavbar = true }: NotFoundContentProps) {
 					where you left it.
 				</p>
 				<div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-					<Link href={ROUTES.tools} className={buttonClasses({ size: "lg" })}>
-						Browse the tools
+					<Link href={ROUTES.home} className={buttonClasses({ size: "lg" })}>
+						Back to home
 					</Link>
 					<Link
-						href={ROUTES.home}
+						href={ROUTES.tools}
 						className={buttonClasses({ variant: "outline", size: "lg" })}
 					>
-						Back to home
+						Browse the tools
 					</Link>
 				</div>
 				<p className="mt-10 text-sm text-muted-foreground">

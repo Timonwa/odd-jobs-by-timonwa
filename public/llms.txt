@@ -1,6 +1,6 @@
 # Odd Jobs
 
-> Free tools for the repetitive parts of writing and code — plus a blog, newsletter archive, and digital-product shop. No sign-up. https://odd-jobs.timonwa.com
+> The odd jobs in writing and code: free single-purpose tools, guides on working better, and templates worth keeping — for writers, developers, and creators. No sign-up, open source. https://odd-jobs.timonwa.com
 
 ## What AI crawlers may use
 
@@ -10,6 +10,7 @@
 ## Key pages
 
 - Tools directory: https://odd-jobs.timonwa.com/tools
+- Tool categories: https://odd-jobs.timonwa.com/categories
 - Blog: https://odd-jobs.timonwa.com/blog
 - Newsletter: https://odd-jobs.timonwa.com/newsletter
 - Shop: https://www.timonwa.com/shop

@@ -14,7 +14,7 @@ export function ProductPageFooter() {
 				<ShoppingBagIcon aria-hidden className="h-4 w-4" />
 				Browse all products
 			</Link>
-			<SupportNote lead="The tools and templates here are free, and the code is open source." />
+			<SupportNote lead="The tools and guides here are free, and the code is open source." />
 		</footer>
 	);
 }

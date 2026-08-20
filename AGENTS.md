@@ -8,7 +8,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # AGENTS.md — Odd Jobs
 
-A productivity hub for writers, developers, and creators — free single-purpose web tools (AI-assisted and client-only), plus a blog, newsletter archive, and digital-product shop. Keep the block above intact — it's auto-managed. For the full tool anatomy and dev setup, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Free tools, guides, and templates for writers, developers, and creators — single-purpose web tools (AI-assisted and client-only), a blog, a newsletter archive, and a digital-product shop. Keep the block above intact — it's auto-managed. For the full tool anatomy and dev setup, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Tech Stack
 

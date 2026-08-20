@@ -14,7 +14,7 @@ export function PostPageFooter() {
 				<BookOpenTextIcon aria-hidden className="h-4 w-4" />
 				Browse all posts
 			</Link>
-			<SupportNote lead="The tools and templates here are free, and the code is open source." />
+			<SupportNote lead="The guides, tools, and templates here are free, and the code is open source." />
 		</footer>
 	);
 }

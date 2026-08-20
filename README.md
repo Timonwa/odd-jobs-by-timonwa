@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Odd Jobs</h1>
-  <b>Free tools for the repetitive parts of writing and code — plus writing on workflow and templates worth keeping.</b>
+  <b>The odd jobs in writing and code — free tools that each do one of them, plus guides and templates to help you work better.</b>
   <br/><br/>
 
 <a href="https://odd-jobs.timonwa.com"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Fodd-jobs.timonwa.com&style=flat-square&label=odd-jobs.timonwa.com&up_message=online&down_message=offline" /></a>
@@ -11,7 +11,15 @@
 
 ---
 
-Odd Jobs is a growing set of free, focused web tools — AI tools that turn an article into SEO metadata or social posts, plus instant browser-side utilities for counting, converting, and slugifying text. A blog and newsletter share the workflows behind them, and a shop offers digital products when you want more. The tools are free to use, no sign-up, with an optional bring-your-own-key for unlimited AI runs.
+Every project has odd jobs — the small, repetitive tasks between the real work. Counting characters for a title. Turning a headline into a slug. Writing the meta description. Odd Jobs is where those get done, for writers, developers, and creators.
+
+Three things live here:
+
+- **Tools** — one page, one job. Most run entirely in your browser; the AI ones use Gemini.
+- **Guides** — a [blog](https://odd-jobs.timonwa.com/blog) and a monthly [newsletter](https://odd-jobs.timonwa.com/newsletter) on the tools, shortcuts, and workflows worth stealing.
+- **Templates** — a [shop](https://odd-jobs.timonwa.com/shop) of generators, templates, custom GPTs, starters, and guides. Most of them free.
+
+No account, no sign-up, no paywall. Open source.
 
 **[odd-jobs.timonwa.com →](https://odd-jobs.timonwa.com)**
 
@@ -38,12 +46,13 @@ Odd Jobs is a growing set of free, focused web tools — AI tools that turn an a
 
 _More on the way._
 
-## Using the tools
+## How it works
 
 - **Instant tools** — run fully in your browser. No key, no account, nothing leaves the page.
 - **AI tools** — a daily free quota per tool, no account needed.
 - **Bring your own key** — add a free [Google AI Studio](https://aistudio.google.com/api-keys) key in an AI tool's settings for unlimited runs. It stays in your browser, never on a server.
 - **Copy-only** — the AI tools draft, you copy and post. No OAuth, no publishing, no stored credentials.
+- **Newsletter** — one issue a month. Only your email is collected, and unsubscribing is one click.
 
 ## Run locally
 
@@ -98,12 +107,15 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, the [Vercel AI SDK
 
 Contributions are welcome — bug fixes, UX and accessibility improvements, agent-prompt tweaks, docs, and ideas for new tools. See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, scope, the codebase layout, and the PR workflow. By participating you agree to the [Code of Conduct](https://www.timonwa.com/coc).
 
+The blog posts, newsletter issues, and product copy under `src/content/**` are my editorial work, so I don't take PRs against them — corrections and ideas are welcome as issues.
+
 ## Privacy
 
 - **Bring-your-own keys** live in your browser's `sessionStorage`, cleared on tab close. They're sent with a request only to make that Gemini call on your behalf — never logged or stored.
 - **Your input** is sent through the server to Google Gemini only for that request; not logged or stored (URL-based fetches are cached in memory for up to an hour). There's no database.
 - **History, preferences, and templates** live only in your browser's `localStorage`.
 - **Rate-limit counters** store a keyed (HMAC-SHA256) hash of your IP plus a daily count in Upstash Redis (resets at UTC midnight); bring-your-own-key requests skip this.
+- **Newsletter signups** send only your email address, to my own [Listmonk](https://listmonk.app) instance. The form gives the same confirmation whether or not you were already subscribed, so it can't be used to test who's on the list.
 - **No accounts, no profiles, no cross-site tracking.** Anonymous, cookieless usage analytics via [Umami](https://umami.is) — no personal data.
 
 Full details: [www.timonwa.com/privacy](https://www.timonwa.com/privacy).
