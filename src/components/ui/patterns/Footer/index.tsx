@@ -87,7 +87,9 @@ export function Footer({
 	const BrandIcon = brand.icon;
 	return (
 		<footer className="border-t border-border/50 bg-background/50">
-			<div className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+			{/* Deep bottom padding, not py-12: the fixed share button sits in this
+			    corner and would cover the legal links at the end of a page. */}
+			<div className="container mx-auto max-w-6xl px-4 pb-28 pt-12 sm:px-6 lg:px-8">
 				<div className="grid gap-10 lg:grid-cols-12 lg:gap-x-8">
 					<div className="lg:col-span-3">
 						<Link

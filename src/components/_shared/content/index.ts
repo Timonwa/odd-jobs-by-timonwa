@@ -9,4 +9,5 @@ export { NewsletterForm } from "./NewsletterForm";
 export { RelatedAside } from "./RelatedAside";
 export { RelatedGrid, type RelatedItem } from "./RelatedGrid";
 export { RelatedSection } from "./RelatedSection";
+export { SupportNote } from "./SupportNote";
 export { ToolContent } from "./ToolContent";

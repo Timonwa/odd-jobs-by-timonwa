@@ -12,6 +12,7 @@ import {
 	ErrorNotice,
 	GenerationStatus,
 } from "@/components/_shared/result";
+import { SupportNote } from "@/components/_shared/content";
 import {
 	Button,
 	Card,
@@ -144,6 +145,8 @@ export function SeoMetaTool() {
 								New article
 							</Button>
 						</div>
+
+						<SupportNote lead="This tool is free and open source." />
 					</div>
 				) : null}
 			</div>

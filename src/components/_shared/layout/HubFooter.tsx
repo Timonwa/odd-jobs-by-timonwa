@@ -122,7 +122,15 @@ export function HubFooter() {
 						{siteConfig.creator.name}
 					</a>{" "}
 					· <span className="font-medium text-primary">{siteConfig.name}</span>{" "}
-					is open source.
+					· Free tools and templates, open source ·{" "}
+					<a
+						href={EXTERNAL_ROUTES.support}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="underline underline-offset-2 transition-colors hover:text-foreground"
+					>
+						Support the project
+					</a>
 				</p>
 			}
 		/>

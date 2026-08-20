@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { SupportNote } from "../content";
 import { ToolContent } from "../content/ToolContent";
 import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
 import { AppNavbar, HubNav } from "@/components/_shared/layout";
@@ -38,6 +39,10 @@ export function ClientToolPage({
 				subtitle={subtitle}
 			/>
 			{children}
+			<SupportNote
+				className="mt-6"
+				lead="This tool runs in your browser, free and open source."
+			/>
 		</>
 	);
 
