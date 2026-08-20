@@ -69,7 +69,6 @@ Open [http://localhost:3000](http://localhost:3000).
 | `IP_HASH_SECRET`                        | when `APP_ENV=production` | Pepper for hashed IPs. The app **throws at boot** without it in production — an unkeyed IP hash is brute-forceable. Generate one with `openssl rand -hex 32` |
 | `GOOGLE_API_KEY_ARTICLE_TO_SEO_META`    | —                         | Per-tool key override (falls back to `GOOGLE_API_KEY`)                                                                                                       |
 | `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` | —                         | Per-tool key override                                                                                                                                        |
-| `SENDER_API_TOKEN`                      | —                         | Sender.net token for newsletter signups                                                                                                                      |
 
 The app builds and the instant tools work with nothing set. **Hosted AI needs `GOOGLE_API_KEY` _and_ the two Upstash variables** — a build that can't meter refuses to spend the platform key, so one without the other leaves the AI tools BYOK-only. The dev server is exempt from metering, so local work needs no Upstash account. [`.env.example`](./.env.example) is the source of truth.
 

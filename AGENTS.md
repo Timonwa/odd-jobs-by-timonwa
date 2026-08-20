@@ -140,7 +140,7 @@ App Router, with two route groups that differ in kind. `(hub)` is **layout-beari
 
 ## Data Fetching
 
-Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. **Article URLs are never fetched by this app** — `resolveArticleSource` validates the URL with `assertSafeArticleUrl` and hands it to Gemini's provider-executed `url_context` tool, which does the reading. So the SSRF guard constrains what we _ask Gemini to fetch_, not our own egress, and there is no response body or cache on our side. The only outbound `fetch` in `lib/server/` is the Sender.net call in `newsletter.action.ts`.
+Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. **Article URLs are never fetched by this app** — `resolveArticleSource` validates the URL with `assertSafeArticleUrl` and hands it to Gemini's provider-executed `url_context` tool, which does the reading. So the SSRF guard constrains what we _ask Gemini to fetch_, not our own egress, and there is no response body or cache on our side. The only outbound `fetch` in `lib/server/` is the newsletter signup call in `newsletter.action.ts`.
 
 ## Mutations
 
@@ -181,7 +181,7 @@ None — no accounts. The only gating is the hosted daily quota (see Backend / A
 
 ## Backend / API
 
-No API layer — Server Actions only. Quota budgets live in `lib/constants/`: `SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`, and `NEWSLETTER_DAILY_USER_CAP` / `NEWSLETTER_DAILY_SHARED_POOL` / `NEWSLETTER_BURST_CAP` — the newsletter action is metered too, because it writes to Sender.net with the server token. `subscribeNewsletter` also has a honeypot field (`NEWSLETTER_HONEYPOT_FIELD`), hidden from people and assistive tech; don't remove it as dead markup.
+No API layer — Server Actions only. Quota budgets live in `lib/constants/`: `SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`, and `NEWSLETTER_DAILY_USER_CAP` / `NEWSLETTER_DAILY_SHARED_POOL` / `NEWSLETTER_BURST_CAP` — the newsletter action is metered too, because it writes to a third-party list. `subscribeNewsletter` also renders `NEWSLETTER_HONEYPOT_FIELD`, hidden from people and assistive tech; it is load-bearing, not dead markup.
 
 Every key is built in `lib/server/clients/redis/keys.ts` — grep that one file to see the whole keyspace — and every key gets a TTL from `ttl.ts`, because an un-expiring key is a permanent cost leak. The three shapes, all reset at UTC midnight except the burst window:
 
@@ -212,7 +212,7 @@ None (single app). `pnpm-workspace.yaml` is the repo's dependency-security surfa
 
 ## Env Vars & Config
 
-**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; a blank value normalizes to absent, so `KEY=""` placeholders don't fail validation): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`, `SENDER_API_TOKEN`. Every one appears in `.env.example` with no value.
+**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; a blank value normalizes to absent, so `KEY=""` placeholders don't fail validation): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`. Every one appears in `.env.example` with no value.
 
 Optional in the schema, but **two are load-bearing at runtime and don't degrade gracefully**:
 

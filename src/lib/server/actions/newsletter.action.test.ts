@@ -7,12 +7,6 @@ vi.mock("@/lib/server/utils/rate-limit.utils", () => ({
 	checkAndIncrementQuota: (config: unknown) => checkAndIncrementQuota(config),
 }));
 
-// The action reads env.SENDER_API_TOKEN at module load — `vi.hoisted` runs
-// before the hoisted static imports, unlike a top-level `vi.stubEnv`.
-vi.hoisted(() => {
-	process.env.SENDER_API_TOKEN = "test-sender-token";
-});
-
 import { subscribeNewsletter } from "./newsletter.action";
 
 const IDLE = { status: "idle" } as const;
@@ -32,11 +26,18 @@ beforeEach(() => {
 	checkAndIncrementQuota
 		.mockReset()
 		.mockResolvedValue({ allowed: true, remaining: 4 });
-	fetchMock.mockReset().mockResolvedValue(new Response("{}", { status: 200 }));
+	// A fresh Response per call — a body can only be read once, so a shared
+	// instance fails the second time the action parses it.
+	fetchMock
+		.mockReset()
+		.mockImplementation(
+			async () =>
+				new Response(JSON.stringify({ success: true }), { status: 200 }),
+		);
 });
 
 describe("subscribeNewsletter", () => {
-	it("subscribes a valid address through Sender.net", async () => {
+	it("subscribes a valid address through the signup endpoint", async () => {
 		const state = await subscribeNewsletter(IDLE, form({ email: "a@b.com" }));
 		expect(state.status).toBe("success");
 		expect(fetchMock).toHaveBeenCalledOnce();
@@ -44,8 +45,8 @@ describe("subscribeNewsletter", () => {
 		expect(JSON.parse(String(init.body))).toMatchObject({ email: "a@b.com" });
 	});
 
-	// A filled honeypot is automation — answer success so the bot doesn't learn
-	// it was blocked, and write nothing anywhere.
+	// A filled hidden field is not a real submission: nothing is written, and the
+	// response is indistinguishable from a success.
 	it("silently drops a submission with a filled honeypot", async () => {
 		const state = await subscribeNewsletter(
 			IDLE,
@@ -69,8 +70,7 @@ describe("subscribeNewsletter", () => {
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
 
-	// The action writes to a third-party list with the server token, so it is
-	// metered like the AI tools — a denial must stop the write.
+	// Metered like the AI tools — a denial must stop the write.
 	it.each(["user", "pool", "burst"] as const)(
 		"refuses without writing when the %s quota denies",
 		async (reason) => {
@@ -94,18 +94,16 @@ describe("subscribeNewsletter", () => {
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
 
-	// Distinguishing "already subscribed" from "subscribed" made the form a
-	// membership oracle — both must return the identical message.
+	// Distinguishing "already subscribed" from "subscribed" would make the form a
+	// membership oracle. The endpoint answers success either way, so the action
+	// must not add a branch that reintroduces the difference.
 	it("answers already-subscribed identically to a fresh signup", async () => {
 		const fresh = await subscribeNewsletter(IDLE, form({ email: "a@b.com" }));
-		fetchMock.mockResolvedValue(
-			new Response("email already exists", { status: 422 }),
-		);
 		const repeat = await subscribeNewsletter(IDLE, form({ email: "a@b.com" }));
 		expect(repeat).toEqual(fresh);
 	});
 
-	it("maps a Sender.net failure to a safe user message", async () => {
+	it("maps an endpoint failure to a safe user message", async () => {
 		fetchMock.mockResolvedValue(new Response("boom", { status: 500 }));
 		const state = await subscribeNewsletter(IDLE, form({ email: "a@b.com" }));
 		expect(state.status).toBe("error");
@@ -113,7 +111,7 @@ describe("subscribeNewsletter", () => {
 	});
 
 	it("maps a network failure to a safe user message", async () => {
-		fetchMock.mockRejectedValue(new Error("ECONNREFUSED sender.internal"));
+		fetchMock.mockRejectedValue(new Error("ECONNREFUSED admin.internal"));
 		const state = await subscribeNewsletter(IDLE, form({ email: "a@b.com" }));
 		expect(state.status).toBe("error");
 		expect(state.message).not.toContain("ECONNREFUSED");
