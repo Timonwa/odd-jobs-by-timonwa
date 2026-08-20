@@ -120,8 +120,8 @@ export function ArticleSourceInput({
 						className="h-48 max-h-96 resize-y [field-sizing:normal]"
 					/>
 					<p className="mt-1.5 text-[11px] text-muted-foreground">
-						Your text stays in your browser and this request only — never cached
-						on our servers.
+						Your text is used for this request only — sent to Gemini to generate
+						the result, never logged or stored.
 					</p>
 					<SourceReuseControls
 						id={textReuseId}

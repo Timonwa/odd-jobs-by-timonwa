@@ -23,7 +23,7 @@ const FEATURES: Feature[] = [
 	{
 		icon: ShieldCheckIcon,
 		title: "Private by default",
-		body: "Your words never touch a server I own. The instant tools run entirely on your machine, and AI requests go straight to Google's Gemini — never stored, never used for training. Your drafts stay yours.",
+		body: "The instant tools run entirely on your machine — nothing leaves the page. AI requests pass through my server to Google's Gemini for that one request only: no database, no logs, nothing kept. Your drafts stay yours.",
 		big: true,
 	},
 	{
