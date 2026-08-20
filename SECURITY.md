@@ -63,7 +63,8 @@ Before reporting, skim the **Privacy** section of [README.md](./README.md) for t
 
 - **Your BYOK key** → browser `sessionStorage` only, cleared on tab close; sent with a request to the server only to make the Gemini call, never stored or logged
 - **Your tool input** (pasted text / URLs) → request-scoped on the server, not cached, not logged; lives in your browser's React state otherwise
-- **Fetched article content** (for URL-based tools) → 1-hour in-memory cache, keyed by URL
+- **Article URLs** → validated, then handed to Gemini's `url_context` tool, which does the fetching. The app never requests the page itself, so no article content is stored or cached here
 - **Rate-limit counters** → keyed (HMAC-SHA256) hash of IP + daily counter in Upstash Redis, resets at UTC midnight
+- **Newsletter signups** → your email address only, sent to my Listmonk instance; nothing else is collected
 
 Thanks again. ❤️

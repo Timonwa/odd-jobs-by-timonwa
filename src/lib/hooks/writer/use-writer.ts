@@ -182,7 +182,7 @@ export function useWriter(runtime: WriterRuntime) {
 					setLastSource(source);
 
 					// Persist both URL and text generations. Posts are stored only in
-					// the user's localStorage — never on our servers — and each entry has
+					// the user's localStorage — never on the server — and each entry has
 					// a Remove button so the user stays in control.
 					upsert({
 						source:
