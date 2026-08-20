@@ -6,20 +6,30 @@
 export function BrandLockup() {
 	return (
 		<>
+			{/* Below `sm` the mark alone — the full lockup crowds the bar's controls.
+			    It carries its own blue tile, so one file covers both themes. */}
+			<img
+				src="/brand-icon.svg"
+				alt=""
+				width={48}
+				height={48}
+				className="h-9 w-9 sm:hidden"
+			/>
+
 			{/* Full lockup from `sm` up, a variant per theme. */}
 			<img
 				src="/logo.svg"
 				alt=""
 				width={214}
 				height={49}
-				className="h-9 w-auto block dark:hidden"
+				className="hidden h-9 w-auto sm:block sm:dark:hidden"
 			/>
 			<img
 				src="/logo-dark.svg"
 				alt=""
 				width={214}
 				height={49}
-				className="hidden h-9 w-auto dark:block"
+				className="hidden h-9 w-auto sm:dark:block"
 			/>
 		</>
 	);

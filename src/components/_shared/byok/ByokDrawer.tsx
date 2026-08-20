@@ -91,8 +91,8 @@ export function ByokDrawer() {
 				// A drawer is a modal dialog, not an expandable region: `aria-expanded`
 				// describes in-place disclosure, so a dialog trigger uses haspopup instead.
 				aria-haspopup="dialog"
-				// Hidden below `md`, where the menu row opens this same drawer by event.
-				className="relative hidden md:inline-flex"
+				// Hidden on phones, where the bar is tight and the menu row covers it.
+				className="relative hidden sm:inline-flex"
 			>
 				<KeyRoundIcon aria-hidden className="w-4 h-4" />
 				{saved && (

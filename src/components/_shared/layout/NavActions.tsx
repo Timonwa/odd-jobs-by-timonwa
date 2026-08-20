@@ -8,6 +8,7 @@ import {
 	useId,
 	useRef,
 	useState,
+	useSyncExternalStore,
 } from "react";
 
 import {
@@ -29,7 +30,7 @@ import { Button, buttonClasses, Tooltip, GithubMark } from "@/components/ui";
 import { ByokDrawer } from "@/components/_shared/byok";
 import { ThemeToggle } from "@/components/_shared/layout";
 import { NAV_LINKS, OPEN_BYOK_EVENT, type NavLinkLabel } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { byokStorage, cn, subscribeByok } from "@/lib/utils";
 import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 import { NavIconButton } from "./NavIconButton";
@@ -64,6 +65,12 @@ export function NavActions({
 	showByok = true,
 }: NavActionsProps) {
 	const pathname = usePathname();
+	// Same store the drawer reads, so the menu row's dot matches the bar icon's.
+	const byokKey = useSyncExternalStore(
+		subscribeByok,
+		() => byokStorage.get(),
+		() => null,
+	);
 	const [openMenu, setOpenMenu] = useState<"tools" | "nav" | null>(null);
 	const ref = useRef<HTMLDivElement>(null);
 	const menuId = useId();
@@ -111,9 +118,8 @@ export function NavActions({
 			    row's gap on both sides. */}
 			{actionsSlot && <div className="hidden md:block">{actionsSlot}</div>}
 
-			{/* On the bar, not only in the menu: the dot is how you tell your own key is
-			    active, which a closed menu can't show. Always mounted — it owns the only
-			    drawer, which the menu row opens by event below `md`. */}
+			{/* On the bar as well as in the menu: the dot is how you tell your own key
+			    is active, which a closed menu can't show. This owns the only drawer. */}
 			{showByok && <ByokDrawer />}
 
 			{/* Theme toggle — kept on the bar, between the tool action and GitHub. */}
@@ -177,8 +183,8 @@ export function NavActions({
 				{/* Menu slot for page-specific links */}
 				{menuSlot}
 
-				{/* Dispatches to the single ByokDrawer on the bar rather than mounting a
-				    second one, which would duplicate its dialog and event listener. */}
+				{/* Opens the bar's drawer by event rather than mounting a second one,
+				    which would duplicate its dialog and event listener. */}
 				{showByok && (
 					<Button
 						variant="ghost"
@@ -188,10 +194,16 @@ export function NavActions({
 							window.dispatchEvent(new Event(OPEN_BYOK_EVENT));
 						}}
 						aria-haspopup="dialog"
-						className="w-full justify-start md:hidden"
+						className="w-full justify-start"
 					>
 						<KeyRoundIcon aria-hidden className="w-4 h-4" />
 						<span>Set API key</span>
+						{byokKey && (
+							<span aria-hidden className="relative ml-auto flex h-2 w-2">
+								<span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
+								<span className="relative block w-2 h-2 rounded-full bg-primary" />
+							</span>
+						)}
 					</Button>
 				)}
 
