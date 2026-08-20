@@ -2,7 +2,7 @@ import {
 	ContentBreadcrumbs,
 	JsonLdScript,
 	Newsletter,
-	RelatedGrid,
+	RelatedAside,
 } from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import type { PostMeta } from "@/lib/schemas";
@@ -56,27 +56,42 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 	return (
 		<>
 			<PageMain>
-				<div className="mx-auto max-w-3xl">
-					<ContentBreadcrumbs
-						section="blog"
-						title={post.title}
-						action={
-							<ShareBar
-								url={`${siteConfig.url}${ROUTES.post(post.slug)}`}
-								title={post.title}
-								shareText={post.description}
-								subject="post"
-							/>
-						}
-					/>
-					<PostHero post={post} />
-					<article>
-						<PostBody />
-					</article>
-					<RelatedGrid heading="More posts" items={related} />
-					<Newsletter className="mt-16" />
-					<PostPageFooter />
+				<ContentBreadcrumbs
+					section="blog"
+					title={post.title}
+					action={
+						<ShareBar
+							url={`${siteConfig.url}${ROUTES.post(post.slug)}`}
+							title={post.title}
+							shareText={post.description}
+							subject="post"
+						/>
+					}
+				/>
+				<div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
+					<div className="flex flex-col lg:col-span-2">
+						<PostHero post={post} />
+						<article>
+							<PostBody />
+						</article>
+						<PostPageFooter />
+					</div>
+
+					{related.length > 0 && (
+						<div className="lg:col-span-1">
+							<div className="lg:sticky lg:top-24">
+								<RelatedAside
+									id="more-posts"
+									heading="More posts"
+									items={related}
+								/>
+							</div>
+						</div>
+					)}
 				</div>
+
+				<Newsletter className="mt-16" />
+
 				<JsonLdScript data={jsonLd} />
 			</PageMain>
 		</>

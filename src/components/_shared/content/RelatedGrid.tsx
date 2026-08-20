@@ -3,6 +3,8 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
 
+import { RelatedSection } from "./RelatedSection";
+
 export type RelatedItem = {
 	href: Route;
 	eyebrow: string;
@@ -12,20 +14,22 @@ export type RelatedItem = {
 
 /** A "more like this" grid shown at the foot of a blog post or shop product. */
 export function RelatedGrid({
+	id,
 	heading,
 	items,
 }: {
+	id: string;
 	heading: string;
 	items: RelatedItem[];
 }) {
 	if (items.length === 0) return null;
 
 	return (
-		<section
-			aria-label={heading}
+		<RelatedSection
+			id={id}
+			heading={heading}
 			className="mt-16 border-t border-border/60 pt-10"
 		>
-			<h2 className="mb-4 text-lg font-semibold tracking-tight">{heading}</h2>
 			<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{items.map((item) => (
 					<li key={item.href}>
@@ -54,6 +58,6 @@ export function RelatedGrid({
 					</li>
 				))}
 			</ul>
-		</section>
+		</RelatedSection>
 	);
 }

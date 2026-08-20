@@ -2,6 +2,7 @@ import {
 	ContentBreadcrumbs,
 	JsonLdScript,
 	Newsletter,
+	RelatedAside,
 } from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
@@ -11,7 +12,6 @@ import type { ProductMeta } from "@/lib/schemas";
 import { ShareBar } from "@/components/_shared/tool";
 import { siteConfig } from "@/lib/config/site";
 
-import { MoreProducts } from "./MoreProducts";
 import { ProductCheckoutCta } from "./ProductCheckoutCta";
 import { ProductHeader } from "./ProductHeader";
 import { ProductPageFooter } from "./ProductPageFooter";
@@ -48,7 +48,13 @@ export async function ProductPageContent({
 
 	const related = getAllProducts()
 		.filter((p) => p.slug !== product.slug)
-		.slice(0, 4);
+		.slice(0, 4)
+		.map((p) => ({
+			href: ROUTES.product(p.slug),
+			eyebrow: p.category,
+			title: p.title,
+			metaRight: p.price,
+		}));
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -98,7 +104,11 @@ export async function ProductPageContent({
 					{related.length > 0 && (
 						<div className="lg:col-span-1">
 							<div className="lg:sticky lg:top-24">
-								<MoreProducts products={related} />
+								<RelatedAside
+									id="more-products"
+									heading="More in the shop"
+									items={related}
+								/>
 							</div>
 						</div>
 					)}
