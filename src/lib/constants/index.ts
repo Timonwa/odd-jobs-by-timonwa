@@ -13,6 +13,7 @@ export {
 	type SvgOutputTab,
 } from "./svg-to-jsx.constant";
 export {
+	FOOTER_LINK_CAP,
 	NAV_LINKS,
 	NAV_PILLARS,
 	FOOTER_META_LINKS,

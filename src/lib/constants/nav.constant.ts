@@ -30,6 +30,9 @@ export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
 );
 
 /** Creator cross-links — a compact row in the footer's bottom area. */
+/** Per-column link cap in the footer — five rows keeps every column the same height. */
+export const FOOTER_LINK_CAP = 5;
+
 export const FOOTER_META_LINKS = [
 	{ href: siteConfig.creator.siteUrl, label: "Timonwa.com" },
 	{ href: siteConfig.creator.buildingUrl, label: "Building" },

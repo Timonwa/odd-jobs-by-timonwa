@@ -13,7 +13,11 @@ type FooterProps = {
 	brand: { href: Route; name: string; icon: IconComponent };
 	tagline: string;
 	socialLinks: { label: string; href: string; icon: IconComponent }[];
-	columns: { heading: string; links: FooterLink[] }[];
+	columns: {
+		heading: string;
+		links: FooterLink[];
+		span?: "narrow";
+	}[];
 	metaLinks: FooterLink[];
 	legalLinks: FooterLink[];
 	/** Copyright / attribution line in the bottom bar. */
@@ -85,7 +89,7 @@ export function Footer({
 		<footer className="border-t border-border/50 bg-background/50">
 			<div className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
 				<div className="grid gap-10 lg:grid-cols-12 lg:gap-x-8">
-					<div className="lg:col-span-4">
+					<div className="lg:col-span-3">
 						<Link
 							href={brand.href}
 							className="inline-flex items-center gap-2 text-base font-semibold"
@@ -121,13 +125,16 @@ export function Footer({
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:col-span-8">
+					<div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-9 lg:grid-cols-11">
 						{columns.map((column) => (
-							<FooterColumn
+							<div
 								key={column.heading}
-								heading={column.heading}
-								links={column.links}
-							/>
+								className={
+									column.span === "narrow" ? "lg:col-span-2" : "lg:col-span-3"
+								}
+							>
+								<FooterColumn heading={column.heading} links={column.links} />
+							</div>
 						))}
 					</div>
 				</div>

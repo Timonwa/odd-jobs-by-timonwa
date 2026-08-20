@@ -114,12 +114,12 @@ export function NavActions({
 			<ThemeToggle />
 
 			{/* Support — quiet icon on the bar; the fuller row stays in the menu. */}
-			<Tooltip label="Support these free tools" side="bottom" align="end">
+			<Tooltip label="Support this project" side="bottom" align="end">
 				<a
 					href={EXTERNAL_ROUTES.support}
 					target="_blank"
 					rel="noopener noreferrer"
-					aria-label="Support these free tools"
+					aria-label="Support this project"
 					className={buttonClasses({ variant: "ghost", size: "icon-sm" })}
 				>
 					<HeartIcon aria-hidden className="h-4 w-4" />
@@ -197,7 +197,7 @@ export function NavActions({
 					className={cta}
 				>
 					<HeartIcon aria-hidden className="w-4 h-4" />
-					<span>Support</span>
+					<span>Support this project</span>
 				</a>
 				<a
 					href={repoUrl}

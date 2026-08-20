@@ -1,9 +1,13 @@
 import { HeartIcon, WrenchIcon } from "lucide-react";
 
 import { Footer, GithubMark, LinkedInLogo, XLogo } from "@/components/ui";
-import { FOOTER_LEGAL_LINKS, FOOTER_META_LINKS } from "@/lib/constants";
+import {
+	FOOTER_LEGAL_LINKS,
+	FOOTER_LINK_CAP,
+	FOOTER_META_LINKS,
+} from "@/lib/constants";
 import { ROUTES } from "@/lib/config/routes";
-import { TOOLS } from "@/lib/config/tools";
+import { LIVE_TOOLS } from "@/lib/config/tools";
 import { getAllPosts, getAllProducts } from "@/lib/server";
 import { siteConfig } from "@/lib/config/site";
 import { EXTERNAL_ROUTES } from "@/lib/config/routes";
@@ -24,7 +28,7 @@ const SOCIAL_LINKS = [
 		icon: LinkedInLogo,
 	},
 	{
-		label: "Support these free tools",
+		label: "Support this project",
 		href: EXTERNAL_ROUTES.support,
 		icon: HeartIcon,
 	},
@@ -32,10 +36,11 @@ const SOCIAL_LINKS = [
 
 /** This app's footer — builds the link columns from the tools registry and the content loaders, then renders the Footer shell. */
 export function HubFooter() {
-	// Cap each list so no column runs long; the "All …" link covers the rest.
-	const tools = TOOLS.filter((tool) => tool.status !== "soon").slice(0, 5);
-	const posts = getAllPosts().slice(0, 4);
-	const products = getAllProducts().slice(0, 4);
+	// Newest first from the loaders, so these stay current as each list grows;
+	// the "All …" link covers whatever the cap leaves out.
+	const tools = LIVE_TOOLS.slice(0, FOOTER_LINK_CAP);
+	const posts = getAllPosts().slice(0, FOOTER_LINK_CAP);
+	const products = getAllProducts().slice(0, FOOTER_LINK_CAP);
 
 	const columns = [
 		{
@@ -60,18 +65,20 @@ export function HubFooter() {
 			links: [
 				{ label: "All products", href: ROUTES.shop },
 				...products.map((product) => ({
-					label: product.title,
+					// Drops the trailing "Notion Template", redundant under a Shop heading.
+					label: product.title.replace(product.titleAccent, "").trim(),
 					href: ROUTES.product(product.slug),
 				})),
 			],
 		},
 		{
 			heading: "Explore",
+			span: "narrow" as const,
 			links: [
 				{ label: "Newsletter", href: ROUTES.newsletter },
 				{ label: "Categories", href: ROUTES.categories },
 				{
-					label: "Support",
+					label: "Support this project",
 					href: EXTERNAL_ROUTES.support,
 					isExternal: true as const,
 				},
