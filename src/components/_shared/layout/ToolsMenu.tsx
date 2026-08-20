@@ -41,13 +41,16 @@ export function ToolsMenu({ open, onToggle, onNavigate }: ToolsMenuProps) {
 			<Button
 				variant="ghost"
 				size="sm"
+				// The label span below is responsive, so the name lives here.
+				aria-label="Tools"
 				aria-haspopup="menu"
 				aria-expanded={open}
 				aria-controls={menuId}
 				onClick={onToggle}
 			>
 				<LayoutGridIcon aria-hidden className="w-4 h-4" />
-				<span className="hidden sm:inline">Tools</span>
+				{/* Hidden from `lg` up, where HubNav renders its own Tools link. */}
+				<span className="hidden sm:inline lg:hidden">Tools</span>
 				<ChevronDownIcon
 					aria-hidden
 					className={cn(
@@ -60,7 +63,7 @@ export function ToolsMenu({ open, onToggle, onNavigate }: ToolsMenuProps) {
 			<div
 				id={menuId}
 				className={cn(
-					"absolute right-4 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-border bg-popover shadow-lg sm:right-6 lg:right-10",
+					"absolute right-4 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-border bg-popover shadow-lg sm:right-6 lg:right-8",
 					open ? "block" : "hidden",
 				)}
 			>

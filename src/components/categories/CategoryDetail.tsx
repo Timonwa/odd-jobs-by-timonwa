@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Newsletter } from "@/components/_shared/content";
+import { SupportBlock } from "@/components/_shared/content";
 import { ToolGrid } from "@/components/_shared/tool";
 import {
 	PageMain,
@@ -58,7 +58,7 @@ export function CategoryDetail({ category }: { category: Category }) {
 					</Link>
 				</div>
 
-				<Newsletter className="mt-16" />
+				<SupportBlock className="mt-16" />
 			</PageMain>
 		</>
 	);

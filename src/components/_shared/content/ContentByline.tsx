@@ -1,4 +1,4 @@
-import { CREATOR_NAME } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",
@@ -21,7 +21,10 @@ export function ContentByline({
 	return (
 		<p className="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
 			<span>
-				By <span className="font-medium text-foreground">{CREATOR_NAME}</span>
+				By{" "}
+				<span className="font-medium text-foreground">
+					{siteConfig.creator.name}
+				</span>
 			</span>
 			<span aria-hidden>·</span>
 			<time dateTime={publishedAt}>

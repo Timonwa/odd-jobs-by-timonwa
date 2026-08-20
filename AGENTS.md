@@ -6,9 +6,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# AGENTS.md — The Productivity Bug
+# AGENTS.md — Odd Jobs
 
-A productivity hub for writers, developers, and creators — free single-purpose web tools (AI-assisted and client-only), plus a blog, newsletter archive, and digital-product shop. Keep the block above intact — it's auto-managed. For the full tool anatomy and dev setup, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Free tools, guides, and templates for writers, developers, and creators — single-purpose web tools (AI-assisted and client-only), a blog, a newsletter archive, and a digital-product shop. Keep the block above intact — it's auto-managed. For the full tool anatomy and dev setup, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Tech Stack
 
@@ -66,7 +66,7 @@ src/lib/                   kind-first, flat inside each kind; barrel per kind, o
     clients/               <service>.client.ts (gemini), or <service>/ when a client needs more than a singleton (redis/: client, keys, ttl)
     utils/                 ai/ (*.utils.ts), rate-limit.utils.ts, og-image.utils.tsx, create-mdx-loader.utils.ts
 src/content/               MDX: blog/, issues/, shop/, tools/ (all rights reserved — see LICENSE-content)
-public/                    assets: logo.png, blog/ images, PWA icons
+public/                    assets: logo/brand SVGs, blog/ images, PWA + maskable icons
 ```
 
 Conventions (full detail in `code-structure`):
@@ -140,7 +140,7 @@ App Router, with two route groups that differ in kind. `(hub)` is **layout-beari
 
 ## Data Fetching
 
-Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. **Article URLs are never fetched by this app** — `resolveArticleSource` validates the URL with `assertSafeArticleUrl` and hands it to Gemini's provider-executed `url_context` tool, which does the reading. So the SSRF guard constrains what we _ask Gemini to fetch_, not our own egress, and there is no response body or cache on our side. The only outbound `fetch` in `lib/server/` is the Sender.net call in `newsletter.action.ts`.
+Server Components call the content loaders from `@/lib/server` (`getAllPosts`, `getIssue`, `getProduct`, …) — filesystem MDX reads validated by `lib/schemas/`. Client tools compute in the browser; no fetch hooks exist and none should be added. **Article URLs are never fetched by this app** — `resolveArticleSource` validates the URL with `assertSafeArticleUrl` and hands it to Gemini's provider-executed `url_context` tool, which does the reading. So the SSRF guard constrains what we _ask Gemini to fetch_, not our own egress, and there is no response body or cache on our side. The only outbound `fetch` in `lib/server/` is the newsletter signup call in `newsletter.action.ts`.
 
 ## Mutations
 
@@ -152,11 +152,11 @@ Server Actions only, in `lib/server/actions/<domain>.action.ts` (`generateSeoMet
 
 ## Brand & Voice
 
-**The Productivity Bug** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.png` (PNG only today; an SVG with the standard `logo.svg` stem is the desired end state). Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
+**Odd Jobs** (`SITE_NAME` etc. in `lib/config/site.ts`). Voice: specific, self-contained copy — name the subject, no vague headings or deixis ("the box", "here"); UI text stands alone. Sentence case. Logo: `public/logo.svg` + `logo-dark.svg` (outlined type, so no font dependency) and `brand-icon.svg` for the mark alone; every raster is generated from them by `scripts/generate-logo.cjs`. Creator: Timonwa Akintokun (`@timonwa_`); external links point at `www.timonwa.com`.
 
 ## SEO
 
-Site: `https://tools.timonwa.com` (`SITE_URL`). Per-route `metadata` exports; per-page OG/Twitter images via `renderOgImage` (`lib/server/utils/og-image.utils.tsx`); JSON-LD via the shared `JsonLdScript`. `sitemap.ts` covers home, the tools directory, categories, live tools ("soon" tools are excluded), blog, newsletter, and the shop index; **shop product pages canonicalize to `www.timonwa.com/shop/<slug>`** (`SHOP_CANONICAL_BASE`) and are omitted from the sitemap.
+Site: `https://odd-jobs.timonwa.com` (`SITE_URL`). Per-route `metadata` exports; per-page OG/Twitter images via `renderOgImage` (`lib/server/utils/og-image.utils.tsx`); JSON-LD via the shared `JsonLdScript`. `sitemap.ts` covers home, the tools directory, categories, live tools ("soon" tools are excluded), blog, newsletter, and the shop index; **shop product pages canonicalize to `www.timonwa.com/shop/<slug>`** (`SHOP_CANONICAL_BASE`) and are omitted from the sitemap.
 
 ## DevRel
 
@@ -181,7 +181,7 @@ None — no accounts. The only gating is the hosted daily quota (see Backend / A
 
 ## Backend / API
 
-No API layer — Server Actions only. Quota budgets live in `lib/constants/`: `SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`, and `NEWSLETTER_DAILY_USER_CAP` / `NEWSLETTER_DAILY_SHARED_POOL` / `NEWSLETTER_BURST_CAP` — the newsletter action is metered too, because it writes to Sender.net with the server token. `subscribeNewsletter` also has a honeypot field (`NEWSLETTER_HONEYPOT_FIELD`), hidden from people and assistive tech; don't remove it as dead markup.
+No API layer — Server Actions only. Quota budgets live in `lib/constants/`: `SEO_META_DAILY_USER_CAP` / `SEO_META_DAILY_SHARED_POOL`, `SOCIAL_POST_DAILY_USER_CAP` / `SOCIAL_POST_DAILY_SHARED_POOL`, and `NEWSLETTER_DAILY_USER_CAP` / `NEWSLETTER_DAILY_SHARED_POOL` / `NEWSLETTER_BURST_CAP` — the newsletter action is metered too, because it writes to a third-party list. `subscribeNewsletter` also renders `NEWSLETTER_HONEYPOT_FIELD`, hidden from people and assistive tech; it is load-bearing, not dead markup.
 
 Every key is built in `lib/server/clients/redis/keys.ts` — grep that one file to see the whole keyspace — and every key gets a TTL from `ttl.ts`, because an un-expiring key is a permanent cost leak. The three shapes, all reset at UTC midnight except the burst window:
 
@@ -212,7 +212,7 @@ None (single app). `pnpm-workspace.yaml` is the repo's dependency-security surfa
 
 ## Env Vars & Config
 
-**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; a blank value normalizes to absent, so `KEY=""` placeholders don't fail validation): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`, `SENDER_API_TOKEN`. Every one appears in `.env.example` with no value.
+**Secrets** (validated in `src/lib/config/env.ts`, imported as `@env`; a blank value normalizes to absent, so `KEY=""` placeholders don't fail validation): `GOOGLE_API_KEY` (hub Gemini key), `GOOGLE_API_KEY_ARTICLE_TO_SEO_META` / `GOOGLE_API_KEY_ARTICLE_TO_SOCIAL_POST` (per-tool overrides, blank falls back to the hub key), `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, `IP_HASH_SECRET`. Every one appears in `.env.example` with no value.
 
 Optional in the schema, but **two are load-bearing at runtime and don't degrade gracefully**:
 
@@ -263,6 +263,7 @@ type(scope): subject
 - Remove existing comments unless factually wrong
 - Pull anything under `lib/server/` into a client bundle
 - Accept content PRs — `src/content/**` is the maintainer's editorial material (see LICENSE-content)
+- Edit `src/content/shop/**` copy — the same product text is published across every storefront, so a change here becomes a manual sync chore in all of them. Propose it, don't apply it
 
 ### Always
 

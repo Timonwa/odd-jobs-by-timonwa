@@ -4,14 +4,14 @@ The source code in this repository is open source under [AGPL-3.0](./LICENSE). T
 
 The following are brand assets of Timonwa Akintokun and are **not** licensed by the AGPL:
 
-- The names **"The Productivity Bug"** and **"Tools by Timonwa"**
+- The names **"Odd Jobs"**, and the former names **"The Productivity Bug"** and **"Tools by Timonwa"**
 - The logos, wordmarks, icons, and Open Graph / social artwork
-- The overall look, feel, and identity of [tools.timonwa.com](https://tools.timonwa.com)
+- The overall look, feel, and identity of [odd-jobs.timonwa.com](https://odd-jobs.timonwa.com)
 
 ## What you can do
 
 - **Use the software** under the AGPL, including running your own instance.
-- **Say your project is "based on" or "a fork of" The Productivity Bug**, factually and without implying endorsement.
+- **Say your project is "based on" or "a fork of" Odd Jobs**, factually and without implying endorsement.
 - **Refer to the project by name** in articles, talks, and reviews.
 
 ## What you must not do

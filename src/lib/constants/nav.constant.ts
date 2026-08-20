@@ -2,13 +2,8 @@
 // surfaces can't drift.
 
 import { ROUTES } from "@/lib/config/routes";
-import {
-	CREATOR_BLOG_URL,
-	CREATOR_SITE_URL,
-	CREATOR_URL,
-	PRIVACY_URL,
-	TERMS_URL,
-} from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 /** Primary nav links, in menu order. */
 export const NAV_LINKS = [
@@ -22,14 +17,29 @@ export const NAV_LINKS = [
 
 export type NavLinkLabel = (typeof NAV_LINKS)[number]["label"];
 
+const PILLAR_LABELS: readonly NavLinkLabel[] = [
+	"Tools",
+	"Blog",
+	"Shop",
+	"Newsletter",
+];
+
+/** The site's four sections, for the desktop navbar. Home is the brand mark and Categories belongs to the tools directory, so neither is one. */
+export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
+	PILLAR_LABELS.includes(navLink.label),
+);
+
 /** Creator cross-links — a compact row in the footer's bottom area. */
+/** Per-column link cap in the footer — five rows keeps every column the same height. */
+export const FOOTER_LINK_CAP = 5;
+
 export const FOOTER_META_LINKS = [
-	{ href: CREATOR_SITE_URL, label: "Main site" },
-	{ href: CREATOR_BLOG_URL, label: "Dev blog" },
-	{ href: CREATOR_URL, label: "All my links" },
+	{ href: siteConfig.creator.siteUrl, label: "Timonwa.com" },
+	{ href: siteConfig.creator.buildingUrl, label: "Building" },
+	{ href: siteConfig.creator.url, label: "All my links" },
 ] as const;
 
 export const FOOTER_LEGAL_LINKS = [
-	{ href: TERMS_URL, label: "Terms" },
-	{ href: PRIVACY_URL, label: "Privacy" },
+	{ href: EXTERNAL_ROUTES.terms, label: "Terms" },
+	{ href: EXTERNAL_ROUTES.privacy, label: "Privacy" },
 ] as const;

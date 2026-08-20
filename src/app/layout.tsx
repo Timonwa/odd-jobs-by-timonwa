@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { HubFooter } from "@/components/_shared/layout/HubFooter";
-import { SiteLayout } from "@/components/ui";
-import {
-	CREATOR_NAME,
-	CREATOR_TWITTER,
-	CREATOR_URL,
-	SITE_DESCRIPTION,
-	SITE_NAME,
-	SITE_TITLE,
-	UMAMI_WEBSITE_ID,
-	SITE_URL,
-} from "@/lib/config/site";
 import "@/styles/globals.css";
 import { isProduction } from "@env";
+
+import { ScrollToTop } from "@/components/_shared/layout";
+import { HubFooter } from "@/components/_shared/layout/HubFooter";
+import { SiteLayout } from "@/components/ui";
+import { STORAGE_KEYS } from "@/lib/constants";
+import { siteConfig } from "@/lib/config/site";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -27,37 +21,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(SITE_URL),
+	metadataBase: new URL(siteConfig.url),
 	title: {
-		default: SITE_TITLE,
-		template: `%s · ${SITE_NAME}`,
+		default: siteConfig.title,
+		template: `%s · ${siteConfig.name}`,
 	},
-	description: SITE_DESCRIPTION,
-	applicationName: SITE_NAME,
-	authors: [{ name: CREATOR_NAME, url: CREATOR_URL }],
-	creator: CREATOR_NAME,
-	publisher: CREATOR_NAME,
+	description: siteConfig.description,
+	applicationName: siteConfig.name,
+	authors: [{ name: siteConfig.creator.name, url: siteConfig.creator.url }],
+	creator: siteConfig.creator.name,
+	publisher: siteConfig.creator.name,
 	alternates: { canonical: "/" },
 	openGraph: {
-		type: "website",
-		url: SITE_URL,
-		siteName: SITE_NAME,
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		type: siteConfig.defaultSiteType,
+		url: siteConfig.url,
+		siteName: siteConfig.name,
+		title: siteConfig.title,
+		description: siteConfig.description,
 		locale: "en_US",
 	},
 	twitter: {
 		card: "summary_large_image",
-		site: CREATOR_TWITTER,
-		creator: CREATOR_TWITTER,
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		site: siteConfig.twitter,
+		creator: siteConfig.twitter,
+		title: siteConfig.title,
+		description: siteConfig.description,
 	},
 	robots: { index: true, follow: true },
 	category: "technology",
 };
 
-const themeInit = `document.documentElement.classList.toggle("dark", localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches));`;
+// Runs before paint, so it can't import anything — the key is interpolated from
+// STORAGE_KEYS rather than written out, since a mismatch here reads as no stored
+// preference and repaints once `useTheme` hydrates.
+const themeInit = `(function(){var k=${JSON.stringify(STORAGE_KEYS.theme)},v=localStorage.getItem(k);document.documentElement.classList.toggle("dark",v==="dark"||(v===null&&window.matchMedia("(prefers-color-scheme: dark)").matches));})();`;
 
 export default function RootLayout({
 	children,
@@ -76,11 +73,12 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
+				<ScrollToTop />
 				<SiteLayout footer={<HubFooter />}>{children}</SiteLayout>
 				{isProduction && (
 					<Script
 						src="https://cloud.umami.is/script.js"
-						data-website-id={UMAMI_WEBSITE_ID}
+						data-website-id={siteConfig.umamiWebsiteId}
 						data-performance="true"
 						strategy="afterInteractive"
 					/>

@@ -7,11 +7,10 @@ import {
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
-import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
 import type { IssueMeta } from "@/lib/schemas";
 import { getAllIssues } from "@/lib/server";
-
 import { ShareBar } from "@/components/_shared/tool";
+import { siteConfig } from "@/lib/config/site";
 
 import { IssueHero } from "./IssueHero";
 import { IssuePageFooter } from "./IssuePageFooter";
@@ -43,9 +42,17 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 		dateModified: issue.updatedAt ?? issue.publishedAt,
 		inLanguage: "en",
 		image: ogImageUrl(ROUTES.issue(issue.slug)),
-		mainEntityOfPage: `${SITE_URL}${ROUTES.issue(issue.slug)}`,
-		author: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
-		publisher: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
+		mainEntityOfPage: `${siteConfig.url}${ROUTES.issue(issue.slug)}`,
+		author: {
+			"@type": "Person",
+			name: siteConfig.creator.name,
+			url: siteConfig.creator.url,
+		},
+		publisher: {
+			"@type": "Person",
+			name: siteConfig.creator.name,
+			url: siteConfig.creator.url,
+		},
 		keywords: issue.keywords.join(", "),
 	};
 
@@ -58,7 +65,7 @@ export async function IssuePageContent({ issue }: { issue: IssueMeta }) {
 						title={issue.title}
 						action={
 							<ShareBar
-								url={`${SITE_URL}${ROUTES.issue(issue.slug)}`}
+								url={`${siteConfig.url}${ROUTES.issue(issue.slug)}`}
 								title={issue.title}
 								shareText={issue.description}
 								subject="issue"

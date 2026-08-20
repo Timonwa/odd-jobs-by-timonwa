@@ -7,6 +7,7 @@ import {
 	GenerationStatus,
 	HistorySidebar,
 } from "@/components/_shared/result";
+import { SupportNote } from "@/components/_shared/content";
 import type { SocialPostHistory, WriterRuntime } from "@/lib/types";
 import { useWriter } from "@/lib/hooks";
 import { Button } from "@/components/ui";
@@ -137,6 +138,8 @@ export function Writer({ runtime }: { runtime: WriterRuntime }) {
 								New article
 							</Button>
 						</div>
+
+						<SupportNote lead="Got what you needed? This tool is free and open source." />
 					</div>
 				)}
 			</div>

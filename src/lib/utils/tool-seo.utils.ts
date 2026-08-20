@@ -4,19 +4,12 @@
 import type { Metadata } from "next";
 
 import { ROUTES } from "@/lib/config/routes";
-import {
-	CREATOR_NAME,
-	CREATOR_SAME_AS,
-	CREATOR_TWITTER,
-	CREATOR_URL,
-	REPO_URL,
-	SITE_NAME,
-	SITE_URL,
-} from "@/lib/config/site";
-import { TOOL_SEO } from "@/lib/data";
+import { TOOL_SEO, type ToolSeo } from "@/lib/data";
+import { siteConfig } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
-function getToolSeo(slug: string) {
-	const seo = TOOL_SEO[slug];
+function getToolSeo(slug: string): ToolSeo {
+	const seo: ToolSeo | undefined = TOOL_SEO[slug as keyof typeof TOOL_SEO];
 	if (!seo) throw new Error(`No TOOL_SEO entry for "${slug}"`);
 	return seo;
 }
@@ -32,16 +25,16 @@ export function buildToolMetadata(slug: string): Metadata {
 		alternates: { canonical: path },
 		openGraph: {
 			type: "website",
-			url: `${SITE_URL}${path}`,
-			siteName: SITE_NAME,
+			url: `${siteConfig.url}${path}`,
+			siteName: siteConfig.name,
 			title: seo.title,
 			description: seo.description,
 			locale: "en_US",
 		},
 		twitter: {
 			card: "summary_large_image",
-			site: CREATOR_TWITTER,
-			creator: CREATOR_TWITTER,
+			site: siteConfig.twitter,
+			creator: siteConfig.twitter,
 			title: seo.title,
 			description: seo.description,
 		},
@@ -56,7 +49,7 @@ export function buildToolJsonLd(slug: string): Record<string, unknown> {
 		"@type": "WebApplication",
 		name: seo.applicationName,
 		...(seo.alternateName && { alternateName: seo.alternateName }),
-		url: `${SITE_URL}${ROUTES.tool(slug)}`,
+		url: `${siteConfig.url}${ROUTES.tool(slug)}`,
 		description: seo.description,
 		applicationCategory: "UtilitiesApplication",
 		applicationSubCategory: seo.applicationSubCategory,
@@ -69,10 +62,10 @@ export function buildToolJsonLd(slug: string): Record<string, unknown> {
 		featureList: seo.featureList,
 		creator: {
 			"@type": "Person",
-			name: CREATOR_NAME,
-			url: CREATOR_URL,
-			sameAs: CREATOR_SAME_AS,
+			name: siteConfig.creator.name,
+			url: siteConfig.creator.url,
+			sameAs: siteConfig.creator.sameAs,
 		},
-		sameAs: [REPO_URL],
+		sameAs: [EXTERNAL_ROUTES.repo],
 	};
 }

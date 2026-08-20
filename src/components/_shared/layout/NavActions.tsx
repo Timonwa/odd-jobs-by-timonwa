@@ -1,9 +1,21 @@
 "use client";
 
 import {
+	type ComponentType,
+	type ReactNode,
+	type SVGProps,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+	useSyncExternalStore,
+} from "react";
+
+import {
 	BookOpenTextIcon,
 	HeartIcon,
 	HomeIcon,
+	KeyRoundIcon,
 	LayoutGridIcon,
 	MailIcon,
 	MenuIcon,
@@ -13,24 +25,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-	type ComponentType,
-	type ReactNode,
-	type SVGProps,
-	useEffect,
-	useId,
-	useRef,
-	useState,
-} from "react";
 
-import { buttonClasses, Tooltip, GithubMark } from "@/components/ui";
+import { Button, buttonClasses, Tooltip, GithubMark } from "@/components/ui";
 import { ByokDrawer } from "@/components/_shared/byok";
+import { ThemeToggle } from "@/components/_shared/layout";
+import { NAV_LINKS, OPEN_BYOK_EVENT, type NavLinkLabel } from "@/lib/constants";
+import { byokStorage, cn, subscribeByok } from "@/lib/utils";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
+
 import { NavIconButton } from "./NavIconButton";
 import { ToolsMenu } from "./ToolsMenu";
-import { ThemeToggle } from "@/components/_shared/layout";
-import { NAV_LINKS, type NavLinkLabel } from "@/lib/constants";
-import { REPO_URL, SUPPORT_URL } from "@/lib/config/site";
-import { cn } from "@/lib/utils";
 
 // Icons stay here rather than in the constant — a const whose values are
 // React components is UI, so lib/constants holds only the labels and hrefs.
@@ -57,10 +61,16 @@ type NavActionsProps = {
 export function NavActions({
 	actionsSlot,
 	menuSlot,
-	repoUrl = REPO_URL,
+	repoUrl = EXTERNAL_ROUTES.repo,
 	showByok = true,
 }: NavActionsProps) {
 	const pathname = usePathname();
+	// Same store the drawer reads, so the menu row's dot matches the bar icon's.
+	const byokKey = useSyncExternalStore(
+		subscribeByok,
+		() => byokStorage.get(),
+		() => null,
+	);
 	const [openMenu, setOpenMenu] = useState<"tools" | "nav" | null>(null);
 	const ref = useRef<HTMLDivElement>(null);
 	const menuId = useId();
@@ -103,24 +113,17 @@ export function NavActions({
 				onNavigate={close}
 			/>
 
-			{/* Tool action (e.g. writing preferences) — kept on the bar at every width. */}
-			<div className="hidden md:block">{actionsSlot}</div>
+			{/* Tool action (e.g. writing preferences) — kept on the bar at every width.
+			    Guarded because an empty wrapper is still a flex item, collecting the
+			    row's gap on both sides. */}
+			{actionsSlot && <div className="hidden md:block">{actionsSlot}</div>}
+
+			{/* On the bar as well as in the menu: the dot is how you tell your own key
+			    is active, which a closed menu can't show. This owns the only drawer. */}
+			{showByok && <ByokDrawer />}
 
 			{/* Theme toggle — kept on the bar, between the tool action and GitHub. */}
 			<ThemeToggle />
-
-			{/* Support — quiet icon on the bar; the fuller row stays in the menu. */}
-			<Tooltip label="Support these free tools" side="bottom" align="end">
-				<a
-					href={SUPPORT_URL}
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-label="Support these free tools"
-					className={buttonClasses({ variant: "ghost", size: "icon-sm" })}
-				>
-					<HeartIcon aria-hidden className="h-4 w-4" />
-				</a>
-			</Tooltip>
 
 			{/* GitHub — kept on the bar at every width. */}
 			<Tooltip label="Star on GitHub" side="bottom" align="end">
@@ -155,7 +158,7 @@ export function NavActions({
 				id={menuId}
 				className={cn(
 					openMenu === "nav"
-						? "absolute right-4 top-full z-50 mt-2 flex max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] flex-col gap-1 overflow-y-auto no-scrollbar rounded-lg border border-border bg-popover p-2 shadow-lg sm:right-6 lg:right-10"
+						? "absolute right-4 top-full z-50 mt-2 flex max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] flex-col gap-1 overflow-y-auto no-scrollbar rounded-lg border border-border bg-popover p-2 shadow-lg sm:right-6 lg:right-8"
 						: "hidden",
 				)}
 			>
@@ -180,20 +183,42 @@ export function NavActions({
 				{/* Menu slot for page-specific links */}
 				{menuSlot}
 
-				{showByok && <ByokDrawer />}
+				{/* Opens the bar's drawer by event rather than mounting a second one,
+				    which would duplicate its dialog and event listener. */}
+				{showByok && (
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => {
+							close();
+							window.dispatchEvent(new Event(OPEN_BYOK_EVENT));
+						}}
+						aria-haspopup="dialog"
+						className="w-full justify-start"
+					>
+						<KeyRoundIcon aria-hidden className="w-4 h-4" />
+						<span>Set API key</span>
+						{byokKey && (
+							<span aria-hidden className="relative ml-auto flex h-2 w-2">
+								<span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
+								<span className="relative block w-2 h-2 rounded-full bg-primary" />
+							</span>
+						)}
+					</Button>
+				)}
 
 				<ThemeToggle presentation="menuItem" />
 
 				<div className="my-1 border-t border-border/60" />
 
 				<a
-					href={SUPPORT_URL}
+					href={EXTERNAL_ROUTES.support}
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cta}
 				>
 					<HeartIcon aria-hidden className="w-4 h-4" />
-					<span>Support</span>
+					<span>Support this project</span>
 				</a>
 				<a
 					href={repoUrl}

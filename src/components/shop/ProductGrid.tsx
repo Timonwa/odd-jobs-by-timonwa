@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from "lucide-react";
 
+import { DraftBadge } from "@/components/_shared/content";
 import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import type { ProductMeta } from "@/lib/schemas";
@@ -11,12 +12,15 @@ export function ProductGrid({ products }: { products: ProductMeta[] }) {
 				<li key={product.slug}>
 					<LinkCard href={ROUTES.product(product.slug)}>
 						<span className="flex items-center justify-between gap-2">
-							<span className="text-xs font-medium uppercase tracking-wide text-primary">
-								{product.category}
+							<span className="flex items-center gap-2">
+								<span className="text-xs font-medium uppercase tracking-wide text-primary">
+									{product.category}
+								</span>
+								<DraftBadge isDraft={product.isDraft} />
 							</span>
-							{product.price && (
+							{product.variants[0] && (
 								<span className="text-xs font-semibold text-foreground">
-									{product.price}
+									{product.variants[0].price}
 								</span>
 							)}
 						</span>

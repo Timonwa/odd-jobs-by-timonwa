@@ -3,36 +3,46 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { LinkCard } from "@/components/ui";
 
+import { DraftBadge } from "./DraftBadge";
+
+import { RelatedSection } from "./RelatedSection";
+
 export type RelatedItem = {
 	href: Route;
 	eyebrow: string;
 	title: string;
 	metaRight?: string;
+	isDraft?: boolean;
 };
 
 /** A "more like this" grid shown at the foot of a blog post or shop product. */
 export function RelatedGrid({
+	id,
 	heading,
 	items,
 }: {
+	id: string;
 	heading: string;
 	items: RelatedItem[];
 }) {
 	if (items.length === 0) return null;
 
 	return (
-		<section
-			aria-label={heading}
+		<RelatedSection
+			id={id}
+			heading={heading}
 			className="mt-16 border-t border-border/60 pt-10"
 		>
-			<h2 className="mb-4 text-lg font-semibold tracking-tight">{heading}</h2>
 			<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{items.map((item) => (
 					<li key={item.href}>
 						<LinkCard href={item.href}>
 							<span className="flex items-center justify-between gap-2">
-								<span className="text-xs font-medium uppercase tracking-wide text-primary">
-									{item.eyebrow}
+								<span className="flex items-center gap-2">
+									<span className="text-xs font-medium uppercase tracking-wide text-primary">
+										{item.eyebrow}
+									</span>
+									<DraftBadge isDraft={Boolean(item.isDraft)} />
 								</span>
 								{item.metaRight && (
 									<span className="text-xs font-semibold text-foreground">
@@ -54,6 +64,6 @@ export function RelatedGrid({
 					</li>
 				))}
 			</ul>
-		</section>
+		</RelatedSection>
 	);
 }

@@ -35,14 +35,14 @@ export function WhatItIs() {
 						id="about-heading"
 						className="text-3xl font-semibold tracking-tight sm:text-4xl"
 					>
-						Built to save you <span className="hero-gradient-text">time</span>
+						More than a <span className="hero-gradient-text">toolbox</span>
 					</h2>
 					<p className="mt-4 max-w-md text-muted-foreground">
-						Every tool does one job well — no signup, nothing to install. AI
-						helpers draft and reshape your content; instant tools handle the
-						everyday text work, right in your browser. The blog and newsletter
-						cover productivity and workflow more broadly — practical ideas to
-						help you get more done.
+						The tools each do one annoying job — character counts, clean slugs,
+						SVG conversions, an article turned into social posts. The blog and
+						newsletter go wider: working with less friction, and actually
+						finishing what you start. The shop has the templates I use myself.
+						Free to use, no account needed, and the code is open source.
 					</p>
 					<ul className="mt-6 flex flex-wrap gap-2">
 						{AUDIENCES.map((audience) => (

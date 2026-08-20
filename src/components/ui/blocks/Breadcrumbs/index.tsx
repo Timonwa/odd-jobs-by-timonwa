@@ -1,12 +1,13 @@
 "use client";
 
+import { Fragment, useState } from "react";
+
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { Fragment, useState } from "react";
 
-import { SITE_URL } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/lib/config/site";
 
 export type BreadcrumbItem = { label: string; href?: Route };
 
@@ -25,7 +26,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
 			"@type": "ListItem",
 			position: i + 1,
 			name: item.label,
-			...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
+			...(item.href ? { item: `${siteConfig.url}${item.href}` } : {}),
 		})),
 	};
 

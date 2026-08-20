@@ -12,16 +12,9 @@ export const IssueFrontmatterSchema = z.object({
 	category: z.string(),
 	publishedAt: z.string(),
 	updatedAt: z.string().optional(),
-	/** Sequential issue number, shown as "Issue #N" when present. */
-	issueNumber: z.number().optional(),
-	/** The email subject line the issue went out with. */
 	subject: z.string(),
 	/** Inbox preview text. */
 	preview: z.string(),
-	ogSubtitle: z.string(),
-	ogPills: z.array(z.string()),
-	ogAccent: z.string(),
-	ogBackgroundTint: z.string(),
 });
 
 /** A loaded issue — frontmatter plus the slug and derived reading time. */
@@ -30,4 +23,6 @@ export type IssueMeta = z.infer<typeof IssueFrontmatterSchema> & {
 	readingMinutes: number;
 	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
 	contentPath: string;
+	isDraft: boolean;
+	issueNumber: number;
 };

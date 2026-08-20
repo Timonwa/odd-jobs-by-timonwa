@@ -1,5 +1,3 @@
-import { Share2Icon } from "lucide-react";
-
 import { AiToolPage } from "@/components/_shared/page";
 import { SocialPostsHero } from "./SocialPostsHero";
 import { SocialPostsHostedUsageNotice } from "./SocialPostsHostedUsageNotice";
@@ -11,7 +9,6 @@ export function ArticleToSocialPostsPageContent() {
 		<AiToolPage
 			slug="article-to-social-posts"
 			name="Article to Social Posts"
-			icon={Share2Icon}
 			usageNotice={<SocialPostsHostedUsageNotice />}
 			menuSlot={<SocialPostsSettingsDrawer presentation="menuItem" />}
 		>

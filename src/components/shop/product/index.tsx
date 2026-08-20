@@ -2,17 +2,16 @@ import {
 	ContentBreadcrumbs,
 	JsonLdScript,
 	Newsletter,
+	RelatedAside,
 } from "@/components/_shared/content";
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
-import { SITE_NAME } from "@/lib/config/site";
 import { getAllProducts } from "@/lib/server";
 import type { ProductMeta } from "@/lib/schemas";
-
 import { ShareBar } from "@/components/_shared/tool";
+import { siteConfig } from "@/lib/config/site";
 
-import { MoreProducts } from "./MoreProducts";
 import { ProductCheckoutCta } from "./ProductCheckoutCta";
 import { ProductHeader } from "./ProductHeader";
 import { ProductPageFooter } from "./ProductPageFooter";
@@ -28,9 +27,9 @@ import { StickyCheckout } from "./StickyCheckout";
  * exactly one "$N", or nothing.
  */
 function parseOfferPrice(
-	display: string | undefined,
+	display: string,
 ): { price: string; priceCurrency: string } | Record<string, never> {
-	const value = display?.trim();
+	const value = display.trim();
 	if (!value) return {};
 	if (/^free$/i.test(value)) return { price: "0", priceCurrency: "USD" };
 	const exact = value.match(/^\$(\d+(?:\.\d{1,2})?)$/);
@@ -49,7 +48,14 @@ export async function ProductPageContent({
 
 	const related = getAllProducts()
 		.filter((p) => p.slug !== product.slug)
-		.slice(0, 4);
+		.slice(0, 4)
+		.map((p) => ({
+			href: ROUTES.product(p.slug),
+			eyebrow: p.category,
+			title: p.title,
+			isDraft: p.isDraft,
+			metaRight: p.variants[0]?.price,
+		}));
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -59,16 +65,16 @@ export async function ProductPageContent({
 		category: product.category,
 		image: ogImageUrl(ROUTES.product(product.slug)),
 		url: product.canonicalUrl,
-		brand: { "@type": "Brand", name: SITE_NAME },
-		offers: {
+		brand: { "@type": "Brand", name: siteConfig.name },
+		// One offer per variant, so a tiered product publishes every price rather
+		// than none — a display string that isn't "Free" or "$N" claims no price.
+		offers: product.variants.map((variant) => ({
 			"@type": "Offer",
-			url: product.checkoutUrl,
+			name: variant.name,
+			url: variant.checkoutUrl,
 			availability: "https://schema.org/InStock",
-			// `price` is required for a Product rich result. The frontmatter carries a
-			// display string ("Free", "$10"), so parse the number out and only claim a
-			// price when there is one to claim.
-			...parseOfferPrice(product.price),
-		},
+			...parseOfferPrice(variant.price),
+		})),
 	};
 
 	return (
@@ -79,7 +85,7 @@ export async function ProductPageContent({
 					title={product.title}
 					action={
 						<ShareBar
-							url={product.canonicalUrl}
+							url={`${siteConfig.url}${ROUTES.product(product.slug)}`}
 							title={product.title}
 							shareText={product.description}
 							subject="product"
@@ -99,7 +105,11 @@ export async function ProductPageContent({
 					{related.length > 0 && (
 						<div className="lg:col-span-1">
 							<div className="lg:sticky lg:top-24">
-								<MoreProducts products={related} />
+								<RelatedAside
+									id="more-products"
+									heading="More in the shop"
+									items={related}
+								/>
 							</div>
 						</div>
 					)}
@@ -107,10 +117,7 @@ export async function ProductPageContent({
 
 				<Newsletter className="mt-16" />
 
-				<StickyCheckout
-					checkoutUrl={product.checkoutUrl}
-					price={product.price}
-				/>
+				<StickyCheckout label="Get it now" />
 
 				<JsonLdScript data={jsonLd} />
 			</PageMain>

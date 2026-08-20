@@ -13,7 +13,7 @@ export function SocialPostsHero() {
 					<span className="hero-gradient-text">social media posts</span>
 				</>
 			}
-			subtitle="Paste an article's URL or its text. The agent reads it and writes a post tailored to each network — X, LinkedIn, Threads, Bluesky, Mastodon, and Substack Notes — ready to edit, copy, and share."
+			subtitle="Paste an article's URL or its text and get a post tailored to each network — X, LinkedIn, Threads, Bluesky, Mastodon, and Substack Notes — ready to edit, copy, and share."
 		/>
 	);
 }

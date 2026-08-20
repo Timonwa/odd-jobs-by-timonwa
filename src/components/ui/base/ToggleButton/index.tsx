@@ -12,7 +12,7 @@ type ToggleButtonProps = React.ComponentProps<"button"> & {
 };
 
 const BASE =
-	"inline-flex items-center justify-center gap-1.5 border font-medium whitespace-nowrap transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
+	"inline-flex items-center justify-center gap-1.5 border-[0.5px] font-medium whitespace-nowrap transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
 
 const SIZE_CLASSES: Record<ToggleSize, string> = {
 	sm: "px-3 py-1.5 text-xs",

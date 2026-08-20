@@ -107,8 +107,8 @@ export function GenerateForm({
 					Generate social media posts
 				</CardTitle>
 				<CardDescription>
-					Paste an article&apos;s URL or text — we draft a post for every
-					platform you pick, ready to copy and post yourself.
+					Paste an article&apos;s URL or text to get a post for every platform
+					you pick, ready to copy and post yourself.
 				</CardDescription>
 			</CardHeader>
 			<CardContent>

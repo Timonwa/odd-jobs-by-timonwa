@@ -1,20 +1,24 @@
 import { ShoppingBagIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
-import { SHOP_PAGE_COPY } from "@/lib/data";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
+
+const SEO = getIndexedSeo("shop");
+const HEADING = splitHeading(SEO.heading);
 
 export function ShopHero() {
 	return (
 		<PageHero
 			className="mb-10"
-			eyebrow={{ icon: ShoppingBagIcon, label: "Shop" }}
+			eyebrow={{ icon: ShoppingBagIcon, label: SEO.eyebrow }}
 			title={
 				<>
-					Digital products that{" "}
-					<span className="hero-gradient-text">get things done</span>
+					{HEADING.lead}
+					<span className="hero-gradient-text">{HEADING.accent}</span>
+					{HEADING.trail}
 				</>
 			}
-			subtitle={SHOP_PAGE_COPY.description}
+			subtitle={SEO.subtitle}
 		/>
 	);
 }

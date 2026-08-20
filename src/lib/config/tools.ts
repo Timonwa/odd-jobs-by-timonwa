@@ -34,7 +34,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 	{
 		slug: "article-to-social-posts",
 		name: "Article to Social Posts",
-		tagline: "Turn articles into platform-optimized social media posts.",
+		tagline: "One article into a post for every network you publish on.",
 		icon: Share2Icon,
 		categories: ["writing", "ai"],
 		featured: true,
@@ -44,7 +44,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 		slug: "article-to-seo-meta",
 		name: "Article to SEO Meta",
 		tagline:
-			"Generate SEO-friendly title and description variations with character counts in spec.",
+			"Titles and descriptions that fit Google's limits, straight from your article.",
 		icon: SearchIcon,
 		categories: ["writing", "ai", "seo"],
 		featured: true,
@@ -54,7 +54,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 		slug: "word-counter",
 		name: "Word & Character Counter",
 		tagline:
-			"Live word, character, sentence, and reading-time counts, with platform character limits.",
+			"Live counts as you type, plus the character limits for SEO and social.",
 		icon: WholeWordIcon,
 		categories: ["writing", "seo"],
 		featured: true,
@@ -63,7 +63,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 	{
 		slug: "svg-to-jsx",
 		name: "SVG to JSX Converter",
-		tagline: "Convert raw SVG markup into a clean React/JSX component.",
+		tagline: "Paste raw SVG, get a clean React component back.",
 		icon: CodeXmlIcon,
 		categories: ["developer"],
 		featured: true,
@@ -72,8 +72,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 	{
 		slug: "hash-generator",
 		name: "Hash Generator",
-		tagline:
-			"Hash text with SHA-1, SHA-256, SHA-384, and SHA-512 in your browser.",
+		tagline: "SHA-1 through SHA-512, computed on your own machine.",
 		icon: FingerprintIcon,
 		categories: ["developer"],
 		featured: true,
@@ -82,7 +81,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 	{
 		slug: "slug-generator",
 		name: "Slug Generator",
-		tagline: "Turn any title or headline into a clean, URL-safe slug.",
+		tagline: "Any headline into a tidy, URL-safe slug.",
 		icon: LinkIcon,
 		categories: ["writing", "seo", "developer"],
 		status: "live",
@@ -91,7 +90,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 		slug: "reading-time",
 		name: "Reading Time Estimator",
 		tagline:
-			"Estimate reading and speaking time, with a copy-ready “X min read” label.",
+			"How long your piece takes to read, with a copy-ready “X min read”.",
 		icon: ClockIcon,
 		categories: ["writing"],
 		status: "live",
@@ -100,7 +99,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 		slug: "case-converter",
 		name: "Case Converter",
 		tagline:
-			"Switch text between UPPERCASE, Title Case, camelCase, snake_case, and more.",
+			"Switch between UPPERCASE, Title Case, camelCase, snake_case, and more.",
 		icon: CaseSensitiveIcon,
 		categories: ["writing", "developer"],
 		featured: true,
@@ -109,8 +108,7 @@ const RAW_TOOLS: Omit<Tool, "href">[] = [
 	{
 		slug: "lorem-ipsum",
 		name: "Lorem Ipsum Generator",
-		tagline:
-			"Generate placeholder paragraphs, sentences, or words in one click.",
+		tagline: "Placeholder text by the word, sentence, or paragraph.",
 		icon: PilcrowIcon,
 		categories: ["developer", "writing"],
 		status: "live",

@@ -24,7 +24,7 @@ function SubmitButton() {
 	);
 }
 
-/** Email capture for the newsletter section — posts to the Sender.net server action. */
+/** Email capture for the newsletter section — posts to the newsletter server action. */
 export function NewsletterForm() {
 	const [state, formAction] = useActionState(subscribeNewsletter, INITIAL);
 	const emailId = useId();

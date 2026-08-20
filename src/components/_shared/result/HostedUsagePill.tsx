@@ -46,10 +46,10 @@ export function HostedUsagePill({
 			: `${remaining} of ${perUserDaily} left`;
 	const summary =
 		remaining == null
-			? `${perUserDaily} free generations per person per day. Click to add your own Gemini key for unlimited use.`
+			? `${perUserDaily} free generations a day. Add your Gemini key for unlimited use.`
 			: low
-				? `${remaining} of ${perUserDaily} free generations left today — they reset tomorrow. Click to add your own Gemini key and skip the limit.`
-				: `${remaining} of ${perUserDaily} free generations left today. Click to add your own Gemini key for unlimited use.`;
+				? `${remaining} of ${perUserDaily} left today, reset tomorrow. Add your Gemini key to skip the limit.`
+				: `${remaining} of ${perUserDaily} free generations left today. Add your Gemini key for unlimited use.`;
 	const Icon = low ? TriangleAlertIcon : InfoIcon;
 
 	const openByok = () => {
@@ -85,7 +85,7 @@ export function HostedUsagePill({
 				// Presentation only: the button's aria-label already carries this text, and a
 				// role="tooltip" referenced by no aria-describedby is unreachable anyway.
 				aria-hidden
-				className="text-center pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(16rem,calc(100vw-1rem))] -translate-x-1/2 rounded-md border border-border/60 bg-popover/75 backdrop-blur-md px-2.5 py-1.5 text-[11px] leading-snug text-popover-foreground shadow-md opacity-0 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
+				className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(14rem,calc(100vw-4rem))] -translate-x-1/2 rounded-md border border-border/60 bg-popover/75 px-2.5 py-1.5 text-[11px] leading-snug text-popover-foreground shadow-md backdrop-blur-md opacity-0 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
 			>
 				{summary}
 			</span>

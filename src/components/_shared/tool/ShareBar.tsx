@@ -177,18 +177,16 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 
 	const menuItems = (
 		<>
-			{canNativeShare && (
-				<li>
-					<button
-						type="button"
-						onClick={handleNativeShare}
-						className={itemClass}
-					>
-						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
-						Share via your device
-					</button>
-				</li>
-			)}
+			<li>
+				<button type="button" onClick={handleCopy} className={itemClass}>
+					{isCopied() ? (
+						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
+					) : (
+						<LinkIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
+					)}
+					{isCopied() ? "Link copied" : "Copy link"}
+				</button>
+			</li>
 			{links.map(({ key, label, Icon, href }) => (
 				<li key={key}>
 					<a
@@ -209,16 +207,18 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 					Share via email
 				</a>
 			</li>
-			<li>
-				<button type="button" onClick={handleCopy} className={itemClass}>
-					{isCopied() ? (
-						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
-					) : (
-						<LinkIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
-					)}
-					{isCopied() ? "Link copied" : "Copy link"}
-				</button>
-			</li>
+			{canNativeShare && (
+				<li>
+					<button
+						type="button"
+						onClick={handleNativeShare}
+						className={itemClass}
+					>
+						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
+						Share via your device
+					</button>
+				</li>
+			)}
 		</>
 	);
 
@@ -249,28 +249,35 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 				)}
 			</div>
 
-			{/* Floating action button, pinned bottom-right at every width; menu drops up. */}
-			<div className="fixed bottom-4 right-4 md:right-6 lg:right-8 z-40">
-				<Button
-					ref={fabTriggerRef}
-					onClick={() => setOpenMenu((prev) => (prev === "fab" ? null : "fab"))}
-					aria-expanded={openMenu === "fab"}
-					aria-controls={fabMenuId}
-					aria-label={`Share this ${subject}`}
-					size="icon-lg"
-					className="rounded-full shadow-lg"
-				>
-					<Share2Icon aria-hidden className="h-5 w-5" />
-				</Button>
-				{openMenu === "fab" && (
-					<ul
-						id={fabMenuId}
-						aria-label="Share options"
-						className={`absolute bottom-full right-0 mb-2 ${menuClass}`}
-					>
-						{menuItems}
-					</ul>
-				)}
+			{/* Mirrors PageMain's container so the button tracks the content's right
+			    edge, not the viewport's — same pattern as StickyCheckout. */}
+			<div className="pointer-events-none fixed inset-x-0 bottom-6 z-40">
+				<div className="container mx-auto flex max-w-6xl justify-end px-4 sm:px-6 lg:px-8">
+					<div className="pointer-events-auto relative">
+						<Button
+							ref={fabTriggerRef}
+							onClick={() =>
+								setOpenMenu((prev) => (prev === "fab" ? null : "fab"))
+							}
+							aria-expanded={openMenu === "fab"}
+							aria-controls={fabMenuId}
+							aria-label={`Share this ${subject}`}
+							size="icon-lg"
+							className="rounded-full shadow-lg"
+						>
+							<Share2Icon aria-hidden className="h-5 w-5" />
+						</Button>
+						{openMenu === "fab" && (
+							<ul
+								id={fabMenuId}
+								aria-label="Share options"
+								className={`absolute bottom-full right-0 mb-2 ${menuClass}`}
+							>
+								{menuItems}
+							</ul>
+						)}
+					</div>
+				</div>
 			</div>
 		</div>
 	);

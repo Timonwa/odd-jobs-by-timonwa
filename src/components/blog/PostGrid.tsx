@@ -1,5 +1,6 @@
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 
+import { DraftBadge } from "@/components/_shared/content";
 import { LinkCard } from "@/components/ui";
 import type { PostMeta } from "@/lib/schemas";
 import { ROUTES } from "@/lib/config/routes";
@@ -10,8 +11,11 @@ export function PostGrid({ posts }: { posts: PostMeta[] }) {
 			{posts.map((post) => (
 				<li key={post.slug}>
 					<LinkCard href={ROUTES.post(post.slug)}>
-						<span className="text-xs font-medium uppercase tracking-wide text-primary">
-							{post.category}
+						<span className="flex items-center gap-2">
+							<span className="text-xs font-medium uppercase tracking-wide text-primary">
+								{post.category}
+							</span>
+							<DraftBadge isDraft={post.isDraft} />
 						</span>
 						<h2 className="mt-2 text-lg font-semibold tracking-tight">
 							{post.title}

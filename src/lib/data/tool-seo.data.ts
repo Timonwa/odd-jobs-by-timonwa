@@ -16,7 +16,7 @@ export type ToolSeo = {
 	featureList: string[];
 };
 
-export const TOOL_SEO: Record<string, ToolSeo> = {
+export const TOOL_SEO = {
 	"article-to-seo-meta": {
 		title: "Article to SEO Meta — titles & descriptions in spec",
 		description:
@@ -262,4 +262,6 @@ export const TOOL_SEO: Record<string, ToolSeo> = {
 			"Open source",
 		],
 	},
-};
+} as const satisfies Record<string, ToolSeo>;
+
+export type ToolSeoKey = keyof typeof TOOL_SEO;

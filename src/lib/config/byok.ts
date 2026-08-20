@@ -33,3 +33,6 @@ export const BYOK_MODELS: {
 		description: "Highest quality. Lowest free tier.",
 	},
 ];
+
+export const AI_STUDIO_URL = "https://aistudio.google.com";
+export const AI_STUDIO_KEYS_URL = `${AI_STUDIO_URL}/api-keys`;

@@ -1,15 +1,16 @@
 "use server";
-// Server action for the newsletter signup form — validates and submits an email to the subscriber list.
+// Server action for the newsletter signup form — validates and meters here, then
+// forwards to the signup endpoint.
 
 import { z } from "zod";
-import { env } from "@env";
 
-import { SENDER_GROUP_IDS, SENDER_SUBSCRIBERS_URL } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 import {
 	NEWSLETTER_BURST_CAP,
 	NEWSLETTER_DAILY_SHARED_POOL,
 	NEWSLETTER_DAILY_USER_CAP,
 	NEWSLETTER_HONEYPOT_FIELD,
+	NEWSLETTER_SUBSCRIBE_ENDPOINT,
 } from "@/lib/constants";
 import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
 
@@ -17,7 +18,7 @@ import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
 // turned the form into a membership oracle: anyone could test whether an address
 // was on the list by submitting it.
 const SIGNUP_CONFIRMATION =
-	"You're on the list — expect new tools, posts, and the occasional issue.";
+	"You're on the list — new tools and guides, once a month.";
 
 const EmailSchema = z.email();
 
@@ -27,14 +28,13 @@ export type NewsletterFormState = {
 	message?: string;
 };
 
-/** Server action — validate and submit an email address to the Sender.net subscriber list. */
+/** Server action — validate and submit an email address to the newsletter list. */
 export async function subscribeNewsletter(
 	_prevState: NewsletterFormState,
 	formData: FormData,
 ): Promise<NewsletterFormState> {
-	// Honeypot: hidden from humans, so anything in it is automation. Answer with
-	// the success message rather than an error — a bot that learns it was blocked
-	// adapts, and a real user can never reach this branch.
+	// Hidden field a person never sees, so a value here is not a real submission.
+	// Answered like a success; a real user cannot reach this branch.
 	const honeypot = formData.get(NEWSLETTER_HONEYPOT_FIELD);
 	if (typeof honeypot === "string" && honeypot.trim() !== "") {
 		return { status: "success", message: SIGNUP_CONFIRMATION };
@@ -48,9 +48,7 @@ export async function subscribeNewsletter(
 		return { status: "error", message: "Enter a valid email address." };
 	}
 
-	// Unauthenticated write to a third-party list, so it gets the same metering
-	// as the AI tools: without it, one loop could poison the subscriber list,
-	// subscribe-bomb an arbitrary address, or burn the Sender.net plan's budget.
+	// Unauthenticated write to a third-party list, so it is metered like the AI tools.
 	const quota = await checkAndIncrementQuota({
 		toolSlug: "newsletter",
 		perUserDaily: NEWSLETTER_DAILY_USER_CAP,
@@ -67,53 +65,38 @@ export async function subscribeNewsletter(
 		};
 	}
 
-	const token = env.SENDER_API_TOKEN;
-	if (!token) {
-		console.warn(
-			"[newsletter] SENDER_API_TOKEN is not set — cannot subscribe.",
-		);
-		return {
-			status: "error",
-			message: "Sign-up isn't available right now. Please try again later.",
-		};
-	}
-
 	try {
-		const response = await fetch(SENDER_SUBSCRIBERS_URL, {
+		const response = await fetch(NEWSLETTER_SUBSCRIBE_ENDPOINT, {
 			method: "POST",
 			headers: {
-				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 				Accept: "application/json",
+				Origin: siteConfig.url,
 			},
-			body: JSON.stringify({
-				email: parsed.data,
-				groups: SENDER_GROUP_IDS,
-				trigger_automation: false,
-			}),
+			body: JSON.stringify({ email: parsed.data }),
 			signal: AbortSignal.timeout(10_000),
 		});
 
-		if (response.ok) {
+		const body = (await response.json().catch(() => null)) as {
+			success?: boolean;
+			message?: string;
+		} | null;
+
+		if (response.ok && body?.success) {
 			return { status: "success", message: SIGNUP_CONFIRMATION };
 		}
 
-		const detail = await response.text().catch(() => "");
-		// Sender returns a validation error when the address is already subscribed
-		// — that's a success from the visitor's point of view, and it must be
-		// indistinguishable from a fresh signup (see SIGNUP_CONFIRMATION).
-		if (/already|taken|exists|subscribed/i.test(detail)) {
-			return { status: "success", message: SIGNUP_CONFIRMATION };
-		}
-
-		console.error(`[newsletter] Sender responded ${response.status}`, detail);
+		console.error(
+			`[newsletter] subscribe endpoint responded ${response.status}`,
+			body?.message ?? "",
+		);
 		return {
 			status: "error",
 			message:
 				"Something went wrong signing you up. Please try again in a moment.",
 		};
 	} catch (error) {
-		console.error("[newsletter] Sender request failed", error);
+		console.error("[newsletter] subscribe request failed", error);
 		return {
 			status: "error",
 			message:

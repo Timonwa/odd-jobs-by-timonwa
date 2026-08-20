@@ -2,20 +2,12 @@
 // in one place stops three near-identical `ItemList` literals from drifting.
 
 import type { Route } from "next";
-
-import {
-	CREATOR_NAME,
-	CREATOR_SAME_AS,
-	CREATOR_URL,
-	SITE_DESCRIPTION,
-	SITE_NAME,
-	SITE_URL,
-} from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 /** Stable `@id`s so every block on the site references one Organization and one WebSite instead of re-describing them. Fragment URIs, per schema.org convention. */
 export const JSON_LD_IDS = {
-	organization: `${SITE_URL}/#organization`,
-	website: `${SITE_URL}/#website`,
+	organization: `${siteConfig.url}/#organization`,
+	website: `${siteConfig.url}/#website`,
 } as const;
 
 /** The site-level graph: who publishes this and what the site is. Rendered once on the home page; everything else points at these `@id`s. */
@@ -26,20 +18,24 @@ export function buildSiteGraphJsonLd(): Record<string, unknown> {
 			{
 				"@type": "Organization",
 				"@id": JSON_LD_IDS.organization,
-				name: SITE_NAME,
+				name: siteConfig.name,
 				// Teaches search engines that the pre-rebrand name is the same entity.
 				alternateName: "Tools by Timonwa",
-				url: SITE_URL,
-				description: SITE_DESCRIPTION,
-				founder: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
-				sameAs: CREATOR_SAME_AS,
+				url: siteConfig.url,
+				description: siteConfig.description,
+				founder: {
+					"@type": "Person",
+					name: siteConfig.creator.name,
+					url: siteConfig.creator.url,
+				},
+				sameAs: siteConfig.creator.sameAs,
 			},
 			{
 				"@type": "WebSite",
 				"@id": JSON_LD_IDS.website,
-				name: SITE_NAME,
-				url: SITE_URL,
-				description: SITE_DESCRIPTION,
+				name: siteConfig.name,
+				url: siteConfig.url,
+				description: siteConfig.description,
 				publisher: { "@id": JSON_LD_IDS.organization },
 				inLanguage: "en",
 			},
@@ -55,12 +51,12 @@ export function buildItemListJsonLd(
 	return {
 		"@context": "https://schema.org",
 		"@type": "ItemList",
-		name: `${sectionName} — ${SITE_NAME}`,
+		name: `${sectionName} — ${siteConfig.name}`,
 		isPartOf: { "@id": JSON_LD_IDS.website },
 		itemListElement: items.map((item, index) => ({
 			"@type": "ListItem",
 			position: index + 1,
-			url: `${SITE_URL}${item.href}`,
+			url: `${siteConfig.url}${item.href}`,
 			name: item.title,
 		})),
 	};
@@ -68,5 +64,5 @@ export function buildItemListJsonLd(
 
 /** Absolute URL of a route's generated OpenGraph card — the `/opengraph-image` suffix lives here rather than being concatenated at each JSON-LD site. */
 export function ogImageUrl(path: Route): string {
-	return `${SITE_URL}${path}/opengraph-image`;
+	return `${siteConfig.url}${path}/opengraph-image`;
 }

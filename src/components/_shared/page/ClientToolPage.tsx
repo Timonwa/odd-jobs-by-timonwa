@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 
 import { ToolContent } from "../content/ToolContent";
 import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
-import { AppNavbar } from "@/components/_shared/layout";
+import { AppNavbar, HubNav } from "@/components/_shared/layout";
 import { PageMain, PageHero } from "@/components/ui";
-import { ROUTES } from "@/lib/config/routes";
 import type { IconComponent } from "@/lib/types";
 
 type ClientToolPageProps = {
@@ -44,15 +43,7 @@ export function ClientToolPage({
 
 	return (
 		<>
-			<AppNavbar
-				brand={{
-					href: ROUTES.tool(slug),
-					name,
-					icon,
-					ariaLabel: `${name} home`,
-				}}
-				showByok={false}
-			/>
+			<AppNavbar centerSlot={<HubNav section="Tools" />} showByok={false} />
 			<PageMain>
 				{constrained ? <div className="mx-auto max-w-3xl">{hero}</div> : hero}
 				<ToolContent currentSlug={slug} />

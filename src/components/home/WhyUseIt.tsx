@@ -23,37 +23,37 @@ const FEATURES: Feature[] = [
 	{
 		icon: ShieldCheckIcon,
 		title: "Private by default",
-		body: "The instant tools run right in your browser — nothing is uploaded. AI requests go straight to Google, and are never stored or used for training. Your drafts stay yours.",
+		body: "The instant tools run entirely on your machine — nothing leaves the page. AI requests pass through my server to Google's Gemini for that one request only: no database, no logs, nothing kept. Your drafts stay yours.",
 		big: true,
 	},
 	{
 		icon: SparklesIcon,
-		title: "Free, no signup",
-		body: "Every tool is free with a daily AI allowance. No account, no credit card.",
+		title: "Free, no sign-up",
+		body: "Every tool is free, including a daily allowance for the AI ones. No account, no credit card, no trial to expire.",
 		tint: 4,
 	},
 	{
 		icon: RulerIcon,
 		title: "Built to spec",
-		body: "Character counts and platform limits are baked in, so output fits SEO and social.",
+		body: "Character counts and platform limits are built in, so what comes out already fits X, LinkedIn, and Google.",
 		tint: 1,
 	},
 	{
 		icon: GaugeIcon,
 		title: "Instant",
-		body: "No installs, no page reloads — results appear as you type or in one request.",
+		body: "Nothing to install, no page reloads. Results appear as you type, or in one request.",
 		tint: 2,
 	},
 	{
 		icon: Code2Icon,
 		title: "Open source",
-		body: "Open source and built in the open. Read the code or bring your own key.",
+		body: "Built in the open, AGPL-licensed. Read the code, file an issue, or bring your own API key.",
 		tint: 3,
 	},
 	{
 		icon: SproutIcon,
 		title: "Growing collection",
-		body: "New writing, developer, and publishing tools ship regularly — just getting started.",
+		body: "New tools, posts, and templates land as I build them. This is the early version of something bigger.",
 		tint: 5,
 	},
 ];
@@ -64,7 +64,7 @@ export function WhyUseIt() {
 			<SectionHeader
 				id="why-heading"
 				title="Why use it"
-				subtitle="Focused, fast, and respectful of your privacy."
+				subtitle="No accounts, no uploads, no catch."
 			/>
 			<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{FEATURES.map((feature) => {

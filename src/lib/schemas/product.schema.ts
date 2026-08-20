@@ -2,8 +2,7 @@
 // incomplete file fails the build loudly instead of shipping a broken page.
 
 import { z } from "zod";
-
-import { SHOP_CANONICAL_BASE } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 export const ProductFrontmatterSchema = z.object({
 	title: z.string(),
@@ -20,19 +19,23 @@ export const ProductFrontmatterSchema = z.object({
 		.string()
 		.url()
 		.refine(
-			(url) => url.startsWith(`${SHOP_CANONICAL_BASE}/`),
-			`canonicalUrl must start with ${SHOP_CANONICAL_BASE}/`,
+			(url) => url.startsWith(`${EXTERNAL_ROUTES.shopCanonicalBase}/`),
+			`canonicalUrl must start with ${EXTERNAL_ROUTES.shopCanonicalBase}/`,
 		),
-	/** Display price, e.g. "Free" or "$5". */
-	price: z.string().optional(),
-	/** External checkout link (Buy Me a Coffee / Selar). */
-	checkoutUrl: z.string().url(),
+	/** Buyable versions, cheapest first — a single-price product has one entry. */
+	variants: z
+		.array(
+			z.object({
+				name: z.string(),
+				price: z.string(),
+				checkoutUrl: z.string().url(),
+			}),
+		)
+		.min(1),
 	/** CTA label, e.g. "Get it on Buy Me a Coffee". */
 	checkoutLabel: z.string().optional(),
 	ogSubtitle: z.string(),
 	ogPills: z.array(z.string()),
-	ogAccent: z.string(),
-	ogBackgroundTint: z.string(),
 });
 
 /** A loaded product — frontmatter plus the slug and derived reading time. */
@@ -41,4 +44,5 @@ export type ProductMeta = z.infer<typeof ProductFrontmatterSchema> & {
 	readingMinutes: number;
 	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
 	contentPath: string;
+	isDraft: boolean;
 };

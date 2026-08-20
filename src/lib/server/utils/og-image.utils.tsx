@@ -1,8 +1,7 @@
 // Shared Open Graph image template rendered by the route og-image handlers.
 
 import { ImageResponse } from "next/og";
-
-import { SITE_DOMAIN } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 /** Shared canvas + MIME for every OG / Twitter card. */
 export const OG_SIZE = { width: 1200, height: 630 } as const;
@@ -134,7 +133,7 @@ export function renderOgImage(config: OgImageConfig) {
 			</div>
 
 			<div style={{ display: "flex", fontSize: "24px", color: "#a1a1aa" }}>
-				{SITE_DOMAIN}
+				{siteConfig.domain}
 			</div>
 		</div>,
 		{ ...OG_SIZE },

@@ -1,20 +1,24 @@
 import { BookOpenTextIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
-import { BLOG_PAGE_COPY } from "@/lib/data";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
+
+const SEO = getIndexedSeo("blog");
+const HEADING = splitHeading(SEO.heading);
 
 export function BlogHero() {
 	return (
 		<PageHero
 			className="mb-10"
-			eyebrow={{ icon: BookOpenTextIcon, label: "Blog" }}
+			eyebrow={{ icon: BookOpenTextIcon, label: SEO.eyebrow }}
 			title={
 				<>
-					Getting things done,{" "}
-					<span className="hero-gradient-text">made simpler</span>
+					{HEADING.lead}
+					<span className="hero-gradient-text">{HEADING.accent}</span>
+					{HEADING.trail}
 				</>
 			}
-			subtitle={BLOG_PAGE_COPY.description}
+			subtitle={SEO.subtitle}
 		/>
 	);
 }

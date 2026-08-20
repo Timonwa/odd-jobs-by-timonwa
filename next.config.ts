@@ -8,11 +8,16 @@ import type { NextConfig } from "next";
 // layout ships an inline theme script (it must run before paint to avoid a
 // flash of the wrong theme) and Next injects inline bootstrap scripts. Moving to
 // a nonce means a middleware that makes every response dynamic, which would
-// forfeit the static rendering this site relies on. `'unsafe-eval'` is
-// deliberately absent.
+// forfeit the static rendering this site relies on.
+//
+// `'unsafe-eval'` stays out of every built app. React's development build needs
+// eval() for its debugging features and refuses to boot without it, so the dev
+// server — which is never public — is the one place it is allowed.
+const isDevServer = process.env.NODE_ENV === "development";
+
 const CSP = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline' https://cloud.umami.is",
+	`script-src 'self' 'unsafe-inline'${isDevServer ? " 'unsafe-eval'" : ""} https://cloud.umami.is`,
 	"style-src 'self' 'unsafe-inline'",
 	"img-src 'self' data: blob:",
 	"font-src 'self' data:",

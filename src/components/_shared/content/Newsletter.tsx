@@ -7,7 +7,7 @@ import { MailIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NewsletterForm } from "./NewsletterForm";
 
-/** "Productivity, in your inbox" signup section. */
+/** The newsletter signup section, rendered on nearly every page. */
 export function Newsletter({ className }: { className?: string }) {
 	return (
 		<section
@@ -36,11 +36,11 @@ export function Newsletter({ className }: { className?: string }) {
 					id="newsletter-heading"
 					className="text-2xl font-semibold tracking-tight"
 				>
-					Productivity, in your inbox
+					Get the next issue
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					New tools, posts, and the occasional newsletter issue — no spam,
-					unsubscribe anytime.
+					One issue a month: new tools and guides on working better. No spam,
+					unsubscribe in one click.
 				</p>
 
 				<NewsletterForm />

@@ -18,10 +18,10 @@ export function HubHomePageContent() {
 			<PageMain>
 				<HomeHero />
 				<ToolsPreview />
-				<WhatItIs />
 				<BrowseByCategory />
 				<HowItWorks />
 				<WhyUseIt />
+				<WhatItIs />
 				<LatestPosts />
 				<ShopPreview />
 				<Newsletter className="mt-20 sm:mt-24" />

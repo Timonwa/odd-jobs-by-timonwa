@@ -1,41 +1,46 @@
 import { HeartIcon, WrenchIcon } from "lucide-react";
 
 import { Footer, GithubMark, LinkedInLogo, XLogo } from "@/components/ui";
-import { FOOTER_LEGAL_LINKS, FOOTER_META_LINKS } from "@/lib/constants";
-import { ROUTES } from "@/lib/config/routes";
 import {
-	CREATOR_LINKEDIN_URL,
-	CREATOR_NAME,
-	CREATOR_TWITTER_URL,
-	CREATOR_URL,
-	REPO_URL,
-	SITE_NAME,
-	SITE_TAGLINE,
-	SUPPORT_URL,
-} from "@/lib/config/site";
-import { TOOLS } from "@/lib/config/tools";
+	FOOTER_LEGAL_LINKS,
+	FOOTER_LINK_CAP,
+	FOOTER_META_LINKS,
+} from "@/lib/constants";
+import { ROUTES } from "@/lib/config/routes";
+import { LIVE_TOOLS } from "@/lib/config/tools";
 import { getAllPosts, getAllProducts } from "@/lib/server";
+import { siteConfig } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 // Resolved at module load so it stays static under Cache Components — the copyright year doesn't need request-time freshness.
 const YEAR = new Date().getFullYear();
 
 const SOCIAL_LINKS = [
-	{ label: "Star on GitHub", href: REPO_URL, icon: GithubMark },
-	{ label: `${CREATOR_NAME} on X`, href: CREATOR_TWITTER_URL, icon: XLogo },
+	{ label: "Star on GitHub", href: EXTERNAL_ROUTES.repo, icon: GithubMark },
 	{
-		label: `${CREATOR_NAME} on LinkedIn`,
-		href: CREATOR_LINKEDIN_URL,
+		label: `${siteConfig.creator.name} on X`,
+		href: siteConfig.creator.twitterUrl,
+		icon: XLogo,
+	},
+	{
+		label: `${siteConfig.creator.name} on LinkedIn`,
+		href: siteConfig.creator.linkedinUrl,
 		icon: LinkedInLogo,
 	},
-	{ label: "Support these free tools", href: SUPPORT_URL, icon: HeartIcon },
+	{
+		label: "Support this project",
+		href: EXTERNAL_ROUTES.support,
+		icon: HeartIcon,
+	},
 ];
 
 /** This app's footer — builds the link columns from the tools registry and the content loaders, then renders the Footer shell. */
 export function HubFooter() {
-	// Cap each list so no column runs long; the "All …" link covers the rest.
-	const tools = TOOLS.filter((tool) => tool.status !== "soon").slice(0, 5);
-	const posts = getAllPosts().slice(0, 4);
-	const products = getAllProducts().slice(0, 4);
+	// Newest first from the loaders, so these stay current as each list grows;
+	// the "All …" link covers whatever the cap leaves out.
+	const tools = LIVE_TOOLS.slice(0, FOOTER_LINK_CAP);
+	const posts = getAllPosts().slice(0, FOOTER_LINK_CAP);
+	const products = getAllProducts().slice(0, FOOTER_LINK_CAP);
 
 	const columns = [
 		{
@@ -49,8 +54,10 @@ export function HubFooter() {
 			heading: "Blog",
 			links: [
 				{ label: "All posts", href: ROUTES.blog },
+				// The footer's rows are plain links with no room for a badge, so drafts
+				// are marked in the label itself (dev server only).
 				...posts.map((post) => ({
-					label: post.title,
+					label: post.isDraft ? `${post.title} (draft)` : post.title,
 					href: ROUTES.post(post.slug),
 				})),
 			],
@@ -59,26 +66,35 @@ export function HubFooter() {
 			heading: "Shop",
 			links: [
 				{ label: "All products", href: ROUTES.shop },
-				...products.map((product) => ({
-					label: product.title,
-					href: ROUTES.product(product.slug),
-				})),
+				...products.map((product) => {
+					// Drops the trailing "Notion Template", redundant under a Shop heading.
+					const label = product.title.replace(product.titleAccent, "").trim();
+					return {
+						label: product.isDraft ? `${label} (draft)` : label,
+						href: ROUTES.product(product.slug),
+					};
+				}),
 			],
 		},
 		{
 			heading: "Explore",
+			span: "narrow" as const,
 			links: [
 				{ label: "Newsletter", href: ROUTES.newsletter },
 				{ label: "Categories", href: ROUTES.categories },
-				{ label: "Support", href: SUPPORT_URL, isExternal: true as const },
+				{
+					label: "Support this project",
+					href: EXTERNAL_ROUTES.support,
+					isExternal: true as const,
+				},
 				{
 					label: "Star on GitHub",
-					href: REPO_URL,
+					href: EXTERNAL_ROUTES.repo,
 					isExternal: true as const,
 				},
 				{
 					label: "Report an issue",
-					href: `${REPO_URL}/issues`,
+					href: `${EXTERNAL_ROUTES.repo}/issues`,
 					isExternal: true as const,
 				},
 			],
@@ -87,8 +103,8 @@ export function HubFooter() {
 
 	return (
 		<Footer
-			brand={{ href: ROUTES.home, name: SITE_NAME, icon: WrenchIcon }}
-			tagline={SITE_TAGLINE}
+			brand={{ href: ROUTES.home, name: siteConfig.name, icon: WrenchIcon }}
+			tagline={siteConfig.tagline}
 			socialLinks={SOCIAL_LINKS}
 			columns={columns}
 			metaLinks={FOOTER_META_LINKS.map((link) => ({
@@ -103,15 +119,23 @@ export function HubFooter() {
 				<p>
 					© {YEAR}{" "}
 					<a
-						href={CREATOR_URL}
+						href={siteConfig.creator.url}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground"
 					>
-						{CREATOR_NAME}
+						{siteConfig.creator.name}
 					</a>{" "}
-					· <span className="font-medium text-primary">{SITE_NAME}</span> is
-					open source.
+					· <span className="font-medium text-primary">{siteConfig.name}</span>{" "}
+					· Free tools and templates, open source ·{" "}
+					<a
+						href={EXTERNAL_ROUTES.support}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="underline underline-offset-2 transition-colors hover:text-foreground"
+					>
+						Support the project
+					</a>
 				</p>
 			}
 		/>
