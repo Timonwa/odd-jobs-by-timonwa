@@ -1,6 +1,6 @@
 import { TagsIcon } from "lucide-react";
 
-import { Newsletter } from "@/components/_shared/content";
+import { SupportBlock } from "@/components/_shared/content";
 import { CategoryGrid } from "@/components/_shared/category";
 import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
 import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
@@ -33,7 +33,7 @@ export function CategoriesPageContent() {
 				/>
 				<h2 className="sr-only">All categories</h2>
 				<CategoryGrid />
-				<Newsletter className="mt-16" />
+				<SupportBlock className="mt-16" />
 			</PageMain>
 		</>
 	);

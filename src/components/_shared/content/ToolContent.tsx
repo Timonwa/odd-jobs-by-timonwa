@@ -4,7 +4,7 @@ import type { ComponentType } from "react";
 import { assertToolSlug, parseToolFaq } from "@/lib/utils";
 
 import { MoreTools } from "./MoreTools";
-import { Newsletter } from "./Newsletter";
+import { SupportBlock } from "./SupportBlock";
 
 /** The SEO content block below a tool — MDX article, FAQ (FAQPage JSON-LD — machine-readability and AI answer engines; Google restricted FAQ rich results to government and health sites in 2023), and a "more tools" grid; copy from `content/tools/<slug>.mdx`. */
 export async function ToolContent({ currentSlug }: { currentSlug: string }) {
@@ -25,7 +25,7 @@ export async function ToolContent({ currentSlug }: { currentSlug: string }) {
 
 	return (
 		<>
-			<Newsletter className="mt-16" />
+			<SupportBlock className="mt-16" />
 
 			<div className="mt-16 flex flex-col gap-12 border-t border-border/60 pt-12">
 				<article className="max-w-3xl">

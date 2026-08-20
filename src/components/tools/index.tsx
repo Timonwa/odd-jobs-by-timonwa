@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { LayoutGridIcon } from "lucide-react";
 
-import { Newsletter } from "@/components/_shared/content";
+import { SupportBlock } from "@/components/_shared/content";
 import { ToolGrid } from "@/components/_shared/tool";
 import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
 import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
@@ -40,7 +40,7 @@ export function ToolsDirectoryPageContent() {
 					<FilterableTools />
 				</Suspense>
 
-				<Newsletter className="mt-16" />
+				<SupportBlock className="mt-16" />
 			</PageMain>
 		</>
 	);

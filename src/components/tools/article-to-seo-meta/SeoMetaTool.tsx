@@ -146,7 +146,7 @@ export function SeoMetaTool() {
 							</Button>
 						</div>
 
-						<SupportNote lead="This tool is free and open source." />
+						<SupportNote lead="Got what you needed? This tool is free and open source." />
 					</div>
 				) : null}
 			</div>
