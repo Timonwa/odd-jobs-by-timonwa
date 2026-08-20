@@ -7,5 +7,6 @@ export { HubNav } from "./HubNav";
 export { HubNavbar } from "./HubNavbar";
 export { NavActions } from "./NavActions";
 export { NavIconButton } from "./NavIconButton";
+export { ScrollToTop } from "./ScrollToTop";
 export { ThemeToggle } from "./ThemeToggle";
 export { ToolsMenu } from "./ToolsMenu";

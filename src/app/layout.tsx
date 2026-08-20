@@ -4,6 +4,7 @@ import Script from "next/script";
 import "@/styles/globals.css";
 import { isProduction } from "@env";
 
+import { ScrollToTop } from "@/components/_shared/layout";
 import { HubFooter } from "@/components/_shared/layout/HubFooter";
 import { SiteLayout } from "@/components/ui";
 import { STORAGE_KEYS } from "@/lib/constants";
@@ -72,6 +73,7 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
+				<ScrollToTop />
 				<SiteLayout footer={<HubFooter />}>{children}</SiteLayout>
 				{isProduction && (
 					<Script
