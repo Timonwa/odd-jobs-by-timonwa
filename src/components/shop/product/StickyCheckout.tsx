@@ -34,7 +34,7 @@ export function StickyCheckout({
 		<div
 			aria-hidden={!show}
 			className={cn(
-				"pointer-events-none fixed inset-x-0 bottom-6 z-40 transition-[opacity,transform] duration-300",
+				"pointer-events-none fixed inset-x-0 bottom-24 z-40 transition-[opacity,transform] duration-300",
 				show ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
 			)}
 		>
