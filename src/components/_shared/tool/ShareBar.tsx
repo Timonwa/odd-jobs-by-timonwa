@@ -177,18 +177,16 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 
 	const menuItems = (
 		<>
-			{canNativeShare && (
-				<li>
-					<button
-						type="button"
-						onClick={handleNativeShare}
-						className={itemClass}
-					>
-						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
-						Share via your device
-					</button>
-				</li>
-			)}
+			<li>
+				<button type="button" onClick={handleCopy} className={itemClass}>
+					{isCopied() ? (
+						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
+					) : (
+						<LinkIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
+					)}
+					{isCopied() ? "Link copied" : "Copy link"}
+				</button>
+			</li>
 			{links.map(({ key, label, Icon, href }) => (
 				<li key={key}>
 					<a
@@ -209,16 +207,18 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 					Share via email
 				</a>
 			</li>
-			<li>
-				<button type="button" onClick={handleCopy} className={itemClass}>
-					{isCopied() ? (
-						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
-					) : (
-						<LinkIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
-					)}
-					{isCopied() ? "Link copied" : "Copy link"}
-				</button>
-			</li>
+			{canNativeShare && (
+				<li>
+					<button
+						type="button"
+						onClick={handleNativeShare}
+						className={itemClass}
+					>
+						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
+						Share via your device
+					</button>
+				</li>
+			)}
 		</>
 	);
 
