@@ -48,13 +48,4 @@ next-env.d.ts
 src/content/**/_drafts/
 
 # private
-docs
-docs/todo.md
-docs/LAUNCH.md
-docs/ideas.md
-docs/next-docs
-docs/ai-sdk-docs
-docs/my-blog-rss-feed.xml
-docs/tool-limits.md
-docs/repurpose-tool-plan.md
-docs/lib-audit.md
+_private

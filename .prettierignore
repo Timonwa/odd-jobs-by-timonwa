@@ -12,3 +12,7 @@ public/
 
 # Lockfile-like
 *.min.*
+
+# Prettier escapes the MDX comment delimiters here and unindents the faq
+# block, leaving a template you cannot paste.
+_docs/content-templates/tools.mdx
