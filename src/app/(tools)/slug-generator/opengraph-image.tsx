@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { siteConfig } from "@/lib/config/site";
 import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
@@ -19,7 +20,7 @@ export const contentType = OG_CONTENT_TYPE;
 /** OG image for the Slug Generator tool page. */
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "Slug generator · Open source",
+		eyebrow: `Slug generator · ${siteConfig.name}`,
 		titleLead: "Slug",
 		titleAccent: "Generator",
 		subtitle:

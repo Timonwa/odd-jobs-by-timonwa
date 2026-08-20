@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { siteConfig } from "@/lib/config/site";
 import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
@@ -15,7 +16,7 @@ export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "SVG to JSX · Open source",
+		eyebrow: `SVG to JSX · ${siteConfig.name}`,
 		titleLead: "SVG to",
 		titleAccent: "JSX",
 		subtitle:

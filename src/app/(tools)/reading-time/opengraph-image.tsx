@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { siteConfig } from "@/lib/config/site";
 import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
@@ -20,7 +21,7 @@ export const contentType = OG_CONTENT_TYPE;
 /** OG image for the Reading Time Estimator tool page. */
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "Reading time estimator · Open source",
+		eyebrow: `Reading time estimator · ${siteConfig.name}`,
 		titleLead: "Reading",
 		titleAccent: "Time",
 		subtitle:

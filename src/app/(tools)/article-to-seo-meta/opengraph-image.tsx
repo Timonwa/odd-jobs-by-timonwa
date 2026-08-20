@@ -3,6 +3,7 @@ import {
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { siteConfig } from "@/lib/config/site";
 import { OG_PALETTES } from "@/lib/constants";
 
 // Edge runtime: a deliberate choice for image generation, not a Next.js
@@ -16,7 +17,7 @@ export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
 	return renderOgImage({
-		eyebrow: "SEO meta generator · Open source",
+		eyebrow: `SEO meta generator · ${siteConfig.name}`,
 		titleLead: "Article to",
 		titleAccent: "SEO Meta",
 		subtitle:
