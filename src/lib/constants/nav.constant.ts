@@ -31,7 +31,7 @@ export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
 
 /** Creator cross-links — a compact row in the footer's bottom area. */
 export const FOOTER_META_LINKS = [
-	{ href: siteConfig.creator.siteUrl, label: "Main site" },
+	{ href: siteConfig.creator.siteUrl, label: "Timonwa.com" },
 	{ href: siteConfig.creator.buildingUrl, label: "Building" },
 	{ href: siteConfig.creator.url, label: "All my links" },
 ] as const;

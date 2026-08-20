@@ -23,32 +23,32 @@ export const INDEXED_SEO = {
 	home: {
 		title: `${siteConfig.name} — free tools, writing & templates`,
 		description:
-			"Free tools for the repetitive parts of writing and code, writing on workflow, and templates worth keeping. For writers, developers, and creators.",
+			"Free tools for the repetitive parts of writing and code, guides on working better, and templates worth keeping. For writers, developers, and creators.",
 		heading: { lead: "The", accent: "odd jobs", trail: "in writing and code" },
 		subtitle:
-			"Free tools that each do one of them, plus writing on workflow and templates worth keeping.",
+			"Free tools that each do one of them, plus guides and templates to help you work better.",
 		eyebrow: "Free · no sign-up · open source",
 		og: {
 			eyebrow: `${siteConfig.name} · Free · Open source`,
 			titleLead: "The odd jobs in",
 			titleAccent: "writing and code",
 			subtitle:
-				"Free tools that each do one of them, plus writing on workflow and templates worth keeping.",
+				"Free tools that each do one of them, plus guides and templates to help you work better.",
 			pills: ["Free", "No sign-up", "Open source"],
 		},
 	},
 	tools: {
-		title: "All tools — the full directory",
+		title: "All tools — free, no sign-up, open source",
 		description:
-			"Browse every tool in the hub and filter by category: AI writing helpers, SEO, developer, and text utilities for writers, developers, and creators.",
+			"Every Odd Jobs tool in one place: AI writing helpers, SEO, developer, and text utilities. Free, no account, and most run entirely in your browser.",
 		heading: { lead: "Every", accent: "odd job", trail: ", one place" },
 		subtitle:
 			"Each tool does one thing. Browse them all, or filter by category to find the one you came for. New ones land here as they ship.",
 		eyebrow: "All tools",
 		og: {
 			eyebrow: `Tools · ${siteConfig.name}`,
-			titleLead: "Every tool,",
-			titleAccent: "one directory",
+			titleLead: "Every odd job,",
+			titleAccent: "one place",
 			subtitle:
 				"AI writing helpers, SEO, developer, and text utilities — free, no sign-up.",
 			pills: ["AI writing", "SEO", "Developer", "Text"],
@@ -57,7 +57,7 @@ export const INDEXED_SEO = {
 	categories: {
 		title: "Tool categories — browse by what you need",
 		description:
-			"Browse the hub by category: AI writing helpers, SEO, developer utilities, text, and media tools for writers, developers, and creators.",
+			"Find an Odd Jobs tool by category: AI writing helpers, SEO, developer utilities, text, and media tools for writers, developers, and creators.",
 		heading: { lead: "Browse tools by", accent: "category" },
 		subtitle:
 			"Every tool belongs to one or more categories — pick a lane to see what's there, and what's on the way.",
@@ -72,54 +72,54 @@ export const INDEXED_SEO = {
 		},
 	},
 	blog: {
-		title: "Blog — writing on workflow and the tools behind it",
+		title: "Blog — guides on working better",
 		description:
-			"How the work actually gets done: the workflows, the shortcuts, and the tools that came out of them.",
-		heading: { lead: "How the work", accent: "actually gets done" },
+			"Guides, tutorials, and hard-won lessons on improving how you work: the tools, the shortcuts, and the workflows worth stealing.",
+		heading: { lead: "Work better,", accent: "one guide at a time" },
 		subtitle:
-			"The workflows, the shortcuts, and the tools that came out of them.",
+			"Guides, tutorials, and lessons learned the hard way — on the tools, shortcuts, and workflows worth stealing.",
 		eyebrow: "Blog",
 		og: {
 			eyebrow: `Blog · ${siteConfig.name}`,
-			titleLead: "Getting things done,",
-			titleAccent: "made simpler",
+			titleLead: "Work better,",
+			titleAccent: "one guide at a time",
 			subtitle:
-				"How the work actually gets done: the workflows, the shortcuts, and the tools that came out of them.",
-			pills: ["Productivity", "Workflow", "Tips"],
+				"Guides, tutorials, and lessons on the tools and workflows worth stealing.",
+			pills: ["Guides", "Tutorials", "Workflows"],
 		},
 	},
 	newsletter: {
-		title: "Newsletter — new tools and workflow notes by email",
+		title: "Newsletter — new tools and guides by email",
 		description:
-			"The Odd Jobs newsletter — new tools and new posts in your inbox. Read past issues or subscribe below.",
-		heading: { lead: "New tools and workflow notes, in your", accent: "inbox" },
+			"The Odd Jobs newsletter: new tools and new guides by email. Read past issues, or subscribe to get the next one.",
+		heading: { lead: "New tools and guides, in your", accent: "inbox" },
 		subtitle:
-			"New tools and new posts in your inbox. Read past issues or subscribe.",
+			"New tools and new guides, by email. Read any past issue below, or subscribe to get the next one.",
 		eyebrow: "Newsletter",
 		og: {
 			eyebrow: `Newsletter · ${siteConfig.name}`,
-			titleLead: "Productivity, in your",
-			titleAccent: "inbox",
+			titleLead: "New tools and guides,",
+			titleAccent: "by email",
 			subtitle:
-				"The Odd Jobs newsletter — new tools and new posts in your inbox. Read past issues or subscribe below.",
-			pills: ["Tools", "Posts", "Notes"],
+				"New tools and new guides from Odd Jobs, straight to your inbox.",
+			pills: ["Tools", "Guides", "Updates"],
 		},
 	},
 	shop: {
-		title: "Shop — templates and starters worth keeping",
+		title: "Shop — templates, starters, and guides",
 		description:
-			"Notion templates and starter kits I built for my own work, tidied up so you can use them too.",
-		heading: { lead: "Templates", accent: "worth keeping" },
+			"Generators, templates, custom GPTs, starters, and guides to help developers, writers, and creators ship faster.",
+		heading: { lead: "Things", accent: "worth keeping" },
 		subtitle:
-			"Notion templates and starter kits I built for my own work, tidied up so you can use them too.",
+			"Generators, templates, custom GPTs, starters, and guides to help you ship faster. I use these myself.",
 		eyebrow: "Shop",
 		og: {
 			eyebrow: `Shop · ${siteConfig.name}`,
-			titleLead: "Products that get",
-			titleAccent: "things done",
+			titleLead: "Things",
+			titleAccent: "worth keeping",
 			subtitle:
-				"Notion templates and starter kits I built for my own work, tidied up so you can use them too.",
-			pills: ["Notion", "Templates", "Digital"],
+				"Generators, templates, custom GPTs, starters, and guides to help you ship faster.",
+			pills: ["Templates", "Starters", "Guides"],
 		},
 	},
 } as const satisfies Record<string, PageSeo>;

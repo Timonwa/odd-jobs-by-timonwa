@@ -10,7 +10,7 @@ export const siteConfig = {
 	domain: SITE_URL.replace(/^https?:\/\//, ""),
 	title: "Odd Jobs — free tools, writing & templates",
 	description:
-		"Free tools for the repetitive parts of writing and code, writing on workflow, and templates worth keeping. For writers, developers, and creators.",
+		"Free tools for the repetitive parts of writing and code, guides on working better, and templates worth keeping. For writers, developers, and creators.",
 	tagline:
 		"Free tools, writing, and templates for writers, developers, and creators. No sign-up, open source.",
 	themeColor: "#4472e3",
