@@ -20,6 +20,7 @@ export const siteConfig = {
 	umamiWebsiteId: "4550710a-0c5e-462a-8012-5d3ee2f3769e",
 	creator: {
 		name: CREATOR_NAME,
+		email: "me@timonwa.com",
 		url: "https://links.timonwa.com",
 		siteUrl: CREATOR_SITE_URL,
 		twitterUrl: `https://x.com/${CREATOR_TWITTER.slice(1)}`,
