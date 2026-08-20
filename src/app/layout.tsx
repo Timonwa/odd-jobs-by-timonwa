@@ -51,10 +51,12 @@ export const metadata: Metadata = {
 	category: "technology",
 };
 
-// Runs before paint, so it can't import anything — the key is interpolated from
-// STORAGE_KEYS rather than written out, since a mismatch here reads as no stored
-// preference and repaints once `useTheme` hydrates.
-const themeInit = `(function(){var k=${JSON.stringify(STORAGE_KEYS.theme)},v=localStorage.getItem(k);document.documentElement.classList.toggle("dark",v==="dark"||(v===null&&window.matchMedia("(prefers-color-scheme: dark)").matches));})();`;
+// Runs before paint, so it can't import anything. The storage key arrives as a
+// data attribute rather than interpolated into the source: hardcoding it here
+// would drift from STORAGE_KEYS (a mismatch reads as no stored preference and
+// repaints once `useTheme` hydrates), and building the script from a variable
+// is the code-construction pattern CodeQL flags.
+const THEME_INIT = `(function(){var s=document.currentScript,k=s&&s.getAttribute("data-key"),v=k&&localStorage.getItem(k);document.documentElement.classList.toggle("dark",v==="dark"||(v===null&&window.matchMedia("(prefers-color-scheme: dark)").matches));})();`;
 
 export default function RootLayout({
 	children,
@@ -68,7 +70,10 @@ export default function RootLayout({
 				    connection early saves its DNS + TLS round-trips. */}
 				<link rel="preconnect" href="https://cloud.umami.is" crossOrigin="" />
 				{/* Tailwind-recommended pre-hydration snippet to avoid theme FOUC */}
-				<script dangerouslySetInnerHTML={{ __html: themeInit }} />
+				<script
+					data-key={STORAGE_KEYS.theme}
+					dangerouslySetInnerHTML={{ __html: THEME_INIT }}
+				/>
 			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
