@@ -1,5 +1,6 @@
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 
+import { DraftBadge } from "@/components/_shared/content";
 import { LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import type { IssueMeta } from "@/lib/schemas";
@@ -19,10 +20,13 @@ export function IssueGrid({ issues }: { issues: IssueMeta[] }) {
 				{issues.map((issue) => (
 					<li key={issue.slug}>
 						<LinkCard href={ROUTES.issue(issue.slug)}>
-							<span className="text-xs font-medium uppercase tracking-wide text-primary">
-								{issue.issueNumber != null
-									? `Issue #${issue.issueNumber}`
-									: dateFormat.format(new Date(issue.publishedAt))}
+							<span className="flex items-center gap-2">
+								<span className="text-xs font-medium uppercase tracking-wide text-primary">
+									{issue.issueNumber != null
+										? `Issue #${issue.issueNumber}`
+										: dateFormat.format(new Date(issue.publishedAt))}
+								</span>
+								<DraftBadge isDraft={issue.isDraft} />
 							</span>
 							<h3 className="mt-2 text-lg font-semibold tracking-tight">
 								{issue.title}

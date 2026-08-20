@@ -27,6 +27,7 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 			href: ROUTES.post(p.slug),
 			eyebrow: p.category,
 			title: p.title,
+			isDraft: p.isDraft,
 			metaRight: `${p.readingMinutes} min read`,
 		}));
 

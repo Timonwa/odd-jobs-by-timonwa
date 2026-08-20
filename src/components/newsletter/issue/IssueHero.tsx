@@ -1,6 +1,6 @@
 import { MailIcon } from "lucide-react";
 
-import { ContentByline } from "@/components/_shared/content";
+import { ContentByline, DraftBadge } from "@/components/_shared/content";
 import { PageHero } from "@/components/ui";
 import { splitTitle } from "@/lib/utils";
 import type { IssueMeta } from "@/lib/schemas";
@@ -11,6 +11,11 @@ export function IssueHero({ issue }: { issue: IssueMeta }) {
 		// The margin moves to the wrapper so the byline sits directly under the
 		// title rather than below the hero's spacing.
 		<div className="mb-10">
+			{issue.isDraft && (
+				<div className="mb-4 flex justify-center">
+					<DraftBadge isDraft={issue.isDraft} />
+				</div>
+			)}
 			<PageHero
 				eyebrow={{
 					icon: MailIcon,

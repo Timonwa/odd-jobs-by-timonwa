@@ -84,6 +84,7 @@ type Loaded<T> = T & {
 	readingMinutes: number;
 	/** Path under the content dir, `<slug>` or `_drafts/<slug>` — what the page's dynamic MDX import interpolates. */
 	contentPath: string;
+	isDraft: boolean;
 };
 
 type MdxLoaderOptions<T> = {
@@ -144,6 +145,7 @@ export function createMdxLoader<T extends { publishedAt: string }>(
 			...parsed.data,
 			readingMinutes: minutes,
 			contentPath: resolved.isDraft ? `${DRAFTS_DIR_NAME}/${slug}` : slug,
+			isDraft: resolved.isDraft,
 		};
 	}
 

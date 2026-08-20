@@ -3,7 +3,7 @@ import type * as React from "react";
 import { type Tint, TINT_SURFACE } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-type BadgeVariant = "default" | "primary" | "outline" | "soon";
+type BadgeVariant = "default" | "primary" | "outline" | "draft" | "soon";
 type BadgeSize = "sm" | "md";
 
 type BadgeProps = React.ComponentProps<"span"> & {
@@ -20,6 +20,8 @@ const VARIANT_CLASSES: Record<BadgeVariant, string> = {
 	primary: "border-primary/20 bg-primary/10 text-primary",
 	outline: "border-border text-muted-foreground",
 	soon: "border-border text-muted-foreground uppercase tracking-wide",
+	draft:
+		"border-tint-2/60 bg-tint-2/20 text-foreground uppercase tracking-wide",
 };
 
 const SIZE_CLASSES: Record<BadgeSize, string> = {

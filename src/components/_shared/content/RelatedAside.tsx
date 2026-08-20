@@ -1,5 +1,6 @@
 import { LinkCard } from "@/components/ui";
 
+import { DraftBadge } from "./DraftBadge";
 import { RelatedSection } from "./RelatedSection";
 import type { RelatedItem } from "./RelatedGrid";
 
@@ -22,8 +23,11 @@ export function RelatedAside({
 					<li key={item.href}>
 						<LinkCard href={item.href}>
 							<span className="flex items-center justify-between gap-2">
-								<span className="text-xs font-medium uppercase tracking-wide text-primary">
-									{item.eyebrow}
+								<span className="flex items-center gap-2">
+									<span className="text-xs font-medium uppercase tracking-wide text-primary">
+										{item.eyebrow}
+									</span>
+									<DraftBadge isDraft={Boolean(item.isDraft)} />
 								</span>
 								{item.metaRight && (
 									<span className="text-xs font-semibold text-foreground">

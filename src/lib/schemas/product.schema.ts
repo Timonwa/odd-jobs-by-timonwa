@@ -40,4 +40,5 @@ export type ProductMeta = z.infer<typeof ProductFrontmatterSchema> & {
 	readingMinutes: number;
 	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
 	contentPath: string;
+	isDraft: boolean;
 };

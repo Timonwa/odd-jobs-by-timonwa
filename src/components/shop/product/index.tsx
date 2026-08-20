@@ -53,6 +53,7 @@ export async function ProductPageContent({
 			href: ROUTES.product(p.slug),
 			eyebrow: p.category,
 			title: p.title,
+			isDraft: p.isDraft,
 			metaRight: p.price,
 		}));
 

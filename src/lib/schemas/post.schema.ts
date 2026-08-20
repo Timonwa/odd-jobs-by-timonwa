@@ -24,4 +24,5 @@ export type PostMeta = z.infer<typeof PostFrontmatterSchema> & {
 	readingMinutes: number;
 	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
 	contentPath: string;
+	isDraft: boolean;
 };

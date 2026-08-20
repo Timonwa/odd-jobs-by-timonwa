@@ -30,4 +30,5 @@ export type IssueMeta = z.infer<typeof IssueFrontmatterSchema> & {
 	readingMinutes: number;
 	/** Path under the content dir — `<slug>` or `_drafts/<slug>`; only drafts differ. */
 	contentPath: string;
+	isDraft: boolean;
 };

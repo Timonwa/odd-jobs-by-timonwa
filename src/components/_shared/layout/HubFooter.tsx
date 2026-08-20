@@ -54,8 +54,10 @@ export function HubFooter() {
 			heading: "Blog",
 			links: [
 				{ label: "All posts", href: ROUTES.blog },
+				// The footer's rows are plain links with no room for a badge, so drafts
+				// are marked in the label itself (dev server only).
 				...posts.map((post) => ({
-					label: post.title,
+					label: post.isDraft ? `${post.title} (draft)` : post.title,
 					href: ROUTES.post(post.slug),
 				})),
 			],
@@ -64,11 +66,14 @@ export function HubFooter() {
 			heading: "Shop",
 			links: [
 				{ label: "All products", href: ROUTES.shop },
-				...products.map((product) => ({
+				...products.map((product) => {
 					// Drops the trailing "Notion Template", redundant under a Shop heading.
-					label: product.title.replace(product.titleAccent, "").trim(),
-					href: ROUTES.product(product.slug),
-				})),
+					const label = product.title.replace(product.titleAccent, "").trim();
+					return {
+						label: product.isDraft ? `${label} (draft)` : label,
+						href: ROUTES.product(product.slug),
+					};
+				}),
 			],
 		},
 		{

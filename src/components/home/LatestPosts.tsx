@@ -1,6 +1,7 @@
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import Link from "next/link";
 
+import { DraftBadge } from "@/components/_shared/content";
 import { buttonClasses, LinkCard } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { getAllPosts } from "@/lib/server";
@@ -31,8 +32,11 @@ export function LatestPosts() {
 				{posts.map((post) => (
 					<li key={post.slug}>
 						<LinkCard href={ROUTES.post(post.slug)}>
-							<span className="text-xs font-medium uppercase tracking-wide text-primary">
-								{post.category}
+							<span className="flex items-center gap-2">
+								<span className="text-xs font-medium uppercase tracking-wide text-primary">
+									{post.category}
+								</span>
+								<DraftBadge isDraft={post.isDraft} />
 							</span>
 							<h3 className="mt-2 text-lg font-semibold tracking-tight">
 								{post.title}
