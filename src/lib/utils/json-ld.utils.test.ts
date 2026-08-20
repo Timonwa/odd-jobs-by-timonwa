@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { SITE_URL } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 import {
 	buildItemListJsonLd,
@@ -33,13 +33,13 @@ describe("buildItemListJsonLd", () => {
 			{
 				"@type": "ListItem",
 				position: 1,
-				url: `${SITE_URL}/blog/a`,
+				url: `${siteConfig.url}/blog/a`,
 				name: "A",
 			},
 			{
 				"@type": "ListItem",
 				position: 2,
-				url: `${SITE_URL}/blog/b`,
+				url: `${siteConfig.url}/blog/b`,
 				name: "B",
 			},
 		]);
@@ -49,7 +49,7 @@ describe("buildItemListJsonLd", () => {
 describe("ogImageUrl", () => {
 	it("appends the opengraph-image segment to an absolute route", () => {
 		expect(ogImageUrl("/blog/a" as never)).toBe(
-			`${SITE_URL}/blog/a/opengraph-image`,
+			`${siteConfig.url}/blog/a/opengraph-image`,
 		);
 	});
 });

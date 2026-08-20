@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { isProduction } from "@env";
-
-import { SITE_URL } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 /**
  * Served at /robots.txt. Points crawlers at the sitemap in production, and
@@ -15,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
 	if (!isProduction) return { rules: { userAgent: "*", disallow: "/" } };
 	return {
 		rules: { userAgent: "*", allow: "/" },
-		sitemap: `${SITE_URL}/sitemap.xml`,
-		host: SITE_URL,
+		sitemap: `${siteConfig.url}/sitemap.xml`,
+		host: siteConfig.url,
 	};
 }

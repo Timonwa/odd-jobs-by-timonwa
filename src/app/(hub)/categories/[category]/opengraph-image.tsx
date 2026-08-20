@@ -3,13 +3,13 @@ import {
 	getCategory,
 	TOOL_CATEGORIES,
 } from "@/lib/config/categories";
-import { SITE_NAME } from "@/lib/config/site";
 import { OG_PALETTES, OG_PALETTE_BY_TINT } from "@/lib/constants";
 import {
 	OG_CONTENT_TYPE,
 	OG_SIZE,
 	renderOgImage,
 } from "@/lib/server/utils/og-image.utils";
+import { siteConfig } from "@/lib/config/site";
 
 // Deliberately NOT `runtime = "edge"`: Next forbids pairing it with
 // `generateStaticParams`, which the sibling `[slug]` image routes also use. Like
@@ -21,7 +21,7 @@ import {
 // `alt` is a module constant and can't vary per category; `generateImageMetadata`
 // is the API for that. Left as the section-level description rather than
 // claiming per-item text the export cannot deliver.
-export const alt = `Tool category — ${SITE_NAME}`;
+export const alt = `Tool category — ${siteConfig.name}`;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
@@ -44,7 +44,7 @@ export default async function Image({
 	// 404s, but a broken image route would surface as a dead social preview.
 	if (!isCategoryId(id)) {
 		return renderOgImage({
-			eyebrow: `Categories · ${SITE_NAME}`,
+			eyebrow: `Categories · ${siteConfig.name}`,
 			titleLead: "Tool",
 			titleAccent: "categories",
 			subtitle: "Browse the hub by what you need.",
@@ -56,7 +56,7 @@ export default async function Image({
 	const category = getCategory(id);
 
 	return renderOgImage({
-		eyebrow: `${category.label} · ${SITE_NAME}`,
+		eyebrow: `${category.label} · ${siteConfig.name}`,
 		titleLead: category.label,
 		titleAccent: "tools",
 		subtitle: category.description,

@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { TOOL_CATEGORIES } from "@/lib/config/categories";
 import { ROUTES } from "@/lib/config/routes";
-import { SITE_URL } from "@/lib/config/site";
 import { getToolsInCategory, TOOLS } from "@/lib/config/tools";
 import { getAllPosts, getAllIssues } from "@/lib/server";
+import { siteConfig } from "@/lib/config/site";
 /**
  * Served at /sitemap.xml. The hub home, the tool directory, the categories index
  * plus each non-empty category page, every live tool route (derived from the
@@ -24,52 +24,52 @@ export default function sitemap(): MetadataRoute.Sitemap {
 	// canonicalizes there, so sitemapping it would ask Google to index pages we
 	// have already told it to ignore.
 	return [
-		{ url: SITE_URL, changeFrequency: "weekly", priority: 1 },
+		{ url: siteConfig.url, changeFrequency: "weekly", priority: 1 },
 		{
-			url: `${SITE_URL}${ROUTES.tools}`,
+			url: `${siteConfig.url}${ROUTES.tools}`,
 			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.9,
 		},
 		{
-			url: `${SITE_URL}${ROUTES.categories}`,
+			url: `${siteConfig.url}${ROUTES.categories}`,
 			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
 		...TOOL_CATEGORIES.filter((c) => getToolsInCategory(c.id).length > 0).map(
 			(c) => ({
-				url: `${SITE_URL}${ROUTES.category(c.id)}`,
+				url: `${siteConfig.url}${ROUTES.category(c.id)}`,
 				changeFrequency: "weekly" as const,
 				priority: 0.6,
 			}),
 		),
 		...TOOLS.filter((t) => t.status !== "soon").map((t) => ({
-			url: `${SITE_URL}${t.href}`,
+			url: `${siteConfig.url}${t.href}`,
 			lastModified: BUILD_DATE,
 			changeFrequency: "monthly" as const,
 			priority: 0.8,
 		})),
 		{
-			url: `${SITE_URL}${ROUTES.blog}`,
+			url: `${siteConfig.url}${ROUTES.blog}`,
 			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
 		...getAllPosts().map((p) => ({
-			url: `${SITE_URL}${ROUTES.post(p.slug)}`,
+			url: `${siteConfig.url}${ROUTES.post(p.slug)}`,
 			lastModified: p.updatedAt ?? p.publishedAt,
 			changeFrequency: "monthly" as const,
 			priority: 0.7,
 		})),
 		{
-			url: `${SITE_URL}${ROUTES.newsletter}`,
+			url: `${siteConfig.url}${ROUTES.newsletter}`,
 			lastModified: BUILD_DATE,
 			changeFrequency: "weekly",
 			priority: 0.7,
 		},
 		...getAllIssues().map((issue) => ({
-			url: `${SITE_URL}${ROUTES.issue(issue.slug)}`,
+			url: `${siteConfig.url}${ROUTES.issue(issue.slug)}`,
 			lastModified: issue.updatedAt ?? issue.publishedAt,
 			changeFrequency: "monthly" as const,
 			priority: 0.6,

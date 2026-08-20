@@ -2,11 +2,9 @@
 
 import type { Route } from "next";
 
-/**
- * Internal app routes — registered once and reused across the navbar, footer,
- * in-app links, metadata, and the sitemap. Off-site / brand links live in
- * lib/config/site.ts; each tool's own route is its `href` in lib/config/tools.ts.
- */
+import { siteConfig } from "./site";
+
+// Barrel — the app's client-safe settings.
 export const ROUTES = {
 	home: "/" as Route,
 	tools: "/tools" as Route,
@@ -25,3 +23,12 @@ export const ROUTES = {
 	product: (slug: string): Route =>
 		`/shop/${encodeURIComponent(slug)}` as Route,
 };
+
+// Separate from ROUTES because these are plain strings, not typedRoutes `Route`s.
+export const EXTERNAL_ROUTES = {
+	repo: "https://github.com/Timonwa/tools-by-timonwa",
+	support: `${siteConfig.creator.siteUrl}/support`,
+	terms: `${siteConfig.creator.siteUrl}/terms`,
+	privacy: `${siteConfig.creator.siteUrl}/privacy`,
+	shopCanonicalBase: `${siteConfig.creator.siteUrl}/shop`,
+} as const;

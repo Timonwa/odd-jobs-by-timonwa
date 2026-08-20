@@ -1,19 +1,24 @@
 import { MailIcon } from "lucide-react";
 
 import { PageHero } from "@/components/ui";
-import { NEWSLETTER_PAGE_COPY } from "@/lib/data";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
+
+const SEO = getIndexedSeo("newsletter");
+const HEADING = splitHeading(SEO.heading);
 
 export function NewsletterHero() {
 	return (
 		<PageHero
 			className="mb-10"
-			eyebrow={{ icon: MailIcon, label: "Newsletter" }}
+			eyebrow={{ icon: MailIcon, label: SEO.eyebrow }}
 			title={
 				<>
-					New tools, in your <span className="hero-gradient-text">inbox</span>
+					{HEADING.lead}
+					<span className="hero-gradient-text">{HEADING.accent}</span>
+					{HEADING.trail}
 				</>
 			}
-			subtitle={NEWSLETTER_PAGE_COPY.description}
+			subtitle={SEO.subtitle}
 		/>
 	);
 }

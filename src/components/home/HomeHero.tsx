@@ -2,7 +2,11 @@ import { ArrowRightIcon, WrenchIcon } from "lucide-react";
 import Link from "next/link";
 
 import { buttonClasses, PageHero } from "@/components/ui";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
 import { ROUTES } from "@/lib/config/routes";
+
+const SEO = getIndexedSeo("home");
+const HEADING = splitHeading(SEO.heading);
 
 export function HomeHero() {
 	return (
@@ -17,19 +21,15 @@ export function HomeHero() {
 
 			<PageHero
 				className="mb-12 sm:mb-16"
-				eyebrow={{ icon: WrenchIcon, label: "Free · no sign-up · open source" }}
+				eyebrow={{ icon: WrenchIcon, label: SEO.eyebrow }}
 				title={
 					<>
-						The <span className="hero-gradient-text">odd jobs</span> in writing
-						and code
+						{HEADING.lead}
+						<span className="hero-gradient-text">{HEADING.accent}</span>
+						{HEADING.trail}
 					</>
 				}
-				subtitle={
-					<>
-						Free tools that each do one of them, plus writing on workflow and
-						templates worth keeping.
-					</>
-				}
+				subtitle={SEO.subtitle}
 				actions={
 					<>
 						<Link href={ROUTES.tools} className={buttonClasses()}>

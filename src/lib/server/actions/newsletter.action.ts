@@ -4,7 +4,6 @@
 import { z } from "zod";
 import { env } from "@env";
 
-import { SENDER_GROUP_IDS, SENDER_SUBSCRIBERS_URL } from "@/lib/config/site";
 import {
 	NEWSLETTER_BURST_CAP,
 	NEWSLETTER_DAILY_SHARED_POOL,
@@ -12,6 +11,7 @@ import {
 	NEWSLETTER_HONEYPOT_FIELD,
 } from "@/lib/constants";
 import { checkAndIncrementQuota } from "@/lib/server/utils/rate-limit.utils";
+import { SENDER_GROUP_IDS, SENDER_SUBSCRIBERS_URL } from "@/lib/constants";
 
 // One message for "subscribed" and "already subscribed". Distinguishing them
 // turned the form into a membership oracle: anyone could test whether an address

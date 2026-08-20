@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { HubFooter } from "@/components/_shared/layout/HubFooter";
-import { SiteLayout } from "@/components/ui";
-import {
-	CREATOR_NAME,
-	CREATOR_TWITTER,
-	CREATOR_URL,
-	SITE_DESCRIPTION,
-	SITE_NAME,
-	SITE_TITLE,
-	UMAMI_WEBSITE_ID,
-	SITE_URL,
-} from "@/lib/config/site";
-import { STORAGE_KEYS } from "@/lib/constants";
 import "@/styles/globals.css";
 import { isProduction } from "@env";
+
+import { HubFooter } from "@/components/_shared/layout/HubFooter";
+import { SiteLayout } from "@/components/ui";
+import { STORAGE_KEYS } from "@/lib/constants";
+import { siteConfig } from "@/lib/config/site";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -28,31 +20,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(SITE_URL),
+	metadataBase: new URL(siteConfig.url),
 	title: {
-		default: SITE_TITLE,
-		template: `%s · ${SITE_NAME}`,
+		default: siteConfig.title,
+		template: `%s · ${siteConfig.name}`,
 	},
-	description: SITE_DESCRIPTION,
-	applicationName: SITE_NAME,
-	authors: [{ name: CREATOR_NAME, url: CREATOR_URL }],
-	creator: CREATOR_NAME,
-	publisher: CREATOR_NAME,
+	description: siteConfig.description,
+	applicationName: siteConfig.name,
+	authors: [{ name: siteConfig.creator.name, url: siteConfig.creator.url }],
+	creator: siteConfig.creator.name,
+	publisher: siteConfig.creator.name,
 	alternates: { canonical: "/" },
 	openGraph: {
-		type: "website",
-		url: SITE_URL,
-		siteName: SITE_NAME,
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		type: siteConfig.defaultSiteType,
+		url: siteConfig.url,
+		siteName: siteConfig.name,
+		title: siteConfig.title,
+		description: siteConfig.description,
 		locale: "en_US",
 	},
 	twitter: {
 		card: "summary_large_image",
-		site: CREATOR_TWITTER,
-		creator: CREATOR_TWITTER,
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		site: siteConfig.twitter,
+		creator: siteConfig.twitter,
+		title: siteConfig.title,
+		description: siteConfig.description,
 	},
 	robots: { index: true, follow: true },
 	category: "technology",
@@ -84,7 +76,7 @@ export default function RootLayout({
 				{isProduction && (
 					<Script
 						src="https://cloud.umami.is/script.js"
-						data-website-id={UMAMI_WEBSITE_ID}
+						data-website-id={siteConfig.umamiWebsiteId}
 						data-performance="true"
 						strategy="afterInteractive"
 					/>

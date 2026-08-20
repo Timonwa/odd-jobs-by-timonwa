@@ -9,7 +9,7 @@ import {
 } from "@/lib/config/categories";
 import { getToolsInCategory } from "@/lib/config/tools";
 import { ROUTES } from "@/lib/config/routes";
-import { CREATOR_TWITTER, SITE_NAME, SITE_URL } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 // Every category is prerendered; an unknown slug falls through to notFound().
 export function generateStaticParams() {
@@ -44,16 +44,16 @@ export async function generateMetadata({
 		}),
 		openGraph: {
 			type: "website",
-			url: `${SITE_URL}${path}`,
-			siteName: SITE_NAME,
+			url: `${siteConfig.url}${path}`,
+			siteName: siteConfig.name,
 			title,
 			description,
 			locale: "en_US",
 		},
 		twitter: {
 			card: "summary_large_image",
-			site: CREATOR_TWITTER,
-			creator: CREATOR_TWITTER,
+			site: siteConfig.twitter,
+			creator: siteConfig.twitter,
 			title,
 			description,
 		},

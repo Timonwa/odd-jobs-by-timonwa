@@ -1,12 +1,5 @@
 import type { MetadataRoute } from "next";
-
-import {
-	SITE_BACKGROUND_COLOR,
-	SITE_DESCRIPTION,
-	SITE_NAME,
-	SITE_SHORT_NAME,
-	SITE_THEME_COLOR,
-} from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 /**
  * Web app manifest (Next.js metadata route). Served at `/manifest.webmanifest`
@@ -15,9 +8,9 @@ import {
  */
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: SITE_NAME,
-		short_name: SITE_SHORT_NAME,
-		description: SITE_DESCRIPTION,
+		name: siteConfig.name,
+		short_name: siteConfig.shortName,
+		description: siteConfig.description,
 		id: "/",
 		start_url: "/",
 		scope: "/",
@@ -26,8 +19,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		lang: "en",
 		dir: "ltr",
 		categories: ["productivity", "utilities"],
-		theme_color: SITE_THEME_COLOR,
-		background_color: SITE_BACKGROUND_COLOR,
+		theme_color: siteConfig.themeColor,
+		background_color: siteConfig.backgroundColor,
 		icons: [
 			{
 				src: "/android-chrome-192x192.png",

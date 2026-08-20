@@ -6,11 +6,10 @@ import {
 import { PageMain } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
-import { SITE_NAME } from "@/lib/config/site";
 import { getAllProducts } from "@/lib/server";
 import type { ProductMeta } from "@/lib/schemas";
-
 import { ShareBar } from "@/components/_shared/tool";
+import { siteConfig } from "@/lib/config/site";
 
 import { MoreProducts } from "./MoreProducts";
 import { ProductCheckoutCta } from "./ProductCheckoutCta";
@@ -59,7 +58,7 @@ export async function ProductPageContent({
 		category: product.category,
 		image: ogImageUrl(ROUTES.product(product.slug)),
 		url: product.canonicalUrl,
-		brand: { "@type": "Brand", name: SITE_NAME },
+		brand: { "@type": "Brand", name: siteConfig.name },
 		offers: {
 			"@type": "Offer",
 			url: product.checkoutUrl,

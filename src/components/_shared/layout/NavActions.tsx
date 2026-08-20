@@ -1,6 +1,16 @@
 "use client";
 
 import {
+	type ComponentType,
+	type ReactNode,
+	type SVGProps,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from "react";
+
+import {
 	BookOpenTextIcon,
 	HeartIcon,
 	HomeIcon,
@@ -13,24 +23,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-	type ComponentType,
-	type ReactNode,
-	type SVGProps,
-	useEffect,
-	useId,
-	useRef,
-	useState,
-} from "react";
 
 import { buttonClasses, Tooltip, GithubMark } from "@/components/ui";
 import { ByokDrawer } from "@/components/_shared/byok";
-import { NavIconButton } from "./NavIconButton";
-import { ToolsMenu } from "./ToolsMenu";
 import { ThemeToggle } from "@/components/_shared/layout";
 import { NAV_LINKS, type NavLinkLabel } from "@/lib/constants";
-import { REPO_URL, SUPPORT_URL } from "@/lib/config/site";
 import { cn } from "@/lib/utils";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
+
+import { NavIconButton } from "./NavIconButton";
+import { ToolsMenu } from "./ToolsMenu";
 
 // Icons stay here rather than in the constant — a const whose values are
 // React components is UI, so lib/constants holds only the labels and hrefs.
@@ -57,7 +59,7 @@ type NavActionsProps = {
 export function NavActions({
 	actionsSlot,
 	menuSlot,
-	repoUrl = REPO_URL,
+	repoUrl = EXTERNAL_ROUTES.repo,
 	showByok = true,
 }: NavActionsProps) {
 	const pathname = usePathname();
@@ -114,7 +116,7 @@ export function NavActions({
 			{/* Support — quiet icon on the bar; the fuller row stays in the menu. */}
 			<Tooltip label="Support these free tools" side="bottom" align="end">
 				<a
-					href={SUPPORT_URL}
+					href={EXTERNAL_ROUTES.support}
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Support these free tools"
@@ -189,7 +191,7 @@ export function NavActions({
 				<div className="my-1 border-t border-border/60" />
 
 				<a
-					href={SUPPORT_URL}
+					href={EXTERNAL_ROUTES.support}
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cta}

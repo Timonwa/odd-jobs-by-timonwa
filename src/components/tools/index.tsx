@@ -1,13 +1,18 @@
-import { LayoutGridIcon } from "lucide-react";
 import { Suspense } from "react";
+
+import { LayoutGridIcon } from "lucide-react";
 
 import { Newsletter } from "@/components/_shared/content";
 import { ToolGrid } from "@/components/_shared/tool";
 import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
 import { ROUTES } from "@/lib/config/routes";
 import { LIVE_TOOLS } from "@/lib/config/tools";
 
 import { FilterableTools } from "./FilterableTools";
+
+const SEO = getIndexedSeo("tools");
+const HEADING = splitHeading(SEO.heading);
 
 export function ToolsDirectoryPageContent() {
 	return (
@@ -18,14 +23,15 @@ export function ToolsDirectoryPageContent() {
 				/>
 				<PageHero
 					className="mb-10"
-					eyebrow={{ icon: LayoutGridIcon, label: "All tools" }}
+					eyebrow={{ icon: LayoutGridIcon, label: SEO.eyebrow }}
 					title={
 						<>
-							Every <span className="hero-gradient-text">odd job</span>, one
-							place
+							{HEADING.lead}
+							<span className="hero-gradient-text">{HEADING.accent}</span>
+							{HEADING.trail}
 						</>
 					}
-					subtitle="Each tool does one thing. Browse them all, or filter by category to find the one you came for. New ones land here as they ship."
+					subtitle={SEO.subtitle}
 				/>
 
 				{/* useSearchParams needs a Suspense boundary; the fallback shows the

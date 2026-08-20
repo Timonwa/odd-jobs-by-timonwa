@@ -1,5 +1,7 @@
 "use client";
 
+import { useId, useState } from "react";
+
 import {
 	AlertCircleIcon,
 	ArrowRightIcon,
@@ -9,13 +11,12 @@ import {
 	EyeOffIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useId, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { BYOK_MODELS, type ByokModel } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
-import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
 import { POST_SLUGS } from "@/lib/constants";
+import { AI_STUDIO_KEYS_URL } from "@/lib/config/byok";
 
 type Status =
 	| { type: "success"; message: string }

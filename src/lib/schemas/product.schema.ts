@@ -2,8 +2,7 @@
 // incomplete file fails the build loudly instead of shipping a broken page.
 
 import { z } from "zod";
-
-import { SHOP_CANONICAL_BASE } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 export const ProductFrontmatterSchema = z.object({
 	title: z.string(),
@@ -20,8 +19,8 @@ export const ProductFrontmatterSchema = z.object({
 		.string()
 		.url()
 		.refine(
-			(url) => url.startsWith(`${SHOP_CANONICAL_BASE}/`),
-			`canonicalUrl must start with ${SHOP_CANONICAL_BASE}/`,
+			(url) => url.startsWith(`${EXTERNAL_ROUTES.shopCanonicalBase}/`),
+			`canonicalUrl must start with ${EXTERNAL_ROUTES.shopCanonicalBase}/`,
 		),
 	/** Display price, e.g. "Free" or "$5". */
 	price: z.string().optional(),

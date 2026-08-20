@@ -2,13 +2,8 @@
 // surfaces can't drift.
 
 import { ROUTES } from "@/lib/config/routes";
-import {
-	CREATOR_BUILDING_URL,
-	CREATOR_SITE_URL,
-	CREATOR_URL,
-	PRIVACY_URL,
-	TERMS_URL,
-} from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
+import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
 /** Primary nav links, in menu order. */
 export const NAV_LINKS = [
@@ -36,12 +31,12 @@ export const NAV_PILLARS = NAV_LINKS.filter((navLink) =>
 
 /** Creator cross-links — a compact row in the footer's bottom area. */
 export const FOOTER_META_LINKS = [
-	{ href: CREATOR_SITE_URL, label: "Main site" },
-	{ href: CREATOR_BUILDING_URL, label: "Building" },
-	{ href: CREATOR_URL, label: "All my links" },
+	{ href: siteConfig.creator.siteUrl, label: "Main site" },
+	{ href: siteConfig.creator.buildingUrl, label: "Building" },
+	{ href: siteConfig.creator.url, label: "All my links" },
 ] as const;
 
 export const FOOTER_LEGAL_LINKS = [
-	{ href: TERMS_URL, label: "Terms" },
-	{ href: PRIVACY_URL, label: "Privacy" },
+	{ href: EXTERNAL_ROUTES.terms, label: "Terms" },
+	{ href: EXTERNAL_ROUTES.privacy, label: "Privacy" },
 ] as const;

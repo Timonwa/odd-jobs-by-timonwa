@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { NOT_FOUND_METADATA } from "@/lib/constants";
+import { getNoIndexSeo } from "@/lib/config/page-seo";
 
 import { PostPageContent } from "@/components/blog/post";
 import { getPost, getPostSlugs } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
-import {
-	CREATOR_TWITTER,
-	CREATOR_URL,
-	SITE_NAME,
-	SITE_URL,
-} from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
 
 // Known post slugs are prerendered; an unknown slug falls through to the
 // notFound() below (`dynamicParams` can't be set alongside cacheComponents).
 // That renders the 404 UI but still answers 200, so generateMetadata marks the
-// response noindex — see NOT_FOUND_METADATA.
+// response noindex — see NOINDEX_SEO.
 export function generateStaticParams() {
 	return getPostSlugs().map((slug) => ({ slug }));
 }
@@ -28,10 +23,10 @@ export async function generateMetadata({
 }: PostPageProps): Promise<Metadata> {
 	const { slug } = await params;
 	const post = getPost(slug);
-	if (!post) return NOT_FOUND_METADATA;
+	if (!post) return getNoIndexSeo("notFound");
 
 	const path = ROUTES.post(slug);
-	const url = `${SITE_URL}${path}`;
+	const url = `${siteConfig.url}${path}`;
 	const title = post.title;
 
 	return {
@@ -42,18 +37,18 @@ export async function generateMetadata({
 		openGraph: {
 			type: "article",
 			url,
-			siteName: SITE_NAME,
+			siteName: siteConfig.name,
 			title,
 			description: post.description,
 			locale: "en_US",
 			publishedTime: post.publishedAt,
 			modifiedTime: post.updatedAt ?? post.publishedAt,
-			authors: [CREATOR_URL],
+			authors: [siteConfig.creator.url],
 		},
 		twitter: {
 			card: "summary_large_image",
-			site: CREATOR_TWITTER,
-			creator: CREATOR_TWITTER,
+			site: siteConfig.twitter,
+			creator: siteConfig.twitter,
 			title,
 			description: post.description,
 		},

@@ -9,9 +9,8 @@ import type { PostMeta } from "@/lib/schemas";
 import { getAllPosts } from "@/lib/server";
 import { ROUTES } from "@/lib/config/routes";
 import { ogImageUrl } from "@/lib/utils";
-import { CREATOR_NAME, CREATOR_URL, SITE_URL } from "@/lib/config/site";
-
 import { ShareBar } from "@/components/_shared/tool";
+import { siteConfig } from "@/lib/config/site";
 
 import { PostHero } from "./PostHero";
 import { PostPageFooter } from "./PostPageFooter";
@@ -40,9 +39,17 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 		dateModified: post.updatedAt ?? post.publishedAt,
 		inLanguage: "en",
 		image: ogImageUrl(ROUTES.post(post.slug)),
-		mainEntityOfPage: `${SITE_URL}${ROUTES.post(post.slug)}`,
-		author: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
-		publisher: { "@type": "Person", name: CREATOR_NAME, url: CREATOR_URL },
+		mainEntityOfPage: `${siteConfig.url}${ROUTES.post(post.slug)}`,
+		author: {
+			"@type": "Person",
+			name: siteConfig.creator.name,
+			url: siteConfig.creator.url,
+		},
+		publisher: {
+			"@type": "Person",
+			name: siteConfig.creator.name,
+			url: siteConfig.creator.url,
+		},
 		keywords: post.keywords.join(", "),
 	};
 
@@ -55,7 +62,7 @@ export async function PostPageContent({ post }: { post: PostMeta }) {
 						title={post.title}
 						action={
 							<ShareBar
-								url={`${SITE_URL}${ROUTES.post(post.slug)}`}
+								url={`${siteConfig.url}${ROUTES.post(post.slug)}`}
 								title={post.title}
 								shareText={post.description}
 								subject="post"

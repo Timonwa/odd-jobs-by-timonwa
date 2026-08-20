@@ -1,8 +1,10 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 
+import Link from "next/link";
+
 import { ROUTES } from "@/lib/config/routes";
-import { SITE_NAME } from "@/lib/config/site";
+import { siteConfig } from "@/lib/config/site";
+
 import { BrandLockup } from "./BrandLockup";
 import { NavActions } from "./NavActions";
 
@@ -32,7 +34,7 @@ export function AppNavbar({
 			<div className="container relative mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
 				<Link
 					href={ROUTES.home}
-					aria-label={`${SITE_NAME} — home`}
+					aria-label={`${siteConfig.name} — home`}
 					className="flex min-w-0 items-center pr-1"
 				>
 					<BrandLockup />
