@@ -19,13 +19,13 @@ There are no tagged releases yet; the hosted instance always runs the latest `ma
 
 ### Preferred: GitHub Security Advisories
 
-[Open a private advisory →](https://github.com/Timonwa/tools-by-timonwa/security/advisories/new)
+[Open a private advisory →](https://github.com/Timonwa/odd-jobs-by-timonwa/security/advisories/new)
 
 This is a private channel between you and the maintainer — nothing you submit is publicly visible until we publish the advisory together after a fix ships.
 
 ### Fallback: email
 
-[me[@]timonwa[dot]com](mailto:me@timonwa.com?subject=Security%20vulnerability%20in%20tools-by-timonwa)
+[me[@]timonwa[dot]com](mailto:me@timonwa.com?subject=Security%20vulnerability%20in%20odd-jobs-by-timonwa)
 
 Please include:
 

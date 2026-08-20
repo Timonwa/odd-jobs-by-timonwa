@@ -50,8 +50,8 @@ _More on the way._
 **Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc)), [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys) if you want the AI tools.
 
 ```bash
-git clone https://github.com/Timonwa/tools-by-timonwa.git
-cd tools-by-timonwa
+git clone https://github.com/Timonwa/odd-jobs-by-timonwa.git
+cd odd-jobs-by-timonwa
 pnpm install
 cp .env.example .env      # GOOGLE_API_KEY for the AI tools; the rest are optional locally
 pnpm dev
@@ -123,7 +123,7 @@ This project is split between open-source **code** and reserved **content**:
 
 ## Support
 
-- ⭐️ [Star the repo](https://github.com/Timonwa/tools-by-timonwa)
+- ⭐️ [Star the repo](https://github.com/Timonwa/odd-jobs-by-timonwa)
 - ❤️ [Support](https://www.timonwa.com/support)
 
 ---

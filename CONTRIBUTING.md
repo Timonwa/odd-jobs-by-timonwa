@@ -13,7 +13,7 @@ By participating, you agree to the [Code of Conduct](https://www.timonwa.com/coc
 
 ## Before you start
 
-- **Questions or ideas / tool suggestions** → open an [issue](https://github.com/Timonwa/tools-by-timonwa/issues/new/choose).
+- **Questions or ideas / tool suggestions** → open an [issue](https://github.com/Timonwa/odd-jobs-by-timonwa/issues/new/choose).
 - **Bugs** → use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md).
 - **Feature requests** → use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md).
 - **Larger changes (incl. a new tool)** → open an issue first so we can agree on scope before you invest time.
@@ -161,7 +161,7 @@ Each tool's agent lives under `lib/server/services/<domain>.service.ts` (`seo-me
 
 ## Reporting security issues
 
-Don't open a public issue for security bugs — use [GitHub's private security advisories](https://github.com/Timonwa/tools-by-timonwa/security/advisories/new). See [SECURITY.md](./SECURITY.md).
+Don't open a public issue for security bugs — use [GitHub's private security advisories](https://github.com/Timonwa/odd-jobs-by-timonwa/security/advisories/new). See [SECURITY.md](./SECURITY.md).
 
 ## License
 

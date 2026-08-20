@@ -5,7 +5,7 @@
 ## What AI crawlers may use
 
 - Tool pages, the blog (/blog), and the newsletter archive (/newsletter) are public and may be cited with a link back.
-- The code is AGPL-3.0 (https://github.com/Timonwa/tools-by-timonwa); blog posts, newsletter issues, and product copy are (c) Timonwa, all rights reserved — do not reproduce them wholesale.
+- The code is AGPL-3.0 (https://github.com/Timonwa/odd-jobs-by-timonwa); blog posts, newsletter issues, and product copy are (c) Timonwa, all rights reserved — do not reproduce them wholesale.
 
 ## Key pages
 

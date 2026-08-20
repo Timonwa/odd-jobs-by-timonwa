@@ -26,7 +26,7 @@ export const ROUTES = {
 
 // Separate from ROUTES because these are plain strings, not typedRoutes `Route`s.
 export const EXTERNAL_ROUTES = {
-	repo: "https://github.com/Timonwa/tools-by-timonwa",
+	repo: "https://github.com/Timonwa/odd-jobs-by-timonwa",
 	support: `${siteConfig.creator.siteUrl}/support`,
 	terms: `${siteConfig.creator.siteUrl}/terms`,
 	privacy: `${siteConfig.creator.siteUrl}/privacy`,
