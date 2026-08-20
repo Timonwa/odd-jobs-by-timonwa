@@ -14,6 +14,7 @@ import {
 	BookOpenTextIcon,
 	HeartIcon,
 	HomeIcon,
+	KeyRoundIcon,
 	LayoutGridIcon,
 	MailIcon,
 	MenuIcon,
@@ -24,10 +25,10 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { buttonClasses, Tooltip, GithubMark } from "@/components/ui";
+import { Button, buttonClasses, Tooltip, GithubMark } from "@/components/ui";
 import { ByokDrawer } from "@/components/_shared/byok";
 import { ThemeToggle } from "@/components/_shared/layout";
-import { NAV_LINKS, type NavLinkLabel } from "@/lib/constants";
+import { NAV_LINKS, OPEN_BYOK_EVENT, type NavLinkLabel } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 
@@ -110,21 +111,13 @@ export function NavActions({
 			    row's gap on both sides. */}
 			{actionsSlot && <div className="hidden md:block">{actionsSlot}</div>}
 
+			{/* On the bar, not only in the menu: the dot is how you tell your own key is
+			    active, which a closed menu can't show. Always mounted — it owns the only
+			    drawer, which the menu row opens by event below `md`. */}
+			{showByok && <ByokDrawer />}
+
 			{/* Theme toggle — kept on the bar, between the tool action and GitHub. */}
 			<ThemeToggle />
-
-			{/* Support — quiet icon on the bar; the fuller row stays in the menu. */}
-			<Tooltip label="Support this project" side="bottom" align="end">
-				<a
-					href={EXTERNAL_ROUTES.support}
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-label="Support this project"
-					className={buttonClasses({ variant: "ghost", size: "icon-sm" })}
-				>
-					<HeartIcon aria-hidden className="h-4 w-4" />
-				</a>
-			</Tooltip>
 
 			{/* GitHub — kept on the bar at every width. */}
 			<Tooltip label="Star on GitHub" side="bottom" align="end">
@@ -184,7 +177,23 @@ export function NavActions({
 				{/* Menu slot for page-specific links */}
 				{menuSlot}
 
-				{showByok && <ByokDrawer />}
+				{/* Dispatches to the single ByokDrawer on the bar rather than mounting a
+				    second one, which would duplicate its dialog and event listener. */}
+				{showByok && (
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => {
+							close();
+							window.dispatchEvent(new Event(OPEN_BYOK_EVENT));
+						}}
+						aria-haspopup="dialog"
+						className="w-full justify-start md:hidden"
+					>
+						<KeyRoundIcon aria-hidden className="w-4 h-4" />
+						<span>Set API key</span>
+					</Button>
+				)}
 
 				<ThemeToggle presentation="menuItem" />
 

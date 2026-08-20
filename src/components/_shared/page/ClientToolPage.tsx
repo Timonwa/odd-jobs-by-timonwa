@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { ToolContent } from "../content/ToolContent";
 import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
-import { AppNavbar } from "@/components/_shared/layout";
+import { AppNavbar, HubNav } from "@/components/_shared/layout";
 import { PageMain, PageHero } from "@/components/ui";
 import type { IconComponent } from "@/lib/types";
 
@@ -43,7 +43,7 @@ export function ClientToolPage({
 
 	return (
 		<>
-			<AppNavbar showByok={false} />
+			<AppNavbar centerSlot={<HubNav section="Tools" />} showByok={false} />
 			<PageMain>
 				{constrained ? <div className="mx-auto max-w-3xl">{hero}</div> : hero}
 				<ToolContent currentSlug={slug} />

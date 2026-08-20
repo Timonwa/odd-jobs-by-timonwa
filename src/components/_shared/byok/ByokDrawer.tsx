@@ -2,7 +2,8 @@
 
 import { KeyRoundIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Button, Drawer } from "@/components/ui";
+import { NavIconButton } from "@/components/_shared/layout";
+import { Drawer } from "@/components/ui";
 import { ByokSection } from "./ByokSection";
 
 import { type ByokModel, DEFAULT_BYOK_MODEL } from "@/lib/config/byok";
@@ -80,27 +81,27 @@ export function ByokDrawer() {
 		byokModelStorage.set(model);
 	};
 
+	const label = saved ? "API key — your own key is active" : "API key";
+
 	return (
 		<>
-			<Button
-				variant="ghost"
-				size="sm"
+			<NavIconButton
+				label={label}
 				onClick={() => setOpen(true)}
-				aria-label={saved ? "API key — your own key is active" : "API key"}
 				// A drawer is a modal dialog, not an expandable region: `aria-expanded`
 				// describes in-place disclosure, so a dialog trigger uses haspopup instead.
 				aria-haspopup="dialog"
-				className="w-full justify-start"
+				// Hidden below `md`, where the menu row opens this same drawer by event.
+				className="relative hidden md:inline-flex"
 			>
 				<KeyRoundIcon aria-hidden className="w-4 h-4" />
-				<span>Set API key</span>
 				{saved && (
-					<span aria-hidden className="relative ml-auto flex h-2 w-2">
+					<span aria-hidden className="absolute right-1 top-1 flex h-2 w-2">
 						<span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
 						<span className="relative block w-2 h-2 rounded-full bg-primary" />
 					</span>
 				)}
-			</Button>
+			</NavIconButton>
 
 			<Drawer
 				open={open}

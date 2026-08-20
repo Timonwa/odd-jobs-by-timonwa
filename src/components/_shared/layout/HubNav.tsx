@@ -3,21 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { NAV_PILLARS } from "@/lib/constants";
+import { NAV_PILLARS, type NavLinkLabel } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 /** Desktop section nav for the hub, for the navbar's centre slot. Hidden below `lg`, where the `NavActions` menu carries the same links. */
-export function HubNav() {
+export function HubNav({ section }: { section?: NavLinkLabel }) {
 	const pathname = usePathname();
 
 	return (
 		<nav aria-label="Sections" className="hidden lg:block">
 			<ul className="flex items-center gap-1">
 				{NAV_PILLARS.map((pillar) => {
-					// Matches everything under the section too, so a post keeps "Blog" lit.
-					const isCurrent =
-						pathname === pillar.href ||
-						(pathname?.startsWith(`${pillar.href}/`) ?? false);
+					// Tools sit at root URLs (/word-counter), so a path check can't place
+					// them under their section — those pages name it instead.
+					const isCurrent = section
+						? section === pillar.label
+						: pathname === pillar.href ||
+							(pathname?.startsWith(`${pillar.href}/`) ?? false);
 					return (
 						<li key={pillar.label}>
 							<Link
