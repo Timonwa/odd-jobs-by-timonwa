@@ -39,8 +39,8 @@ export function Newsletter({ className }: { className?: string }) {
 					Get the next issue
 				</h2>
 				<p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-					New tools and guides on working better, by email. No spam, unsubscribe
-					in one click.
+					One issue a month: new tools and guides on working better. No spam,
+					unsubscribe in one click.
 				</p>
 
 				<NewsletterForm />

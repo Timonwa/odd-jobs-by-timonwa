@@ -89,11 +89,12 @@ export const INDEXED_SEO = {
 		},
 	},
 	newsletter: {
-		title: "Newsletter — new tools and guides by email",
+		title: "Newsletter — one issue a month, by email",
 		description:
-			"The Odd Jobs newsletter: new tools and new guides by email. Read past issues, or subscribe to get the next one.",
+			"The Odd Jobs newsletter: one issue a month with new tools and new guides. Read past issues, or subscribe to get the next one.",
 		heading: { lead: "New tools and guides, in your", accent: "inbox" },
-		subtitle: "Read any past issue below, or subscribe to get the next one.",
+		subtitle:
+			"One issue a month. Read any past issue below, or subscribe to get the next one.",
 		eyebrow: "Newsletter",
 		og: {
 			eyebrow: `Newsletter · ${siteConfig.name}`,
