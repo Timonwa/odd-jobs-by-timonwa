@@ -10,40 +10,39 @@ import {
 } from "react";
 import { useFormStatus } from "react-dom";
 
-import ArticleSourceInput from "@/components/_shared/source/ArticleSourceInput";
-import ErrorNotice from "@/components/_shared/result/ErrorNotice";
+import { ArticleSourceInput } from "@/components/_shared/source";
+import { ErrorNotice } from "@/components/_shared/result";
 import { useArticleSource } from "@/lib/hooks";
 import type {
-	ArticleSourceType,
-	SeoMetaResultType,
-	TokenUsageType,
+	ArticleSource,
+	SeoMetaFormParams,
+	SeoMetaResult,
+	TokenUsage,
 } from "@/lib/types";
 import { MAX_ARTICLE_INPUT_CHARS } from "@/lib/constants";
 import { Button, Input, SegmentedControl } from "@/components/ui";
 
-import { generateSeoMeta } from "@/lib/actions";
-import { byokModelStorage, byokStorage } from "@/lib/utils";
-import { emitHostedUsage } from "@/lib/utils";
+import { generateSeoMeta } from "@/lib/server/actions";
+import {
+	byokModelStorage,
+	byokStorage,
+	emitHostedUsage,
+	toActionCallErrorMessage,
+} from "@/lib/utils";
 
-export type SeoMetaFormParamsType = {
-	source: ArticleSourceType;
-	primaryKeyword?: string;
-	variationCount: 1 | 2 | 3;
-};
-
-type SeoMetaFormStateType = { error?: string } | null;
+type SeoMetaFormState = { error?: string } | null;
 
 type SeoMetaFormProps = {
 	onResult: (
-		result: SeoMetaResultType,
-		usage: TokenUsageType,
-		params: SeoMetaFormParamsType,
+		result: SeoMetaResult,
+		usage: TokenUsage,
+		params: SeoMetaFormParams,
 	) => void;
 	onLoadingChange?: (loading: boolean) => void;
 	onReset?: () => void;
 	resetRef?: RefObject<(() => void) | null>;
 	busy?: boolean;
-	initial?: SeoMetaFormParamsType;
+	initial?: SeoMetaFormParams;
 	hasResult?: boolean;
 };
 
@@ -77,7 +76,7 @@ function SubmitButton({
 	);
 }
 
-export default function SeoMetaForm({
+export function SeoMetaForm({
 	onResult,
 	onLoadingChange,
 	onReset,
@@ -143,9 +142,9 @@ export default function SeoMetaForm({
 	// The form action validates client-side, calls the server action, and hands
 	// results straight to the parent — returning only an error string for display
 	// (React 19 useActionState). No effects needed.
-	const [state, formAction, isPending] = useActionState<SeoMetaFormStateType>(
-		async (): Promise<SeoMetaFormStateType> => {
-			const source: ArticleSourceType =
+	const [state, formAction, isPending] = useActionState<SeoMetaFormState>(
+		async (): Promise<SeoMetaFormState> => {
+			const source: ArticleSource =
 				sourceKind === "url"
 					? { kind: "url", url: url.trim() }
 					: { kind: "text", text: article };
@@ -180,10 +179,9 @@ export default function SeoMetaForm({
 					variationCount: count,
 				});
 				return null;
-			} catch {
+			} catch (error) {
 				return {
-					error:
-						"We couldn't reach the server. Check your internet connection and try again.",
+					error: toActionCallErrorMessage(error, "seo-meta:generate"),
 				};
 			} finally {
 				onLoadingChange?.(false);

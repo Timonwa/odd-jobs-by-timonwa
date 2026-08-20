@@ -1,10 +1,10 @@
 # Security Policy
 
-Thanks for helping keep Tools by Timonwa and its users safe.
+Thanks for helping keep Odd Jobs and its users safe.
 
 ## Supported versions
 
-Tools by Timonwa is a single-version, actively-developed web app. Security fixes are applied to the **latest commit on `main`** and rolled out to the hosted instance shortly after.
+Odd Jobs is a single-version, actively-developed web app. Security fixes are applied to the **latest commit on `main`** and rolled out to the hosted instance shortly after.
 
 | Version         | Supported |
 | --------------- | --------- |
@@ -19,13 +19,13 @@ There are no tagged releases yet; the hosted instance always runs the latest `ma
 
 ### Preferred: GitHub Security Advisories
 
-[Open a private advisory →](https://github.com/Timonwa/tools-by-timonwa/security/advisories/new)
+[Open a private advisory →](https://github.com/Timonwa/odd-jobs-by-timonwa/security/advisories/new)
 
 This is a private channel between you and the maintainer — nothing you submit is publicly visible until we publish the advisory together after a fix ships.
 
 ### Fallback: email
 
-[me[@]timonwa[dot]com](mailto:me@timonwa.com?subject=Security%20vulnerability%20in%20tools-by-timonwa)
+[me[@]timonwa[dot]com](mailto:me@timonwa.com?subject=Security%20vulnerability%20in%20odd-jobs-by-timonwa)
 
 Please include:
 
@@ -51,7 +51,7 @@ Please include:
 
 ## Out of scope
 
-- Prompt injection of the LLM — tool agents' output is schema-validated and prompts are not treated as a secret (see `CONTRIBUTING.md`)
+- Prompt injection of the LLM — agent prompts are public by design (they live in `src/lib/server/services/` and PRs to improve them are welcome), and every agent's output is validated against a Zod schema before it reaches the page
 - Rate-limit evasion — a known limitation of the hosted daily quota
 - Vulnerabilities in third-party services (Google AI Studio, Upstash, Vercel) — please report those directly to the respective vendors
 - Missing best-practice HTTP headers that have no concrete impact
@@ -63,7 +63,8 @@ Before reporting, skim the **Privacy** section of [README.md](./README.md) for t
 
 - **Your BYOK key** → browser `sessionStorage` only, cleared on tab close; sent with a request to the server only to make the Gemini call, never stored or logged
 - **Your tool input** (pasted text / URLs) → request-scoped on the server, not cached, not logged; lives in your browser's React state otherwise
-- **Fetched article content** (for URL-based tools) → 1-hour in-memory cache, keyed by URL
+- **Article URLs** → validated, then handed to Gemini's `url_context` tool, which does the fetching. The app never requests the page itself, so no article content is stored or cached here
 - **Rate-limit counters** → keyed (HMAC-SHA256) hash of IP + daily counter in Upstash Redis, resets at UTC midnight
+- **Newsletter signups** → your email address only, sent to my Listmonk instance; nothing else is collected
 
 Thanks again. ❤️

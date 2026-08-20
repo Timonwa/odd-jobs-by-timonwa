@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
 	Card,
@@ -12,10 +12,8 @@ import {
 	SegmentedControl,
 } from "@/components/ui";
 import { TINT_TEXT } from "@/lib/config/tints";
-import { slugify, type SlugSeparatorType } from "@/lib/utils";
-import { cn } from "@/lib/utils";
-
-const SEPARATORS: { value: SlugSeparatorType; label: string }[] = [
+import { slugify, type SlugSeparator, cn } from "@/lib/utils";
+const SEPARATORS: { value: SlugSeparator; label: string }[] = [
 	{ value: "-", label: "hyphen ( - )" },
 	{ value: "_", label: "underscore ( _ )" },
 ];
@@ -24,16 +22,13 @@ const SEPARATORS: { value: SlugSeparatorType; label: string }[] = [
 // truncated in search results — a soft target, surfaced gently (not an error).
 const SLUG_LENGTH_TARGET = 60;
 
-export default function SlugGeneratorTool() {
+export function SlugGeneratorTool() {
 	const [title, setTitle] = useState("");
-	const [separator, setSeparator] = useState<SlugSeparatorType>("-");
+	const [separator, setSeparator] = useState<SlugSeparator>("-");
 	const [lowercase, setLowercase] = useState(true);
 	const [removeStopWords, setRemoveStopWords] = useState(false);
 
-	const slug = useMemo(
-		() => slugify(title, { separator, lowercase, removeStopWords }),
-		[title, separator, lowercase, removeStopWords],
-	);
+	const slug = slugify(title, { separator, lowercase, removeStopWords });
 
 	const slugLength = slug.length;
 	const wordCount = slug ? slug.split(separator).filter(Boolean).length : 0;

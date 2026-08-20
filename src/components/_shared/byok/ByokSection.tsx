@@ -1,5 +1,7 @@
 "use client";
 
+import { useId, useState } from "react";
+
 import {
 	AlertCircleIcon,
 	ArrowRightIcon,
@@ -9,49 +11,56 @@ import {
 	EyeOffIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useId, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
-import { BYOK_MODELS, type ByokModelType } from "@/lib/config/byok";
+import { BYOK_MODELS, type ByokModel } from "@/lib/config/byok";
 import { ROUTES } from "@/lib/config/routes";
-import { AI_STUDIO_KEYS_URL } from "@/lib/config/site";
-import { GUIDE_SLUGS } from "@/lib/guides/guides";
+import { POST_SLUGS } from "@/lib/constants";
+import { AI_STUDIO_KEYS_URL } from "@/lib/config/byok";
 
-type StatusType =
+type Status =
 	| { type: "success"; message: string }
 	| { type: "error"; message: string }
 	| null;
 
 type ByokSectionProps = {
 	savedKey: string | null;
-	byokModel: ByokModelType;
-	onSave: (key: string) => StatusType;
-	onClear: () => void;
-	onModelChange: (model: ByokModelType) => void;
+	byokModel: ByokModel;
+	onSave: (key: string) => Status;
+	onClear: () => Status;
+	onModelChange: (model: ByokModel) => void;
 };
 
 const mask = (k: string) =>
 	k.length > 10 ? `${k.slice(0, 6)}…${k.slice(-4)}` : "•••";
 
 /** The BYOK form: Gemini key input (masked reveal + format check), model picker, and save/clear. */
-export default function ByokSection({
+export function ByokSection({
 	savedKey,
 	byokModel,
 	onSave,
 	onClear,
 	onModelChange,
 }: ByokSectionProps) {
-	const [input, setInput] = useState(savedKey ?? "");
+	// Starts empty and clears after a successful save — never seeded from the
+	// saved key, so the full key doesn't linger in the DOM as an input value.
+	// The masked "Using your key" panel is the confirmation that one is set.
+	const [input, setInput] = useState("");
 	const [reveal, setReveal] = useState(false);
-	const [status, setStatus] = useState<StatusType>(null);
+	const [status, setStatus] = useState<Status>(null);
 	const keyInputId = useId();
 	const modelLabelId = useId();
 
-	const handleSave = () => setStatus(onSave(input.trim()));
+	const handleSave = () => {
+		const result = onSave(input.trim());
+		if (result?.type === "success") setInput("");
+		setStatus(result);
+	};
 	const handleClear = () => {
-		onClear();
+		const result = onClear();
 		setInput("");
-		setStatus({ type: "success", message: "Key cleared." });
+		// Report what actually happened rather than assuming the clear landed.
+		setStatus(result);
 	};
 
 	return (
@@ -66,7 +75,7 @@ export default function ByokSection({
 						Stored in <code className="text-foreground">sessionStorage</code> —
 						cleared when you close this tab
 					</li>
-					<li>Sent to our server only to call Gemini, never logged or saved</li>
+					<li>Sent to the server only to call Gemini, never logged or saved</li>
 					<li>Not shared across other tabs or devices</li>
 				</ul>
 			</div>
@@ -83,7 +92,7 @@ export default function ByokSection({
 					<span className="sr-only">(opens in a new tab)</span>
 				</Link>
 				<Link
-					href={ROUTES.guide(GUIDE_SLUGS.geminiApiKey)}
+					href={ROUTES.post(POST_SLUGS.geminiApiKey)}
 					className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
 				>
 					New to API keys? Read the 2-minute guide

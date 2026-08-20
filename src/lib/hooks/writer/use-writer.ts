@@ -11,15 +11,19 @@ import {
 	useTransition,
 } from "react";
 
-import type { WriterRuntimeType } from "@/lib/types";
-import { useArticleSource } from "@/lib/hooks/use-article-source";
 import type {
-	ArticleSourceType,
-	SocialPostType,
-	SocialPostsResultType,
-	TokenUsageType,
+	WriterRuntime,
+	ArticleSource,
+	SocialPost,
+	SocialPostsResult,
+	TokenUsage,
+	SocialPostHistory,
 } from "@/lib/types";
+import { useArticleSource } from "@/lib/hooks/use-article-source";
+import { useCopyFeedback } from "@/lib/hooks/use-copy-feedback";
+import { HISTORY_DEBOUNCE_MS } from "@/lib/constants";
 import {
+	toActionCallErrorMessage,
 	articleSourceIdentity,
 	buildAllPostsCopyText,
 	buildPostCopyText,
@@ -27,10 +31,9 @@ import {
 	byokStorage,
 	emitHostedUsage,
 } from "@/lib/utils";
-import type { SocialPostHistoryType } from "@/lib/types";
 
 /** Central state and action hook for the writer engine — wires the article source, generation, editing, history, and style templates. Stores, server actions, and the history/template hooks are injected via `runtime`, so one engine powers several tools. */
-export function useWriter(runtime: WriterRuntimeType) {
+export function useWriter(runtime: WriterRuntime) {
 	const {
 		styleStorage,
 		workflowStorage,
@@ -73,17 +76,17 @@ export function useWriter(runtime: WriterRuntimeType) {
 	// `regeneratePost` uses its own transition but tracks per-post loading via `regenerating` — a single flag can't distinguish cards.
 	const [isGenerating, startGenerate] = useTransition();
 	const [, startRegenerate] = useTransition();
-	const [result, setResult] = useState<SocialPostsResultType | null>(null);
-	const [editablePosts, setEditablePosts] = useState<SocialPostType[]>([]);
+	const [result, setResult] = useState<SocialPostsResult | null>(null);
+	const [editablePosts, setEditablePosts] = useState<SocialPost[]>([]);
 	const [error, setError] = useState<string | null>(null);
 
 	// Captured when a run starts so later form edits don't silently change what a regeneratePost sees.
-	const [lastSource, setLastSource] = useState<ArticleSourceType | null>(null);
+	const [lastSource, setLastSource] = useState<ArticleSource | null>(null);
 
 	const [regenerating, setRegenerating] = useState<Record<string, boolean>>({});
-	const [copiedKey, setCopiedKey] = useState<string | null>(null);
+	const { copiedKey, copy } = useCopyFeedback();
 
-	const [lastUsage, setLastUsage] = useState<TokenUsageType | null>(null);
+	const [lastUsage, setLastUsage] = useState<TokenUsage | null>(null);
 
 	const {
 		templates,
@@ -115,7 +118,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 	// Debounced 600 ms — avoids hammering localStorage on every keystroke.
 	useEffect(() => {
 		if (editablePosts.length === 0) return;
-		const id = setTimeout(persistPostEdits, 600);
+		const id = setTimeout(persistPostEdits, HISTORY_DEBOUNCE_MS);
 		return () => clearTimeout(id);
 	}, [editablePosts]);
 
@@ -133,7 +136,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 		resetResults();
 	}, [resetResults, setText, setUrl]);
 
-	const currentSource = useCallback((): ArticleSourceType | null => {
+	const currentSource = useCallback((): ArticleSource | null => {
 		if (sourceKind === "url") {
 			const trimmed = url.trim();
 			return trimmed ? { kind: "url", url: trimmed } : null;
@@ -151,7 +154,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 
 	// `reset: false` keeps current posts visible until the new set lands — avoids blanking results mid-flight.
 	const runPostGeneration = useCallback(
-		(source: ArticleSourceType, { reset }: { reset: boolean }) => {
+		(source: ArticleSource, { reset }: { reset: boolean }) => {
 			if (platforms.length === 0) return;
 			if (reset) resetResults();
 			else setError(null);
@@ -179,7 +182,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 					setLastSource(source);
 
 					// Persist both URL and text generations. Posts are stored only in
-					// the user's localStorage — never on our servers — and each entry has
+					// the user's localStorage — never on the server — and each entry has
 					// a Remove button so the user stays in control.
 					upsert({
 						source:
@@ -194,10 +197,8 @@ export function useWriter(runtime: WriterRuntimeType) {
 						result: generated,
 						timestamp: Date.now(),
 					});
-				} catch {
-					setError(
-						"We couldn't reach the server. Check your internet connection and try again.",
-					);
+				} catch (error) {
+					setError(toActionCallErrorMessage(error, "writer:generate"));
 				}
 			});
 		},
@@ -229,7 +230,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 	}, [lastSource, runPostGeneration]);
 
 	const updatePostContent = useCallback(
-		(platform: SocialPostType["platform"], content: string) => {
+		(platform: SocialPost["platform"], content: string) => {
 			setEditablePosts((cur) =>
 				cur.map((d) =>
 					d.platform === platform
@@ -242,7 +243,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 	);
 
 	const updateThreadPost = useCallback(
-		(platform: SocialPostType["platform"], index: number, content: string) => {
+		(platform: SocialPost["platform"], index: number, content: string) => {
 			setEditablePosts((cur) =>
 				cur.map((d) => {
 					if (d.platform !== platform || !d.thread) return d;
@@ -259,7 +260,7 @@ export function useWriter(runtime: WriterRuntimeType) {
 	);
 
 	const regeneratePost = useCallback(
-		(post: SocialPostType) => {
+		(post: SocialPost) => {
 			if (!lastSource) return;
 			// Immediate per-card feedback (urgent), then the async work runs in a
 			// transition so the regenerated post render stays non-blocking.
@@ -285,10 +286,8 @@ export function useWriter(runtime: WriterRuntimeType) {
 						cur.map((d) => (d.platform === post.platform ? response.post : d)),
 					);
 					setLastUsage(response.usage);
-				} catch {
-					setError(
-						"We couldn't reach the server. Check your internet connection and try again.",
-					);
+				} catch (error) {
+					setError(toActionCallErrorMessage(error, "writer:generate"));
 				} finally {
 					setRegenerating((r) => ({ ...r, [post.platform]: false }));
 				}
@@ -297,20 +296,22 @@ export function useWriter(runtime: WriterRuntimeType) {
 		[lastSource, xThreadLength, onRegenerate, styleStorage],
 	);
 
-	const copy = useCallback(async (key: string, text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-			setCopiedKey(key);
-			setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
-		} catch {
-			setError(
-				"Your browser blocked copying. Select the text and copy it manually instead.",
-			);
-		}
-	}, []);
+	// Keeps the (key, text) order the writer UI already calls with, and owns the
+	// blocked-clipboard message — `useCopyFeedback` reports failure but doesn't
+	// word it, because each surface words it differently.
+	const copyText = useCallback(
+		async (key: string, text: string) => {
+			if (!(await copy(text, key))) {
+				setError(
+					"Your browser blocked copying. Select the text and copy it manually instead.",
+				);
+			}
+		},
+		[copy],
+	);
 
 	const loadFromHistory = useCallback(
-		(entry: SocialPostHistoryType) => {
+		(entry: SocialPostHistory) => {
 			if (entry.source.kind === "url") {
 				setSourceKind("url");
 				setUrl(entry.source.url);
@@ -370,11 +371,14 @@ export function useWriter(runtime: WriterRuntimeType) {
 		updatePostContent,
 		updateThreadPost,
 		regeneratePost,
-		copy,
+		copy: copyText,
 		copyAll: () =>
-			copy("all", buildAllPostsCopyText(editablePosts, result?.article.url)),
-		copyPost: (post: SocialPostType) =>
-			copy(
+			copyText(
+				"all",
+				buildAllPostsCopyText(editablePosts, result?.article.url),
+			),
+		copyPost: (post: SocialPost) =>
+			copyText(
 				`post-${post.platform}`,
 				buildPostCopyText(post, result?.article.url),
 			),

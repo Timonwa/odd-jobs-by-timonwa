@@ -1,9 +1,9 @@
 import { CaseSensitiveIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import CaseConverterTool from "./CaseConverterTool";
+import { ClientToolPage } from "@/components/_shared/page";
+import { CaseConverterTool } from "./CaseConverterTool";
 
-export default function CaseConverterPageContent() {
+export function CaseConverterPageContent() {
 	return (
 		<ClientToolPage
 			slug="case-converter"
@@ -15,7 +15,7 @@ export default function CaseConverterPageContent() {
 					Fix the <span className="hero-gradient-text">case</span> in one click
 				</>
 			}
-			subtitle="Switch text between UPPERCASE, Title Case, Sentence case, camelCase, snake_case, and more — instantly, then copy. Nothing leaves your browser."
+			subtitle="Switch text between UPPERCASE, Title Case, Sentence case, camelCase, snake_case, and more — instantly, then copy. Your text stays on this page."
 		>
 			<CaseConverterTool />
 		</ClientToolPage>

@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui";
 import { TOOL_CATEGORIES } from "@/lib/config/categories";
-import type { TintType } from "@/lib/config/tints";
+import type { Tint } from "@/lib/config/tints";
 import { cn } from "@/lib/utils";
 
-const AUDIENCES: { label: string; tint: TintType }[] = [
+const AUDIENCES: { label: string; tint: Tint }[] = [
 	{ label: "Writers", tint: 1 },
 	{ label: "Developers", tint: 2 },
 	{ label: "Creators", tint: 3 },
@@ -19,7 +19,7 @@ const TILE_POSITIONS = [
 	"right-2 bottom-6 h-16 w-16 -rotate-3",
 ];
 
-export default function WhatItIs() {
+export function WhatItIs() {
 	return (
 		<section
 			aria-labelledby="about-heading"
@@ -35,15 +35,14 @@ export default function WhatItIs() {
 						id="about-heading"
 						className="text-3xl font-semibold tracking-tight sm:text-4xl"
 					>
-						The small tools you reach for,{" "}
-						<span className="hero-gradient-text">all in one place</span>
+						More than a <span className="hero-gradient-text">toolbox</span>
 					</h2>
 					<p className="mt-4 max-w-md text-muted-foreground">
-						A growing, open-source collection of focused tools — each does one
-						job well, with no signup and nothing to install. AI helpers draft
-						and reshape your content; instant tools handle the everyday text
-						work, right in your browser. Free to use, and you can bring your own
-						key for unlimited AI runs.
+						The tools each do one annoying job — character counts, clean slugs,
+						SVG conversions, an article turned into social posts. The blog and
+						newsletter go wider: working with less friction, and actually
+						finishing what you start. The shop has the templates I use myself.
+						Free to use, no account needed, and the code is open source.
 					</p>
 					<ul className="mt-6 flex flex-wrap gap-2">
 						{AUDIENCES.map((audience) => (

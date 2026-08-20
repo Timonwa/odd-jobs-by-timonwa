@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
 	Button,
@@ -10,17 +10,17 @@ import {
 	Textarea,
 	ToggleButton,
 } from "@/components/ui";
-import { CASE_GROUPS, type CaseIdType, convertCase } from "@/lib/utils";
+import { CASE_GROUPS, type CaseId, convertCase } from "@/lib/utils";
 
 const ALL_CASES = CASE_GROUPS.flatMap((g) => g.cases);
 
-export default function CaseConverterTool() {
+export function CaseConverterTool() {
 	// Local-only: case conversion is for short strings/titles/code, not an
 	// article draft, so this tool opts out of the cross-tool shared draft.
 	const [text, setText] = useState("");
-	const [active, setActive] = useState<CaseIdType>("title-ap");
+	const [active, setActive] = useState<CaseId>("title-ap");
 
-	const output = useMemo(() => convertCase(text, active), [text, active]);
+	const output = convertCase(text, active);
 	const activeMeta = ALL_CASES.find((c) => c.id === active);
 
 	return (

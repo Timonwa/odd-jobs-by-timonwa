@@ -1,0 +1,32 @@
+Content License — Odd Jobs
+
+Copyright © Timonwa Akintokun. All rights reserved.
+
+This license covers the CONTENT and BRAND assets in this repository, which are
+NOT part of the open-source software and are NOT licensed under the AGPL-3.0
+license in LICENSE. Specifically, it covers:
+
+- Everything under `src/content/**` — blog posts, newsletter issues, product
+    copy, and any other written or editorial material.
+- Brand assets — the names "Odd Jobs", "The Productivity Bug", and "Tools by
+    Timonwa", logos, wordmarks, icons, and Open Graph / social artwork.
+- Marketing and site copy authored for this project.
+
+All rights are reserved. You may NOT copy, reproduce, republish, distribute,
+translate, or create derivative works from this content, in whole or in part,
+without prior written permission from the copyright holder — except:
+
+- Brief quotation for review, commentary, or news reporting, with clear
+    attribution and a link to the original (customary "fair use" / "fair
+    dealing").
+- Any use expressly permitted by a separate written agreement.
+
+Reading the content on the live site (<https://odd-jobs.timonwa.com>) for personal,
+non-commercial use is of course fine — that's what it's there for.
+
+For the SOFTWARE (all source code) see LICENSE (AGPL-3.0). For use of the brand
+names and logos see TRADEMARK.md. When code and content live in the same file
+(for example, an MDX file that mixes prose with components), the prose is
+governed by this license and the code by LICENSE.
+
+Questions or permission requests: <me@timonwa.com>

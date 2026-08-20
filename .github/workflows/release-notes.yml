@@ -1,0 +1,22 @@
+name: Release notes
+
+# Drafts release notes from merged PRs, categorized by label.
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-notes.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

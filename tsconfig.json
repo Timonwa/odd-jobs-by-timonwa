@@ -5,6 +5,9 @@
 		"allowJs": true,
 		"skipLibCheck": true,
 		"strict": true,
+		// Index access returns `T | undefined`, so a missing key is a compile error
+		// rather than an `undefined` that types as present.
+		"noUncheckedIndexedAccess": true,
 		"noEmit": true,
 		"esModuleInterop": true,
 		"module": "esnext",

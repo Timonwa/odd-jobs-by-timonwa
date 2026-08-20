@@ -1,9 +1,9 @@
 import { LinkIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import SlugGeneratorTool from "./SlugGeneratorTool";
+import { ClientToolPage } from "@/components/_shared/page";
+import { SlugGeneratorTool } from "./SlugGeneratorTool";
 
-export default function SlugGeneratorPageContent() {
+export function SlugGeneratorPageContent() {
 	return (
 		<ClientToolPage
 			slug="slug-generator"
@@ -16,7 +16,7 @@ export default function SlugGeneratorPageContent() {
 					<span className="hero-gradient-text">URL slugs</span>
 				</>
 			}
-			subtitle="Paste a title, product name, or any text and get a tidy, URL-safe slug — accents and punctuation stripped, separator and stop words your call. Nothing leaves your browser."
+			subtitle="Paste a title, product name, or any text and get a tidy, URL-safe slug — accents and punctuation stripped, separator and stop words your call. It all happens on this page."
 			constrained
 		>
 			<SlugGeneratorTool />

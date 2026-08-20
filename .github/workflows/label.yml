@@ -1,0 +1,17 @@
+name: Label PRs
+
+# Path-based PR labels, driven by .github/labeler.yml.
+on:
+  - pull_request_target
+
+permissions: {}
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5

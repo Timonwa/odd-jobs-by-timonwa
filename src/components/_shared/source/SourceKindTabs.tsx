@@ -2,23 +2,23 @@
 
 import { FileTextIcon, LinkIcon } from "lucide-react";
 
-import type { ArticleSourceKindType } from "@/lib/types";
+import type { ArticleSourceKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /** URL / paste-text tab switcher shared by the article-source tools (social posts, SEO meta). */
-export default function SourceKindTabs({
+export function SourceKindTabs({
 	value,
 	onChange,
 	disabled,
 	textLabel = "Paste text",
 }: {
-	value: ArticleSourceKindType;
-	onChange: (kind: ArticleSourceKindType) => void;
+	value: ArticleSourceKind;
+	onChange: (kind: ArticleSourceKind) => void;
 	disabled?: boolean;
 	textLabel?: string;
 }) {
 	const tabs: {
-		id: ArticleSourceKindType;
+		id: ArticleSourceKind;
 		label: string;
 		icon: typeof LinkIcon;
 	}[] = [
@@ -26,8 +26,11 @@ export default function SourceKindTabs({
 		{ id: "text", label: textLabel, icon: FileTextIcon },
 	];
 	return (
+		// radiogroup, not tablist: these switch which input is shown rather than
+		// revealing tabpanels, and a tablist without `aria-controls` or arrow-key
+		// navigation is a promise to assistive tech that isn't kept.
 		<div
-			role="tablist"
+			role="radiogroup"
 			aria-label="Source input type"
 			className="inline-flex rounded-md border border-border bg-muted/40 p-1 text-sm"
 		>
@@ -38,8 +41,8 @@ export default function SourceKindTabs({
 					<button
 						key={t.id}
 						type="button"
-						role="tab"
-						aria-selected={active}
+						role="radio"
+						aria-checked={active}
 						onClick={() => onChange(t.id)}
 						disabled={disabled}
 						className={cn(

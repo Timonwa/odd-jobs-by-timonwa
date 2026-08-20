@@ -1,9 +1,9 @@
 import { WholeWordIcon } from "lucide-react";
 
-import ClientToolPage from "@/components/_shared/page/ClientToolPage";
-import WordCounterTool from "./WordCounterTool";
+import { ClientToolPage } from "@/components/_shared/page";
+import { WordCounterTool } from "./WordCounterTool";
 
-export default function WordCounterPageContent() {
+export function WordCounterPageContent() {
 	return (
 		<ClientToolPage
 			slug="word-counter"
@@ -16,7 +16,7 @@ export default function WordCounterPageContent() {
 					type
 				</>
 			}
-			subtitle="Live word, character, sentence, and paragraph counts — plus reading time and the character limits that matter for SEO and social. Nothing leaves your browser."
+			subtitle="Live word, character, sentence, and paragraph counts — plus reading time and the character limits that matter for SEO and social. Counted on this page, never uploaded."
 		>
 			<WordCounterTool />
 		</ClientToolPage>

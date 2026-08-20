@@ -1,8 +1,10 @@
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool";
 import { getRelatedTools } from "@/lib/config/tools";
 
+import { RelatedSection } from "./RelatedSection";
+
 /** "More tools" grid — same-category tools first, backfilled to `max` from the TOOLS config. */
-export default function MoreTools({
+export function MoreTools({
 	currentSlug,
 	max = 3,
 }: {
@@ -13,17 +15,8 @@ export default function MoreTools({
 	if (others.length === 0) return null;
 
 	return (
-		<section
-			aria-labelledby="more-tools-heading"
-			className="flex flex-col gap-4"
-		>
-			<h2
-				id="more-tools-heading"
-				className="text-xl font-semibold tracking-tight"
-			>
-				More tools
-			</h2>
+		<RelatedSection id="more-tools" heading="More tools">
 			<ToolGrid tools={others} />
-		</section>
+		</RelatedSection>
 	);
 }

@@ -3,26 +3,25 @@
 import { PenLineIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import type { WriterRuntimeType } from "@/lib/types";
+import type { WriterRuntime, SocialPostStyle } from "@/lib/types";
 import { OPEN_SOCIAL_POST_SETTINGS_EVENT } from "@/lib/constants";
-import type { SocialPostStyleType } from "@/lib/types";
-import TemplatesPicker from "@/components/_shared/writer/TemplatesPicker";
-import NavIconButton from "@/components/layout/NavIconButton";
+import { TemplatesPicker } from "@/components/_shared/writer";
+import { NavIconButton } from "@/components/_shared/layout";
 import { Button, Drawer } from "@/components/ui";
 
-import HashtagsSection from "./Hashtags";
-import WritingStyleControls from "./WritingStyleControls";
+import { HashtagsSection } from "./HashtagsSection";
+import { WritingStyleControls } from "./WritingStyleControls";
 
-export type SettingsPresentationType = "icon" | "menuItem";
+export type SettingsPresentation = "icon" | "menuItem";
 
 type SettingsDrawerProps = {
-	runtime: WriterRuntimeType;
-	presentation?: SettingsPresentationType;
+	runtime: WriterRuntime;
+	presentation?: SettingsPresentation;
 	drawerClassName?: string;
 };
 
 /** Slide-out drawer for a tool's writing style, bound to a tool via runtime; presentation picks the trigger — bar icon or full-width menu row. */
-export default function SettingsDrawer({
+export function SettingsDrawer({
 	runtime,
 	presentation = "icon",
 	drawerClassName,
@@ -46,7 +45,7 @@ export default function SettingsDrawer({
 			window.removeEventListener(OPEN_SOCIAL_POST_SETTINGS_EVENT, handler);
 	}, [presentation]);
 
-	const updateStyle = (patch: Partial<SocialPostStyleType>) => {
+	const updateStyle = (patch: Partial<SocialPostStyle>) => {
 		stores.styleStorage.set({ ...style, ...patch });
 	};
 
@@ -57,7 +56,9 @@ export default function SettingsDrawer({
 					variant="ghost"
 					size="sm"
 					onClick={() => setOpen(true)}
-					aria-expanded={open}
+					// A drawer is a modal dialog, not an expandable region: `aria-expanded`
+					// describes in-place disclosure, so a dialog trigger uses haspopup instead.
+					aria-haspopup="dialog"
 					className="w-full justify-start"
 				>
 					<PenLineIcon aria-hidden className="w-4 h-4" />

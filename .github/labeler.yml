@@ -1,0 +1,42 @@
+# Path -> label map read by label.yml (actions/labeler).
+tools:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/components/tools/**"
+          - "src/app/(tools)/**"
+blog:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/blog/**"
+          - "src/components/blog/**"
+          - "src/content/blog/**"
+newsletter:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/newsletter/**"
+          - "src/components/newsletter/**"
+          - "src/content/issues/**"
+shop:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/shop/**"
+          - "src/components/shop/**"
+          - "src/content/shop/**"
+ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/components/ui/**"
+          - "src/styles/**"
+lib:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/lib/**"
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "**/*.mdx"
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"

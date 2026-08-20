@@ -1,18 +1,15 @@
-import type { ComponentType, ReactNode, SVGProps } from "react";
+import type { ReactNode } from "react";
 
-import ToolContent from "../content/ToolContent";
-import ToolBreadcrumbs from "../tool/ToolBreadcrumbs";
-import Navbar from "@/components/layout/Navbar";
-import PageMain from "@/components/layout/PageMain";
-import { PageHero } from "@/components/ui";
-import { ROUTES } from "@/lib/config/routes";
-
-type IconComponentType = ComponentType<SVGProps<SVGSVGElement>>;
+import { ToolContent } from "../content/ToolContent";
+import { ToolBreadcrumbs } from "../tool/ToolBreadcrumbs";
+import { AppNavbar, HubNav } from "@/components/_shared/layout";
+import { PageMain, PageHero } from "@/components/ui";
+import type { IconComponent } from "@/lib/types";
 
 type ClientToolPageProps = {
 	slug: string;
 	name: string;
-	icon: IconComponentType;
+	icon: IconComponent;
 	eyebrowLabel: string;
 	title: ReactNode;
 	subtitle: string;
@@ -21,7 +18,7 @@ type ClientToolPageProps = {
 };
 
 /** Page shell for client-only (no-API) tools: navbar, hero, tool, then SEO content (AI tools use AiToolPage). */
-export default function ClientToolPage({
+export function ClientToolPage({
 	slug,
 	name,
 	icon,
@@ -46,15 +43,7 @@ export default function ClientToolPage({
 
 	return (
 		<>
-			<Navbar
-				brand={{
-					href: ROUTES.tool(slug),
-					name,
-					icon,
-					ariaLabel: `${name} home`,
-				}}
-				showByok={false}
-			/>
+			<AppNavbar centerSlot={<HubNav section="Tools" />} showByok={false} />
 			<PageMain>
 				{constrained ? <div className="mx-auto max-w-3xl">{hero}</div> : hero}
 				<ToolContent currentSlug={slug} />

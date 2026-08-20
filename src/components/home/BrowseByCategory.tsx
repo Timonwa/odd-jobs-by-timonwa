@@ -1,13 +1,13 @@
-import CategoryGrid from "@/components/_shared/category/CategoryGrid";
+import { CategoryGrid } from "@/components/_shared/category";
 import { Section, SectionHeader } from "@/components/ui";
 
-export default function BrowseByCategory() {
+export function BrowseByCategory() {
 	return (
 		<Section aria-labelledby="categories-heading" className="gap-6">
 			<SectionHeader
 				id="categories-heading"
 				title="Browse by category"
-				subtitle="Jump to the kind of tool you need — or see what's coming next."
+				subtitle="Jump straight to the kind of tool you need."
 			/>
 			<CategoryGrid />
 		</Section>

@@ -1,3 +1,14 @@
+/* Guarantees the WCAG 2.5.8 minimum 24×24px pointer target on a control whose
+   icon is smaller than that. The growth is transparent padding around the icon,
+   so visual density is unchanged — only the hit box grows. */
+@utility tap-target {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.5rem;
+	min-height: 1.5rem;
+}
+
 /* Hide the scrollbar while keeping the element scrollable. */
 @utility no-scrollbar {
 	-ms-overflow-style: none;

@@ -1,12 +1,12 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import ToolGrid from "@/components/_shared/tool/ToolGrid";
+import { ToolGrid } from "@/components/_shared/tool";
 import { buttonClasses } from "@/components/ui";
 import { ROUTES } from "@/lib/config/routes";
 import { FEATURED_TOOLS, LIVE_TOOLS } from "@/lib/config/tools";
 
-export default function ToolsPreview() {
+export function ToolsPreview() {
 	const hasMore = LIVE_TOOLS.length > FEATURED_TOOLS.length;
 
 	return (

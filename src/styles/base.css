@@ -18,6 +18,26 @@
 		}
 	}
 
+	/* Several animations documented themselves as respecting this preference
+	   without any query actually guarding them. One global stop is more reliable
+	   than per-animation queries, since it also covers anything added later. */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+
+	/* Keyboard focus can scroll an element under the sticky navbar; scroll-padding
+	   reserves its height for every scroll, not just `:target` anchor jumps. */
+	html {
+		scroll-padding-top: 5rem;
+	}
+
 	html {
 		scrollbar-color: var(--border) transparent;
 		/* An off-screen decorative/hover element must never widen the page: on mobile a

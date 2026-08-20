@@ -10,16 +10,16 @@ import {
 	OutputBlock,
 	Textarea,
 } from "@/components/ui";
-import { HASH_ALGORITHMS, type HashAlgorithmType } from "@/lib/constants";
+import { HASH_ALGORITHMS, type HashAlgorithm } from "@/lib/constants";
 import { hashText } from "@/lib/utils";
 
-type Hashes = Record<HashAlgorithmType, string>;
+type Hashes = Record<HashAlgorithm, string>;
 
 const EMPTY_HASHES = Object.fromEntries(
 	HASH_ALGORITHMS.map((algorithm) => [algorithm, ""]),
 ) as Hashes;
 
-export default function HashGeneratorTool() {
+export function HashGeneratorTool() {
 	const [input, setInput] = useState("");
 	const [uppercase, setUppercase] = useState(false);
 	const [hashes, setHashes] = useState<Hashes>(EMPTY_HASHES);

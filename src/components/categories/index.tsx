@@ -1,16 +1,17 @@
 import { TagsIcon } from "lucide-react";
 
-import Newsletter from "@/components/_shared/content/Newsletter";
-import CategoryGrid from "@/components/_shared/category/CategoryGrid";
-import HubNavbar from "@/components/layout/HubNavbar";
-import PageMain from "@/components/layout/PageMain";
-import { Breadcrumbs, PageHero } from "@/components/ui";
+import { SupportBlock } from "@/components/_shared/content";
+import { CategoryGrid } from "@/components/_shared/category";
+import { PageMain, Breadcrumbs, PageHero } from "@/components/ui";
+import { getIndexedSeo, splitHeading } from "@/lib/config/page-seo";
 import { ROUTES } from "@/lib/config/routes";
 
-export default function CategoriesPageContent() {
+const SEO = getIndexedSeo("categories");
+const HEADING = splitHeading(SEO.heading);
+
+export function CategoriesPageContent() {
 	return (
 		<>
-			<HubNavbar />
 			<PageMain>
 				<Breadcrumbs
 					items={[
@@ -20,18 +21,19 @@ export default function CategoriesPageContent() {
 				/>
 				<PageHero
 					className="mb-10"
-					eyebrow={{ icon: TagsIcon, label: "Categories" }}
+					eyebrow={{ icon: TagsIcon, label: SEO.eyebrow }}
 					title={
 						<>
-							Browse tools by{" "}
-							<span className="hero-gradient-text">category</span>
+							{HEADING.lead}
+							<span className="hero-gradient-text">{HEADING.accent}</span>
+							{HEADING.trail}
 						</>
 					}
-					subtitle="Every tool belongs to one or more categories — pick a lane to see what's there, and what's on the way."
+					subtitle={SEO.subtitle}
 				/>
 				<h2 className="sr-only">All categories</h2>
 				<CategoryGrid />
-				<Newsletter className="mt-16" />
+				<SupportBlock className="mt-16" />
 			</PageMain>
 		</>
 	);

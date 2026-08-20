@@ -5,8 +5,8 @@
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
-	/* Hub default brand (indigo). */
-	--primary: oklch(0.58 0.18 265);
+	/* Hub default brand (Blue). */
+	--primary: oklch(0.555 0.18 265);
 	--primary-foreground: oklch(0.985 0 0);
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
@@ -18,7 +18,11 @@
 	--destructive-foreground: oklch(0.985 0 0);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
+	/* Form-control border. Separate from --border because it is the only thing
+	   distinguishing a field from the page, so WCGA 1.4.11 asks 3:1 of it —
+	   while a decorative card border is exempt. */
+	--input-border: oklch(0.66 0 0);
+	--ring: oklch(0.55 0 0);
 	--radius: 0.625rem;
 
 	/*
@@ -54,6 +58,8 @@
 	--destructive-foreground: oklch(0.985 0 0);
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
+	/* 3:1 against the dark background — see the light-mode note. */
+	--input-border: oklch(0.486 0 0);
 	--ring: oklch(0.556 0 0);
 
 	--tint-1: oklch(0.72 0.12 240);
@@ -70,55 +76,55 @@
  * `--primary` is scoped here — everything else stays hub-neutral.
  */
 .tool-article-to-social-posts {
-	--primary: oklch(0.58 0.18 150);
+	--primary: oklch(0.52 0.18 150);
 }
 .dark .tool-article-to-social-posts {
 	--primary: oklch(0.72 0.17 150);
 }
 .tool-article-to-seo-meta {
-	--primary: oklch(0.65 0.16 60);
+	--primary: oklch(0.558 0.16 60);
 }
 .dark .tool-article-to-seo-meta {
 	--primary: oklch(0.76 0.15 60);
 }
 .tool-word-counter {
-	--primary: oklch(0.6 0.13 195);
+	--primary: oklch(0.518 0.13 195);
 }
 .dark .tool-word-counter {
 	--primary: oklch(0.72 0.12 195);
 }
 .tool-case-converter {
-	--primary: oklch(0.62 0.19 20);
+	--primary: oklch(0.571 0.19 20);
 }
 .dark .tool-case-converter {
 	--primary: oklch(0.73 0.17 20);
 }
 .tool-slug-generator {
-	--primary: oklch(0.58 0.19 300);
+	--primary: oklch(0.568 0.19 300);
 }
 .dark .tool-slug-generator {
 	--primary: oklch(0.72 0.17 300);
 }
 .tool-reading-time {
-	--primary: oklch(0.58 0.15 235);
+	--primary: oklch(0.532 0.15 235);
 }
 .dark .tool-reading-time {
 	--primary: oklch(0.72 0.14 235);
 }
 .tool-svg-to-jsx {
-	--primary: oklch(0.62 0.2 330);
+	--primary: oklch(0.573 0.2 330);
 }
 .dark .tool-svg-to-jsx {
 	--primary: oklch(0.73 0.18 330);
 }
 .tool-lorem-ipsum {
-	--primary: oklch(0.62 0.14 160);
+	--primary: oklch(0.525 0.14 160);
 }
 .dark .tool-lorem-ipsum {
 	--primary: oklch(0.73 0.13 160);
 }
 .tool-hash-generator {
-	--primary: oklch(0.62 0.19 350);
+	--primary: oklch(0.572 0.19 350);
 }
 .dark .tool-hash-generator {
 	--primary: oklch(0.73 0.17 350);

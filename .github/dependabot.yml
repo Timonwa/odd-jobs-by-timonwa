@@ -1,0 +1,18 @@
+# Routine version updates (security alerts/fix PRs are separate and always on).
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies"]
+    groups:
+      # One weekly PR for all non-major bumps instead of one PR per package.
+      non-major:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies"]

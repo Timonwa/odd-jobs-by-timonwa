@@ -18,7 +18,7 @@ import {
 } from "@/components/ui";
 import { timeAgo } from "@/lib/utils";
 
-type HistoryItemType = {
+type HistoryItem = {
 	id: string;
 	kind: "url" | "text";
 	title: string;
@@ -26,8 +26,8 @@ type HistoryItemType = {
 	meta?: ReactNode;
 };
 
-type Props = {
-	items: HistoryItemType[];
+type HistorySidebarProps = {
+	items: HistoryItem[];
 	onLoad: (id: string) => void;
 	onRemove: (id: string) => void;
 	description?: string;
@@ -39,13 +39,13 @@ const DEFAULT_DESCRIPTION =
 const DEFAULT_EMPTY = "Your generations will appear here.";
 
 /** History sidebar for the draft-based AI tools: scrollable list, source badge, two-step remove. */
-export default function HistorySidebar({
+export function HistorySidebar({
 	items,
 	onLoad,
 	onRemove,
 	description = DEFAULT_DESCRIPTION,
 	emptyText = DEFAULT_EMPTY,
-}: Props) {
+}: HistorySidebarProps) {
 	// Two-step remove: the first click arms the confirm, the second removes.
 	const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
@@ -116,7 +116,7 @@ export default function HistorySidebar({
 											<button
 												type="button"
 												onClick={() => setConfirmingId(item.id)}
-												className="mt-1 text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+												className="tap-target mt-1 justify-start text-[10px] text-muted-foreground hover:text-destructive gap-1 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
 											>
 												<Trash2Icon className="w-3 h-3" />
 												Remove

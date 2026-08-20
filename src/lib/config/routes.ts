@@ -2,11 +2,9 @@
 
 import type { Route } from "next";
 
-/**
- * Internal app routes — registered once and reused across the navbar, footer,
- * in-app links, metadata, and the sitemap. Off-site / brand links live in
- * lib/config/site.ts; each tool's own route is its `href` in lib/config/tools.ts.
- */
+import { siteConfig } from "./site";
+
+// Barrel — the app's client-safe settings.
 export const ROUTES = {
 	home: "/" as Route,
 	tools: "/tools" as Route,
@@ -16,7 +14,21 @@ export const ROUTES = {
 	toolsCategory: (category: string): Route =>
 		`/tools?category=${encodeURIComponent(category)}` as Route,
 	tool: (slug: string): Route => `/${encodeURIComponent(slug)}` as Route,
-	guides: "/guides" as Route,
-	guide: (slug: string): Route =>
-		`/guides/${encodeURIComponent(slug)}` as Route,
+	blog: "/blog" as Route,
+	post: (slug: string): Route => `/blog/${encodeURIComponent(slug)}` as Route,
+	newsletter: "/newsletter" as Route,
+	issue: (slug: string): Route =>
+		`/newsletter/${encodeURIComponent(slug)}` as Route,
+	shop: "/shop" as Route,
+	product: (slug: string): Route =>
+		`/shop/${encodeURIComponent(slug)}` as Route,
 };
+
+// Separate from ROUTES because these are plain strings, not typedRoutes `Route`s.
+export const EXTERNAL_ROUTES = {
+	repo: "https://github.com/Timonwa/odd-jobs-by-timonwa",
+	support: `${siteConfig.creator.siteUrl}/support`,
+	terms: `${siteConfig.creator.siteUrl}/terms`,
+	privacy: `${siteConfig.creator.siteUrl}/privacy`,
+	shopCanonicalBase: `${siteConfig.creator.siteUrl}/shop`,
+} as const;
