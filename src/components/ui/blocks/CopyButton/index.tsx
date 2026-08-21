@@ -42,6 +42,7 @@ export function CopyButton({
 			onClick={handleCopy}
 			disabled={disabled || !value}
 			aria-label={copied ? copiedLabel : label}
+			data-umami-event="tool-copy"
 			className={cn(copied && "text-primary", className)}
 		>
 			<Icon aria-hidden className="w-4 h-4" />

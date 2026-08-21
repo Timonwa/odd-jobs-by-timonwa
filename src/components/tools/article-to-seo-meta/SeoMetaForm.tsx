@@ -59,6 +59,7 @@ function SubmitButton({
 			type="submit"
 			size="lg"
 			className="w-full sm:flex-1"
+			data-umami-event="tool-generate"
 			disabled={pending || disabled}
 		>
 			{pending ? (

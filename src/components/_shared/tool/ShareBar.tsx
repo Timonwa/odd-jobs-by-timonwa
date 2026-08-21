@@ -178,7 +178,13 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 	const menuItems = (
 		<>
 			<li>
-				<button type="button" onClick={handleCopy} className={itemClass}>
+				<button
+					type="button"
+					onClick={handleCopy}
+					data-umami-event="share-click"
+					data-umami-event-target="copy-link"
+					className={itemClass}
+				>
 					{isCopied() ? (
 						<CheckIcon aria-hidden className="h-4 w-4 text-primary" />
 					) : (
@@ -194,6 +200,8 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 						target="_blank"
 						rel="noopener noreferrer"
 						onClick={closeMenu}
+						data-umami-event="share-click"
+						data-umami-event-target={key}
 						className={itemClass}
 					>
 						<Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
@@ -202,7 +210,13 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 				</li>
 			))}
 			<li>
-				<a href={mailtoHref} onClick={closeMenu} className={itemClass}>
+				<a
+					href={mailtoHref}
+					onClick={closeMenu}
+					data-umami-event="share-click"
+					data-umami-event-target="email"
+					className={itemClass}
+				>
 					<MailIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
 					Share via email
 				</a>
@@ -212,6 +226,8 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 					<button
 						type="button"
 						onClick={handleNativeShare}
+						data-umami-event="share-click"
+						data-umami-event-target="native"
 						className={itemClass}
 					>
 						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />

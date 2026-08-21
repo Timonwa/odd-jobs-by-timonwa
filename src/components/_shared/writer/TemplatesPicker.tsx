@@ -138,6 +138,7 @@ export function TemplatesPicker({
 										? `This writing style is already saved as “${activeTemplate.name}”`
 										: "Save the current writing style as a reusable template"
 							}
+							data-umami-event="writing-style-saved"
 							className="text-[11px] text-primary hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
 						>
 							+ Save current
