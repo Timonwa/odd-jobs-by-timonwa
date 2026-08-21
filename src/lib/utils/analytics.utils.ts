@@ -3,15 +3,21 @@
 
 import { isBrowser } from "./is-browser.utils";
 
-type UmamiTracker = { track: (eventName: string) => void };
+type UmamiTracker = {
+	track: (eventName: string, eventData?: Record<string, string>) => void;
+};
 
 /**
- * Fire a Umami event by name. A no-op when the script hasn't loaded — it is
- * gated on `APP_ENV`, so it is absent in development and on previews, and a
- * blocked or failed load must not throw inside a tool's event handler.
+ * Fire a Umami event by name, with optional event data (the programmatic
+ * equivalent of `data-umami-event-*` attributes). A no-op when the script
+ * hasn't loaded — it is gated on `APP_ENV`, so it is absent in development and
+ * on previews, and a blocked or failed load must not throw inside a handler.
  */
-export function trackEvent(eventName: string): void {
+export function trackEvent(
+	eventName: string,
+	eventData?: Record<string, string>,
+): void {
 	if (!isBrowser()) return;
 	const umami = (window as unknown as { umami?: UmamiTracker }).umami;
-	umami?.track(eventName);
+	umami?.track(eventName, eventData);
 }

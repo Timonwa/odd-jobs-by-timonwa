@@ -44,7 +44,7 @@ export function WordCounterTool() {
 	const handleTextChange = (next: string) => {
 		if (!hasTrackedUse.current && next.trim() !== "") {
 			hasTrackedUse.current = true;
-			trackEvent("tool-use");
+			trackEvent("tool-use", { tool: "word-counter" });
 		}
 		setText(next);
 	};

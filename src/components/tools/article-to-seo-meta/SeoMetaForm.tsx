@@ -60,6 +60,7 @@ function SubmitButton({
 			size="lg"
 			className="w-full sm:flex-1"
 			data-umami-event="tool-generate"
+			data-umami-event-tool="article-to-seo-meta"
 			disabled={pending || disabled}
 		>
 			{pending ? (

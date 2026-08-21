@@ -6,6 +6,8 @@ import {
 	SparklesIcon,
 	Wand2Icon,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+
 import { ArticleSourceInput } from "@/components/_shared/source";
 import { ErrorNotice } from "@/components/_shared/result";
 import type { ArticleSourceKind, SocialPostStyleTemplate } from "@/lib/types";
@@ -91,6 +93,9 @@ export function GenerateForm({
 	onUpdateTemplate,
 	onRenameTemplate,
 }: GenerateFormProps) {
+	// Shared by every writer-based tool, so the tool comes from the path
+	// (tool pages live at the root) rather than a threaded prop.
+	const tool = usePathname().split("/")[1] || "home";
 	const hasInput =
 		sourceKind === "url" ? url.trim().length > 0 : text.trim().length > 0;
 	const textOver = text.length > MAX_ARTICLE_INPUT_CHARS;
@@ -170,6 +175,7 @@ export function GenerateForm({
 							size="lg"
 							className="w-full sm:flex-1"
 							data-umami-event="tool-generate"
+							data-umami-event-tool={tool}
 							aria-disabled={disabled || undefined}
 							onClick={(event) => {
 								if (disabled) event.preventDefault();
