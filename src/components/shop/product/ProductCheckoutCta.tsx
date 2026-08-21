@@ -40,6 +40,8 @@ export function ProductCheckoutCta({ product }: { product: ProductMeta }) {
 			<div className="flex flex-wrap items-center gap-3">
 				<a
 					href={variant.checkoutUrl}
+					data-umami-event="checkout-click"
+					data-umami-event-variant={variant.name}
 					target="_blank"
 					rel="noopener noreferrer"
 					className={buttonClasses({ size: "lg" })}
