@@ -175,7 +175,9 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 	const menuClass =
 		"z-50 max-h-[80vh] min-w-56 overflow-y-auto no-scrollbar rounded-xl border border-border bg-popover p-1.5 shadow-lg";
 
-	const menuItems = (
+	// A function of the trigger, not a static block, so the `trigger` property
+	// on each event reflects which of the two buttons actually opened the menu.
+	const renderMenuItems = (trigger: "inline" | "fab") => (
 		<>
 			<li>
 				<button
@@ -183,6 +185,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 					onClick={handleCopy}
 					data-umami-event="share-click"
 					data-umami-event-target="copy-link"
+					data-umami-event-trigger={trigger}
 					className={itemClass}
 				>
 					{isCopied() ? (
@@ -202,6 +205,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 						onClick={closeMenu}
 						data-umami-event="share-click"
 						data-umami-event-target={key}
+						data-umami-event-trigger={trigger}
 						className={itemClass}
 					>
 						<Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
@@ -215,6 +219,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 					onClick={closeMenu}
 					data-umami-event="share-click"
 					data-umami-event-target="email"
+					data-umami-event-trigger={trigger}
 					className={itemClass}
 				>
 					<MailIcon aria-hidden className="h-4 w-4 text-muted-foreground" />
@@ -228,6 +233,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 						onClick={handleNativeShare}
 						data-umami-event="share-click"
 						data-umami-event-target="native"
+						data-umami-event-trigger={trigger}
 						className={itemClass}
 					>
 						<Share2Icon aria-hidden className="h-4 w-4 text-muted-foreground" />
@@ -260,7 +266,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 						aria-label="Share options"
 						className={`absolute right-0 top-full mt-2 ${menuClass}`}
 					>
-						{menuItems}
+						{renderMenuItems("inline")}
 					</ul>
 				)}
 			</div>
@@ -289,7 +295,7 @@ export function ShareBar({ url, title, shareText, subject }: ShareBarProps) {
 								aria-label="Share options"
 								className={`absolute bottom-full right-0 mb-2 ${menuClass}`}
 							>
-								{menuItems}
+								{renderMenuItems("fab")}
 							</ul>
 						)}
 					</div>
