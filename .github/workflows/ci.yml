@@ -15,6 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The `name:` of the lint, test, and build jobs are the check contexts the
+  # main ruleset requires — rename one and PRs wait forever on a check that
+  # will never report.
+
   # ──────────────────────────────────────────────
   # Detect docs-only changes to skip CI entirely
   # ──────────────────────────────────────────────
@@ -24,8 +28,8 @@ jobs:
     outputs:
       should-skip: ${{ steps.filter.outputs.docs-only == 'true' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3.0.4
         id: filter
         with:
           # `every` is essential: the default `some` marks a PR docs-only when
@@ -55,7 +59,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup environment
         uses: ./.github/actions/setup
@@ -80,7 +84,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup environment
         uses: ./.github/actions/setup
@@ -104,7 +108,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup environment
         uses: ./.github/actions/setup
