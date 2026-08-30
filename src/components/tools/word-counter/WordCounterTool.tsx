@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useRef } from "react";
 
 import { SourceReuseControls } from "@/components/_shared/source";
 import { useArticleSource } from "@/lib/hooks";
@@ -12,6 +12,7 @@ import {
 	READING_WPM,
 	SPEAKING_WPM,
 	cn,
+	trackEvent,
 } from "@/lib/utils";
 import {
 	SEO_META_DESC_MAX,
@@ -37,6 +38,16 @@ const numberFmt = new Intl.NumberFormat("en-US");
 export function WordCounterTool() {
 	const { text, setText, textReuse, toggleTextReuse, clear } =
 		useArticleSource();
+	// This tool has no button to attach a `data-umami-event` to — it counts as
+	// you type. Fired once per mount so the metric is people, not keystrokes.
+	const hasTrackedUse = useRef(false);
+	const handleTextChange = (next: string) => {
+		if (!hasTrackedUse.current && next.trim() !== "") {
+			hasTrackedUse.current = true;
+			trackEvent("tool-use", { tool: "word-counter" });
+		}
+		setText(next);
+	};
 	const reuseId = useId();
 	const counts = getTextCounts(text);
 
@@ -65,7 +76,7 @@ export function WordCounterTool() {
 						<Textarea
 							id="counter-input"
 							value={text}
-							onChange={(e) => setText(e.target.value)}
+							onChange={(e) => handleTextChange(e.target.value)}
 							placeholder="Paste or type your text…"
 							className="min-h-64 max-h-96 overflow-y-auto no-scrollbar"
 						/>

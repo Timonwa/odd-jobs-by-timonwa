@@ -16,6 +16,8 @@ export function SupportNote({
 			{lead}{" "}
 			<a
 				href={EXTERNAL_ROUTES.support}
+				data-umami-event="support-click"
+				data-umami-event-placement="note"
 				target="_blank"
 				rel="noopener noreferrer"
 				className="font-medium text-primary hover:underline"

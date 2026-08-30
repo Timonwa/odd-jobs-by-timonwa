@@ -5,14 +5,20 @@ import type { ReactNode } from "react";
 import { Tooltip } from "../../base/Tooltip";
 import type { IconComponent } from "@/lib/types";
 
-type FooterLink = { label: string } & (
+type FooterLink = { label: string; event?: string; eventPlacement?: string } & (
 	{ href: Route; isExternal?: false } | { href: string; isExternal: true }
 );
 
 type FooterProps = {
 	brand: { href: Route; name: string; icon: IconComponent };
 	tagline: string;
-	socialLinks: { label: string; href: string; icon: IconComponent }[];
+	socialLinks: {
+		label: string;
+		href: string;
+		icon: IconComponent;
+		event?: string;
+		eventPlacement?: string;
+	}[];
 	columns: {
 		heading: string;
 		links: FooterLink[];
@@ -37,6 +43,8 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 				href={link.href}
 				target="_blank"
 				rel="noopener noreferrer"
+				data-umami-event={link.event}
+				data-umami-event-placement={link.eventPlacement}
 				className={linkClass}
 			>
 				{link.label}
@@ -117,6 +125,8 @@ export function Footer({
 											target="_blank"
 											rel="noopener noreferrer"
 											aria-label={social.label}
+											data-umami-event={social.event}
+											data-umami-event-placement={social.eventPlacement}
 											className={iconLinkClass}
 										>
 											<SocialIcon aria-hidden className="h-4 w-4" />
