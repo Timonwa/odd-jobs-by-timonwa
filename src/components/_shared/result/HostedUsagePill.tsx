@@ -61,6 +61,7 @@ export function HostedUsagePill({
 			<button
 				type="button"
 				onClick={openByok}
+				data-umami-event="quota-pill-click"
 				aria-label={remaining == null ? "Add your own Gemini key" : summary}
 				className={cn(
 					"inline-flex items-center gap-1.5 rounded-full border transition-colors px-2.5 py-1 text-[10px] leading-tight sm:text-xs whitespace-nowrap cursor-pointer",

@@ -57,6 +57,8 @@ export function SupportBlock({
 				<div className="mt-6 flex flex-wrap items-center justify-center gap-3">
 					<a
 						href={EXTERNAL_ROUTES.support}
+						data-umami-event="support-click"
+						data-umami-event-placement="block"
 						target="_blank"
 						rel="noopener noreferrer"
 						className={buttonClasses({ size: "lg" })}
@@ -65,6 +67,8 @@ export function SupportBlock({
 					</a>
 					<a
 						href={EXTERNAL_ROUTES.repo}
+						data-umami-event="repo-click"
+						data-umami-event-placement="block"
 						target="_blank"
 						rel="noopener noreferrer"
 						className={buttonClasses({ variant: "outline", size: "lg" })}
@@ -77,6 +81,8 @@ export function SupportBlock({
 					Prefer email?{" "}
 					<Link
 						href={ROUTES.newsletter}
+						data-umami-event="newsletter-link-click"
+						data-umami-event-placement="block"
 						className="font-medium text-primary hover:underline"
 					>
 						Get new tools and guides monthly
