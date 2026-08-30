@@ -197,11 +197,20 @@ export function ByokSection({
 			)}
 
 			<div className="flex flex-col gap-2 pt-2">
-				<Button onClick={handleSave} className="w-full">
+				<Button
+					onClick={handleSave}
+					data-umami-event="byok-key-saved"
+					className="w-full"
+				>
 					Save key
 				</Button>
 				{savedKey && (
-					<Button variant="outline" onClick={handleClear} className="w-full">
+					<Button
+						variant="outline"
+						onClick={handleClear}
+						data-umami-event="byok-key-cleared"
+						className="w-full"
+					>
 						Clear key
 					</Button>
 				)}

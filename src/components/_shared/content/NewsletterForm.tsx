@@ -18,7 +18,12 @@ const INITIAL: NewsletterFormState = { status: "idle" };
 function SubmitButton() {
 	const { pending } = useFormStatus();
 	return (
-		<Button type="submit" disabled={pending} className="shrink-0">
+		<Button
+			type="submit"
+			disabled={pending}
+			data-umami-event="newsletter-subscribe"
+			className="shrink-0"
+		>
 			{pending ? "Subscribing…" : "Notify me"}
 		</Button>
 	);

@@ -132,6 +132,8 @@ export function NavActions({
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Star on GitHub"
+					data-umami-event="repo-click"
+					data-umami-event-placement="navbar"
 					className={buttonClasses({ variant: "ghost", size: "icon-sm" })}
 				>
 					<GithubMark aria-hidden className="h-4 w-4" />
@@ -215,6 +217,8 @@ export function NavActions({
 					href={EXTERNAL_ROUTES.support}
 					target="_blank"
 					rel="noopener noreferrer"
+					data-umami-event="support-click"
+					data-umami-event-placement="nav-menu"
 					className={cta}
 				>
 					<HeartIcon aria-hidden className="w-4 h-4" />
@@ -224,6 +228,8 @@ export function NavActions({
 					href={repoUrl}
 					target="_blank"
 					rel="noopener noreferrer"
+					data-umami-event="repo-click"
+					data-umami-event-placement="nav-menu"
 					className={cta}
 				>
 					<span aria-hidden>⭐</span>

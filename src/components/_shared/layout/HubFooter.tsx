@@ -16,21 +16,33 @@ import { EXTERNAL_ROUTES } from "@/lib/config/routes";
 const YEAR = new Date().getFullYear();
 
 const SOCIAL_LINKS = [
-	{ label: "Star on GitHub", href: EXTERNAL_ROUTES.repo, icon: GithubMark },
+	{
+		label: "Star on GitHub",
+		href: EXTERNAL_ROUTES.repo,
+		icon: GithubMark,
+		event: "repo-click",
+		eventPlacement: "footer",
+	},
 	{
 		label: `${siteConfig.creator.name} on X`,
 		href: siteConfig.creator.twitterUrl,
 		icon: XLogo,
+		event: "social-click",
+		eventPlacement: "x",
 	},
 	{
 		label: `${siteConfig.creator.name} on LinkedIn`,
 		href: siteConfig.creator.linkedinUrl,
 		icon: LinkedInLogo,
+		event: "social-click",
+		eventPlacement: "linkedin",
 	},
 	{
 		label: "Support this project",
 		href: EXTERNAL_ROUTES.support,
 		icon: HeartIcon,
+		event: "support-click",
+		eventPlacement: "footer",
 	},
 ];
 
@@ -110,6 +122,8 @@ export function HubFooter() {
 			metaLinks={FOOTER_META_LINKS.map((link) => ({
 				...link,
 				isExternal: true as const,
+				event: "ecosystem-click",
+				eventPlacement: link.label,
 			}))}
 			legalLinks={FOOTER_LEGAL_LINKS.map((link) => ({
 				...link,
@@ -132,6 +146,8 @@ export function HubFooter() {
 						href={EXTERNAL_ROUTES.support}
 						target="_blank"
 						rel="noopener noreferrer"
+						data-umami-event="support-click"
+						data-umami-event-placement="footer-note"
 						className="underline underline-offset-2 transition-colors hover:text-foreground"
 					>
 						Support the project

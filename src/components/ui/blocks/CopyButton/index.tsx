@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { Button } from "../../base/Button";
 import { useCopyFeedback } from "@/lib/hooks";
@@ -28,6 +29,9 @@ export function CopyButton({
 }: CopyButtonProps) {
 	const { isCopied, copy } = useCopyFeedback();
 	const copied = isCopied();
+	// Tool pages live at the root (`/slug-generator`), so the path is the slug —
+	// read here rather than threaded through every call site as a prop.
+	const tool = usePathname().split("/")[1] || "home";
 
 	// A blocked clipboard (insecure context / permissions) simply shows no
 	// confirmation — there is no room for an error message on an icon button.
@@ -42,6 +46,8 @@ export function CopyButton({
 			onClick={handleCopy}
 			disabled={disabled || !value}
 			aria-label={copied ? copiedLabel : label}
+			data-umami-event="tool-copy"
+			data-umami-event-tool={tool}
 			className={cn(copied && "text-primary", className)}
 		>
 			<Icon aria-hidden className="w-4 h-4" />
