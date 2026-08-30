@@ -7,10 +7,6 @@ import {
 } from "@/lib/server/utils/og-image.utils";
 import { siteConfig } from "@/lib/config/site";
 
-// Edge runtime: a deliberate choice for image generation, not a Next.js
-// requirement (these routes build fine on Node). Content-backed OG routes must
-// NOT copy it — they read MDX with node:fs, which the edge runtime lacks.
-export const runtime = "edge";
 export const alt = `Tool categories — ${siteConfig.name}`;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;

@@ -6,10 +6,6 @@ import {
 import { siteConfig } from "@/lib/config/site";
 import { OG_PALETTES } from "@/lib/constants";
 
-// Edge runtime: a deliberate choice for image generation, not a Next.js
-// requirement (these routes build fine on Node). Content-backed OG routes must
-// NOT copy it — they read MDX with node:fs, which the edge runtime lacks.
-export const runtime = "edge";
 export const alt =
 	"Case Converter — UPPERCASE, Title Case, camelCase, snake_case, and more";
 export const size = OG_SIZE;
