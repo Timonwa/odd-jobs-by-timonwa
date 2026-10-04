@@ -35,7 +35,10 @@ export function AiToolPage({
 			/>
 			<PageMain>
 				<ToolBreadcrumbs slug={slug} name={name} />
-				{children}
+				{/* Umami's replay block selector targets this, so replays never capture text pasted into or produced by a tool. */}
+				<div data-replay-block className="contents">
+					{children}
+				</div>
 				{showToolContent && <ToolContent currentSlug={slug} />}
 			</PageMain>
 		</>
