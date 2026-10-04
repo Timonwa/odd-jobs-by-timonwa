@@ -56,7 +56,7 @@ _More on the way._
 
 ## Run locally
 
-**Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc)), [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys) if you want the AI tools.
+**Prerequisites:** Node.js 24 (see [`.nvmrc`](./.nvmrc)), [pnpm](https://pnpm.io), and a [Google AI Studio API key](https://aistudio.google.com/api-keys) if you want the AI tools.
 
 ```bash
 git clone https://github.com/Timonwa/odd-jobs-by-timonwa.git
