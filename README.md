@@ -116,7 +116,7 @@ The blog posts, newsletter issues, and product copy under `src/content/**` are m
 - **History, preferences, and templates** live only in your browser's `localStorage`.
 - **Rate-limit counters** store a keyed (HMAC-SHA256) hash of your IP plus a daily count in Upstash Redis (resets at UTC midnight); bring-your-own-key requests skip this.
 - **Newsletter signups** send only your email address, to my own [Listmonk](https://listmonk.app) instance. The form gives the same confirmation whether or not you were already subscribed, so it can't be used to test who's on the list.
-- **No accounts, no profiles, no cross-site tracking.** Anonymous, cookieless usage analytics via [Umami](https://umami.is) — no personal data.
+- **No accounts, no profiles, no cross-site tracking.** Anonymous, cookieless usage analytics and session replays via my own [Umami](https://umami.is) instance — form inputs are masked in replays, and no personal data is collected.
 
 Full details: [www.timonwa.com/privacy](https://www.timonwa.com/privacy).
 
