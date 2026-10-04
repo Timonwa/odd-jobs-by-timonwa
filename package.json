@@ -36,7 +36,7 @@
 		"@upstash/redis": "^1.38.4",
 		"ai": "^7.0.106",
 		"clsx": "^2.1.1",
-		"dompurify": "^3.4.15",
+		"dompurify": "^3.4.16",
 		"lucide-react": "^1.47.0",
 		"next": "16.3.5",
 		"react": "19.3.0",
