@@ -68,7 +68,7 @@ export default function RootLayout({
 			<head>
 				{/* The analytics script loads after hydration, so warming the
 				    connection early saves its DNS + TLS round-trips. */}
-				<link rel="preconnect" href="https://cloud.umami.is" crossOrigin="" />
+				<link rel="preconnect" href={siteConfig.umamiUrl} crossOrigin="" />
 				{/* Tailwind-recommended pre-hydration snippet to avoid theme FOUC */}
 				<script
 					data-key={STORAGE_KEYS.theme}
@@ -81,13 +81,20 @@ export default function RootLayout({
 				<ScrollToTop />
 				<SiteLayout footer={<HubFooter />}>{children}</SiteLayout>
 				{isProduction && (
-					<Script
-						src="https://cloud.umami.is/script.js"
-						data-website-id={siteConfig.umamiWebsiteId}
-						data-tag={siteConfig.umamiTag}
-						data-performance="true"
-						strategy="afterInteractive"
-					/>
+					<>
+						<Script
+							src={`${siteConfig.umamiUrl}/script.js`}
+							data-website-id={siteConfig.umamiWebsiteId}
+							data-performance="true"
+							strategy="afterInteractive"
+						/>
+						{/* Masks every form input by default, so BYOK keys never reach a replay. */}
+						<Script
+							src={`${siteConfig.umamiUrl}/recorder.js`}
+							data-website-id={siteConfig.umamiWebsiteId}
+							strategy="afterInteractive"
+						/>
+					</>
 				)}
 			</body>
 		</html>

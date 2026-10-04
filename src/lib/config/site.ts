@@ -17,8 +17,8 @@ export const siteConfig = {
 	backgroundColor: "#ffffff",
 	twitter: CREATOR_TWITTER,
 	defaultSiteType: "website",
-	umamiWebsiteId: "4550710a-0c5e-462a-8012-5d3ee2f3769e",
-	umamiTag: "odd-jobs",
+	umamiUrl: "https://analytics.timonwa.com",
+	umamiWebsiteId: "d0868380-8ecd-4a65-8b65-05a501da974b",
 	creator: {
 		name: CREATOR_NAME,
 		email: "me@timonwa.com",

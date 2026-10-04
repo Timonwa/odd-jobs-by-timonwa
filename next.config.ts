@@ -1,6 +1,8 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
+import { siteConfig } from "./src/lib/config/site";
+
 // Content-Security-Policy, set here rather than in middleware — this app has no
 // middleware, and a static header costs nothing per request.
 //
@@ -17,13 +19,13 @@ const isDevServer = process.env.NODE_ENV === "development";
 
 const CSP = [
 	"default-src 'self'",
-	`script-src 'self' 'unsafe-inline'${isDevServer ? " 'unsafe-eval'" : ""} https://cloud.umami.is`,
+	`script-src 'self' 'unsafe-inline'${isDevServer ? " 'unsafe-eval'" : ""} ${siteConfig.umamiUrl}`,
 	"style-src 'self' 'unsafe-inline'",
 	"img-src 'self' data: blob:",
 	"font-src 'self' data:",
 	// Gemini is called server-side, so the browser only ever talks to us and the
 	// analytics collector.
-	"connect-src 'self' https://cloud.umami.is https://api-gateway.umami.dev",
+	`connect-src 'self' ${siteConfig.umamiUrl}`,
 	"frame-src https://www.youtube-nocookie.com",
 	"object-src 'none'",
 	"base-uri 'self'",
