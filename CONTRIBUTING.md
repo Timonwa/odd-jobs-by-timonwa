@@ -42,7 +42,7 @@ If you're not sure, open an issue and ask.
 
 ## Dev setup
 
-**Prerequisites:** Node.js 22 (see [`.nvmrc`](./.nvmrc); `engines` enforces it), [pnpm](https://pnpm.io), and a [Google AI Studio key](https://aistudio.google.com/api-keys) if you're touching the AI tools.
+**Prerequisites:** Node.js 24 (see [`.nvmrc`](./.nvmrc); `engines` enforces it), [pnpm](https://pnpm.io), and a [Google AI Studio key](https://aistudio.google.com/api-keys) if you're touching the AI tools.
 
 Clone, install, and run: [README → Run locally](./README.md#run-locally). The [environment variables](./README.md#environment-variables) table lives there too — including which variables the AI tools actually need, and which one the app refuses to boot without in production.
 
