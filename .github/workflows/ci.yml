@@ -42,7 +42,6 @@ jobs:
               - 'LICENSE'
               - 'LICENSE-content'
               - '.github/labeler.yml'
-              - '.github/release-notes.yml'
               - '.github/workflows/label.yml'
               - '.github/pull_request_template.md'
               - '.github/ISSUE_TEMPLATE/**'
