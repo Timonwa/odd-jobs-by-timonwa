@@ -47,7 +47,7 @@
 		"sugar-high": "^2.4.1",
 		"tailwind-merge": "^3.7.0",
 		"yaml": "^2.9.1",
-		"zod": "^4.6.5"
+		"zod": "^4.6.6"
 	},
 	"devDependencies": {
 		"@mdx-js/loader": "^3.1.1",
